@@ -31,6 +31,9 @@ const App = () => {
     <GestureHandlerRootView style={{ flex: 1 }}>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View style={styles.body(colors)}>
+
+          <Text style={[styles.headerText, {fontSize: 28}]}> Home </Text>
+
           <BottomSheet
             ref={bottomSheetRef}
             index={0}
@@ -91,7 +94,7 @@ const App = () => {
 const styles = StyleSheet.create({
   body: (theme) => ({
     flex: 1,
-    padding: 24,
+    padding: 12,
     backgroundColor: theme.background,
   }),
 
