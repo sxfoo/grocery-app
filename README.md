@@ -1,24 +1,18 @@
-# grocery-app
-
-git clone this repo
-
-**To run the project for the first time:**
-
-cd into this repo
-
+# Running the project (first time)
+Git clone this project
+```
+cd grocery-app
 yarn add expo
-
 npx expo start
+```
+## App Layout
+- **Main overall App:** Starts from `App.js`
 
-**Layout**
+- **Screens (using React Navigation):** Located in `/screens`
 
-Main App starts from App.js
+- **Assets (such as images / fonts):** Located in `/assets`
 
-Screens are located in /screens
-
-Assets are located in /assets
-
-**Libraries Used Currently**
+## Libraries Used Currently
 
 react navigation
 
