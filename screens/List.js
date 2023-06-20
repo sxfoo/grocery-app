@@ -5,16 +5,22 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { useTheme } from '@react-navigation/native';
 import { IconButton, Switch } from 'react-native-paper';
 
+/* The overall Screen to be displayed. */
 const App = () => {
 
   const { colors } = useTheme();
   const bottomSheetRef = useRef(null);
+
+  /* The % of screen the bottom Sheet should snap to */
   const snapPoints = useMemo(() => ['15%', '90%'], []);
 
+  /* This is not needed. Currently logs the position which the bottomSheet snaps */
   const handleSheetChanges = useCallback((index) => {
     console.log('handleSheetChanges', index);
   }, []);
 
+  /* Callback function to render only once.
+     Currently only used for => tapping the backdrop will close keyboard */
   const renderBackdrop = useCallback(
     (props) => (
       <BottomSheetBackdrop
@@ -24,16 +30,23 @@ const App = () => {
     []
   );
 
+  /* Toggle states for the switches in the bottom sheet. To be changed */
   const [categorySwitch, setCategorySwitch] = useState(false);
   const [quantitySwitch, setQuantitySwitch] = useState(false);
 
   return (
+
+    /* Used for react native gesture handler */
     <GestureHandlerRootView style={{ flex: 1 }}>
+    
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+
+        {/* The overall screen. */}
         <View style={styles.body(colors)}>
 
           <Text style={[styles.headerText, {fontSize: 28}]}> Home </Text>
 
+          {/* The Bottom Sheet. */}
           <BottomSheet
             ref={bottomSheetRef}
             index={0}
@@ -45,7 +58,8 @@ const App = () => {
           >
 
             <BottomSheetView style={styles.contentContainer}>
-
+              
+              {/* The row containing the text input */}
               <BottomSheetView style={styles.row}>
                 <BottomSheetTextInput
                   style={styles.searchbar}
@@ -59,7 +73,8 @@ const App = () => {
                   size={28}
                 />
               </BottomSheetView>
-
+              
+              {/* The additional options to be carried out. Currently no logic.*/}
               <BottomSheetView style={[styles.row, {marginTop: 60, justifyContent: 'space-between'}]}>
                 <Text style={styles.headerText}> Additional Item Details </Text>
               </BottomSheetView>
@@ -85,8 +100,11 @@ const App = () => {
             </BottomSheetView>
 
           </BottomSheet>
+
         </View>
+        
       </TouchableWithoutFeedback>
+
     </GestureHandlerRootView>
   );
 };

@@ -4,16 +4,24 @@ import { IconButton } from 'react-native-paper';
 import { StatusBar } from 'expo-status-bar';
 import { useNavigation, useTheme } from '@react-navigation/native';
 
+
+/* A Grocery Card component. Displays the user's existing grocery lists. */
 const GroceryCard = () => {
 
     const navigation = useNavigation();
     const { colors } = useTheme();
 
     return (
+        /* Overall, GroceryCard is a pressable container. Currently, onPress goes to 'List' */
         <Pressable onPress={() => {console.log('GroceryCard Pressed'); navigation.navigate('List')}}>
+
             <View style={styles.card(colors)}>
+
                 <Image source={require('../assets/images/CardBg1.jpg')} style={styles.image} />
+
+                {/* View used for giving transparency to image. To make overlayed text clearer*/}
                 <View style={styles.darkenContainer}>
+
                     <View style={styles.topRowContainer}>
                         <IconButton
                             icon='home'
@@ -48,20 +56,27 @@ const GroceryCard = () => {
                             size={30}
                         />
                     </View>
+
                 </View>
+
             </View>
+
         </Pressable>
     );
 }
 
+/* A NewCard component. Meant for the user to create a new List. Displays "Add New List" */
 const NewCard = () => {
 
     const navigation = useNavigation();
     const { colors } = useTheme();
 
     return (
+        /* Overall, NewCard is a pressable container. Currently, onPress goes to 'List' */
         <Pressable onPress={() => { navigation.navigate('List') }}>
+
             <View style={[styles.card(colors), { height: 80, backgroundColor: '#323F4b' }]}>
+
                 <View style={[styles.topRowContainer, { justifyContent: 'center', flex: 1 }]}>
                     <IconButton
                         icon='plus-thick'
@@ -71,12 +86,16 @@ const NewCard = () => {
                         size={24}
                     />
                     <Text style={[styles.title, {fontSize: 20}]}> New List</Text>
+
                 </View>
+
             </View>
+
         </Pressable>
     )
 }
 
+/* The overall Screen to be displayed. Shows all the user's created grocery lists */
 const HomeScreen = () => {
     return (
         <SafeAreaView style={styles.container}>

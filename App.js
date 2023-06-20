@@ -8,6 +8,9 @@ const Stack = createNativeStackNavigator();
 
 export default function App() {
 
+  /* Placeholder custom theme using react-navigation
+     In the future we can use other libraries (react native paper etc) 
+     for theming as well? */
   const CustomTheme = {
     dark: false,
     colors: {
@@ -21,13 +24,21 @@ export default function App() {
   }
 
   return (
+
+    /* React Native Paper requirements */
     <PaperProvider>
+
+      {/* React Native Navigation container. For Stack, Tabs, Drawer navigation */}
       <NavigationContainer theme={CustomTheme}>
+
+        {/* Stack Navigation for displaying Grocery List. Refer to screens directory */}
         <Stack.Navigator>
           <Stack.Screen name="All Lists" component={HomeScreen} />
           <Stack.Screen name="List" component={ListScreen} />
         </Stack.Navigator>
+
       </NavigationContainer>
+
     </PaperProvider>
   );
 }
