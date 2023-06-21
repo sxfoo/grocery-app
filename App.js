@@ -45,12 +45,14 @@ export default function App() {
       {/* React Native Navigation container. For Stack, Tabs, Drawer navigation */}
       <NavigationContainer theme={CustomTheme}>
 
+        {/* Bottom Tab Navigation */}
         <Tab.Navigator
           screenOptions={{
             tabBarHideOnKeyboard: Platform.OS !== 'ios',
             tabBarStyle: { position: 'absolute' }
           }}>
 
+          {/* Grocery List Tab. Goes to ListStack (see function above) */}
           <Tab.Screen
             name="Grocery List"
             component={ListStack}
