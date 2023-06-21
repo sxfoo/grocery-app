@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { View, StyleSheet, SafeAreaView, ScrollView, Text, Pressable, Image } from 'react-native';
-import { IconButton } from 'react-native-paper';
+import { Button, IconButton } from 'react-native-paper';
 import { StatusBar } from 'expo-status-bar';
 import { useNavigation, useTheme } from '@react-navigation/native';
 
@@ -97,11 +97,14 @@ const NewCard = () => {
 
 /* The overall Screen to be displayed. Shows all the user's created grocery lists */
 const HomeScreen = () => {
+    const navigation = useNavigation();
     return (
         <SafeAreaView style={styles.container}>
             <ScrollView style={styles.scrollView}>
                 <GroceryCard />
                 <NewCard />
+                <Button title="This is the button title"
+                onPress={() => navigation.navigate('Trial') }> Click me to navigate to the profile</Button>
             </ScrollView>
         </SafeAreaView>
     );
