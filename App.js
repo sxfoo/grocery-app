@@ -16,7 +16,8 @@ function ListStack() {
     <Stack.Navigator>
       <Stack.Screen name="All Lists" component={HomeScreen} />
       <Stack.Screen name="List" component={ListScreen} />
-    </Stack.Navigator >
+      <Stack.Screen name="Trial" component={Trial} />
+    </Stack.Navigator>
   );
 }
 
@@ -44,30 +45,24 @@ export default function App() {
       {/* React Native Navigation container. For Stack, Tabs, Drawer navigation */}
       <NavigationContainer theme={CustomTheme}>
 
-        {/* Stack Navigation for displaying Grocery List. Refer to screens directory */}
-        <Stack.Navigator>
-          <Stack.Screen name="All Lists" component={HomeScreen} />
-          <Stack.Screen name="List" component={ListScreen} />
-          <Stack.Screen name = "Trial" component={Trial} />
-        </Stack.Navigator>
-          <Tab.Navigator
-            screenOptions={{
-              tabBarHideOnKeyboard: Platform.OS!== 'ios',
-              tabBarStyle: { position: 'absolute' }
-            }}>
+        <Tab.Navigator
+          screenOptions={{
+            tabBarHideOnKeyboard: Platform.OS !== 'ios',
+            tabBarStyle: { position: 'absolute' }
+          }}>
 
-            <Tab.Screen
-              name="Grocery List"
-              component={ListStack}
-              options={{
-                headerShown: false,
-                tabBarIcon: ({ color, size }) => (
-                  <MaterialCommunityIcons name="view-list" color={color} size={size} />
-                ),
-                title: 'Grocery List'
-              }} />
+          <Tab.Screen
+            name="Grocery List"
+            component={ListStack}
+            options={{
+              headerShown: false,
+              tabBarIcon: ({ color, size }) => (
+                <MaterialCommunityIcons name="view-list" color={color} size={size} />
+              ),
+              title: 'Grocery List'
+            }} />
 
-          </Tab.Navigator>
+        </Tab.Navigator>
 
       </NavigationContainer>
 
