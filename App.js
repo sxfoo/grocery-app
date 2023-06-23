@@ -1,5 +1,5 @@
-import { PaperProvider } from 'react-native-paper';
-import { NavigationContainer } from '@react-navigation/native';
+import { MD3DarkTheme, MD3LightTheme, PaperProvider, adaptNavigationTheme } from 'react-native-paper';
+import {NavigationContainer, DarkTheme as NavigationDarkTheme, DefaultTheme as NavigationDefaultTheme} from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -15,7 +15,7 @@ function ListStack() {
     /* Stack Navigation for displaying Grocery List. Refer to screens directory */
     <Stack.Navigator>
       <Stack.Screen name="All Lists" component={HomeScreen} />
-      <Stack.Screen name="List" component={ListScreen} />
+      <Stack.Screen name="List" component={ListScreen} initialParams={{ title: 'New list' }} options={({ route }) => ({ title: route.params.title })} />
       <Stack.Screen name="Trial" component={Trial} />
     </Stack.Navigator>
   );
@@ -23,33 +23,42 @@ function ListStack() {
 
 export default function App() {
 
-  /* Placeholder custom theme using react-navigation
-     In the future we can use other libraries (react native paper etc) 
+  /* Placeholder custom theme using react native paper
+     In the future we can use other libraries 
      for theming as well? */
-  const CustomTheme = {
-    dark: false,
+     
+  /* const CustomTheme = {
+    ...NavigationDarkTheme,
     colors: {
+      ...NavigationDarkTheme.colors,
       primary: '#f5f7fa',
-      background: '#1f2933',
-      card: '#3e4c59',
-      text: '#f5f7fa',
+      background: '#121212',
+      card: '#121212',
       border: 'rgb(199, 199, 204)',
-      notification: 'rgb(255, 69, 58)',
     },
-  }
+  } */
+
+  const { LightTheme, DarkTheme } = adaptNavigationTheme({
+    reactNavigationLight: NavigationDefaultTheme,
+    reactNavigationDark: NavigationDarkTheme,
+  });
 
   return (
     /* React Native Paper requirements */
-    <PaperProvider>
+    <PaperProvider theme={MD3DarkTheme}>
 
       {/* React Native Navigation container. For Stack, Tabs, Drawer navigation */}
-      <NavigationContainer theme={CustomTheme}>
+      <NavigationContainer theme={DarkTheme}>
 
         {/* Bottom Tab Navigation */}
         <Tab.Navigator
           screenOptions={{
             tabBarHideOnKeyboard: Platform.OS !== 'ios',
-            tabBarStyle: { position: 'absolute' }
+            tabBarStyle: {
+              backgroundColor: '#2d2d2d',
+              position: 'absolute',
+              borderTopWidth: 0
+            }
           }}>
 
           {/* Grocery List Tab. Goes to ListStack (see function above) */}

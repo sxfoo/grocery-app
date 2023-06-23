@@ -1,35 +1,25 @@
 import { useCallback, useMemo, useRef, useState } from 'react';
-import { Text, View, StyleSheet, TouchableWithoutFeedback, Keyboard, Pressable, Switch, Touchable } from 'react-native';
+import { View, StyleSheet, TouchableWithoutFeedback, Keyboard } from 'react-native';
 import BottomSheet, { BottomSheetTextInput, BottomSheetBackdrop, BottomSheetView } from '@gorhom/bottom-sheet';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { useTheme } from '@react-navigation/native';
-import { IconButton, Divider } from 'react-native-paper';
+import { IconButton, Divider, Card, Text, useTheme } from 'react-native-paper';
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 
-/* Displays Title of the List + User's Location */
+/* Displays User's Location at the top*/
 const ListHeader = () => {
 
   return (
     <View style={{ flexDirection: 'column', gap: 20 }}>
 
-      <Text style={[styles.headerText, { fontSize: 28 }]}> Home </Text>
-
-      <Pressable onPress={() => console.log('location pressed')} style={{ flexDirection: 'row', alignItems: 'center' }}>
-        <IconButton
-          icon='map-marker-radius'
-          iconColor='#3E4C59'
-          containerColor='#E4E7EB'
-          mode='contained'
-          size={32}
+      <Card>
+        <Card.Title
+          title="Nearest Supermarket"
+          subtitle="Fairprice Xtra @ Ang Mo Kio Street.."
+          left={(props) => <IconButton {...props} icon="map-marker-radius" />}
+          right={(props) => <IconButton {...props} icon="dots-vertical" onPress={() => { }} />}
         />
-
-        <View style={{ flexDirection: 'column' }}>
-          <Text style={[styles.textOptions, { fontSize: 14, color: 'rgb(199, 199, 204)' }]}> Nearest Supermarket </Text>
-          <Text style={styles.textOptions}> Fairprice Xtra @ Ang Mo Kio Street.. </Text>
-        </View>
-
-      </Pressable>
-
+      </Card>
+      
       <Divider />
 
     </View>
@@ -50,8 +40,8 @@ const ListOfItems = () => {
 /* The overall Screen to be displayed. */
 const App = () => {
 
-  const { colors } = useTheme();
   const bottomSheetRef = useRef(null);
+  const theme = useTheme();
 
   const bottomTabHeight = useBottomTabBarHeight();
 
@@ -75,10 +65,6 @@ const App = () => {
     []
   );
 
-  /* Toggle states for the switches in the bottom sheet. To be changed */
-  const [categorySwitch, setCategorySwitch] = useState(false);
-  const [quantitySwitch, setQuantitySwitch] = useState(false);
-
   return (
 
     /* Used for react native gesture handler */
@@ -86,72 +72,45 @@ const App = () => {
 
       <TouchableWithoutFeedback onPress={() => { Keyboard.dismiss() }}>
 
-          {/* The overall screen. */}
-          <View style={styles.body(colors)}>
+        {/* The overall screen. */}
+        <View style={styles.body}>
 
-            <ListHeader />
-            <ListOfItems />
+          <ListHeader />
+          <ListOfItems />
 
-            {/* The Bottom Sheet. */}
-            <BottomSheet
-              ref={bottomSheetRef}
-              index={0}
-              snapPoints={snapPoints}
-              onChange={handleSheetChanges}
-              backgroundStyle={styles.sheetBg(colors)}
-              backdropComponent={renderBackdrop}
-              keyboardBehavior='extend'
-            >
+          {/* The Bottom Sheet. */}
+          <BottomSheet
+            ref={bottomSheetRef}
+            index={0}
+            snapPoints={snapPoints}
+            onChange={handleSheetChanges}
+            backgroundStyle={{backgroundColor: theme.colors.surfaceVariant}}
+            backdropComponent={renderBackdrop}
+            keyboardBehavior='extend'
+          >
 
-              <BottomSheetView style={styles.contentContainer}>
+            <BottomSheetView style={styles.contentContainer}>
 
-                {/* The row containing the text input */}
-                <BottomSheetView style={styles.row}>
-                  <BottomSheetTextInput
-                    style={styles.searchbar}
-                    placeholder='e.g. Milk'
-                    placeholderTextColor='rgba(199, 199, 204, 0.4)' />
-                  <IconButton
-                    icon='plus-thick'
-                    iconColor='#3E4C59'
-                    containerColor='#E4E7EB'
-                    mode='contained'
-                    size={28}
-                  />
-                </BottomSheetView>
-
-                {/* The additional options to be carried out. Currently no logic.*/}
-                <BottomSheetView style={[styles.row, { marginTop: 60, justifyContent: 'space-between' }]}>
-                  <Text style={styles.headerText}> Additional Item Details </Text>
-                </BottomSheetView>
-
-                <BottomSheetView style={[styles.row, { marginTop: 32, justifyContent: 'space-between' }]}>
-                  <Text style={styles.textOptions}> Category </Text>
-                  <Switch
-                    trackColor={{ false: '#767577', true: 'green' }}
-                    thumbColor={'#f4f3f4'}
-                    ios_backgroundColor="#3e3e3e"
-                    onValueChange={() => { setCategorySwitch(!categorySwitch) }}
-                    value={categorySwitch}
-                  />
-                </BottomSheetView>
-
-                <BottomSheetView style={[styles.row, { marginTop: 32, justifyContent: 'space-between' }]}>
-                  <Text style={styles.textOptions}> Quantity </Text>
-                  <Switch
-                    trackColor={{ false: '#767577', true: 'green' }}
-                    thumbColor={'#f4f3f4'}
-                    ios_backgroundColor="#3e3e3e"
-                    onValueChange={() => { setQuantitySwitch(!quantitySwitch) }}
-                    value={quantitySwitch}
-                  />
-                </BottomSheetView>
-
+              {/* The row containing the text input */}
+              <BottomSheetView style={styles.row}>
+                <BottomSheetTextInput
+                  style={styles.searchbar}
+                  placeholder='e.g. Milk'
+                  placeholderTextColor='rgba(199, 199, 204, 0.4)' />
+                <IconButton
+                  icon='plus-thick'
+                  iconColor={theme.colors.inverseOnSurface}
+                  containerColor={theme.colors.onSurfaceVariant}
+                  mode='contained'
+                  size={28}
+                />
               </BottomSheetView>
 
-            </BottomSheet>
+            </BottomSheetView>
 
-          </View>
+          </BottomSheet>
+
+        </View>
 
       </TouchableWithoutFeedback>
 
@@ -160,15 +119,10 @@ const App = () => {
 };
 
 const styles = StyleSheet.create({
-  body: (theme) => ({
+  body: {
     flex: 1,
     padding: 16,
-    backgroundColor: theme.background,
-  }),
-
-  sheetBg: (theme) => ({
-    backgroundColor: theme.card
-  }),
+  },
 
   contentContainer: {
     flex: 1,
@@ -193,15 +147,8 @@ const styles = StyleSheet.create({
   },
 
   textOptions: {
-    fontSize: 18,
-    color: '#f5f7fa',
+    fontSize: 18
   },
-
-  headerText: {
-    fontSize: 22,
-    color: '#f5f7fa',
-    fontWeight: 'bold'
-  }
 
 });
 
