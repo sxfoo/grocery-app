@@ -32,10 +32,6 @@ react-native-gesture-handler
 
 ## App Theming and Colors
 
-### **Current Theme** (No primary colors defined yet)
-<div style="display: flex;">
-  <img src="https://github.com/sxfoo/grocery-app/assets/110796551/a17ccb6a-b6b6-4cf3-9d5c-be66b4ff9cf2" height="260" />
-  <img src="https://github.com/sxfoo/grocery-app/assets/110796551/32f4f39a-326a-4f74-9210-0bc3b97eeb6c" height="260" />
-</div>
-
+### **Current Theme** 
+<img src="https://github.com/sxfoo/grocery-app/assets/110796551/b9a51132-76cd-4a82-a1f2-3918d18a1941" alt="MD3Dark" width="600" />
 
