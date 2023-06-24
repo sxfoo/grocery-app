@@ -1,11 +1,13 @@
 import { MD3DarkTheme, MD3LightTheme, PaperProvider, adaptNavigationTheme } from 'react-native-paper';
-import {NavigationContainer, DarkTheme as NavigationDarkTheme, DefaultTheme as NavigationDefaultTheme} from '@react-navigation/native';
+import { Button } from 'react-native'
+import { NavigationContainer, DarkTheme as NavigationDarkTheme, DefaultTheme as NavigationDefaultTheme } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import HomeScreen from './screens/AllLists';
 import ListScreen from './screens/List';
 import Trial from './screens/Trial';
+import SearchItems from './screens/SearchItems';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -13,10 +15,18 @@ const Tab = createBottomTabNavigator();
 function ListStack() {
   return (
     /* Stack Navigation for displaying Grocery List. Refer to screens directory */
-    <Stack.Navigator>
+    <Stack.Navigator initialRouteName='All Lists'>
       <Stack.Screen name="All Lists" component={HomeScreen} />
-      <Stack.Screen name="List" component={ListScreen} initialParams={{ title: 'New list' }} options={({ route }) => ({ title: route.params.title })} />
+      <Stack.Screen
+        name="List"
+        component={ListScreen}
+        initialParams={{ title: 'New list' }}
+        options={({ route }) => ({
+          title: route.params.title
+        })}
+      />
       <Stack.Screen name="Trial" component={Trial} />
+      <Stack.Screen name="Search Items" component={SearchItems} />
     </Stack.Navigator>
   );
 }
@@ -26,7 +36,7 @@ export default function App() {
   /* Placeholder custom theme using react native paper
      In the future we can use other libraries 
      for theming as well? */
-     
+
   /* const CustomTheme = {
     ...NavigationDarkTheme,
     colors: {
@@ -56,7 +66,6 @@ export default function App() {
             tabBarHideOnKeyboard: Platform.OS !== 'ios',
             tabBarStyle: {
               backgroundColor: '#2d2d2d',
-              position: 'absolute',
               borderTopWidth: 0
             }
           }}>

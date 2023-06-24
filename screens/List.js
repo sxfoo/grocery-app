@@ -2,15 +2,14 @@ import { useCallback, useMemo, useRef, useState } from 'react';
 import { View, StyleSheet, TouchableWithoutFeedback, Keyboard } from 'react-native';
 import BottomSheet, { BottomSheetTextInput, BottomSheetBackdrop, BottomSheetView } from '@gorhom/bottom-sheet';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { IconButton, Divider, Card, Text, useTheme } from 'react-native-paper';
+import { IconButton, Divider, Card, Text, useTheme, Button } from 'react-native-paper';
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
+import { useNavigation } from '@react-navigation/native';
 
 /* Displays User's Location at the top*/
 const ListHeader = () => {
-
   return (
     <View style={{ flexDirection: 'column', gap: 20 }}>
-
       <Card>
         <Card.Title
           title="Nearest Supermarket"
@@ -19,20 +18,25 @@ const ListHeader = () => {
           right={(props) => <IconButton {...props} icon="dots-vertical" onPress={() => { }} />}
         />
       </Card>
-      
       <Divider />
-
     </View>
   )
 }
 
-/* Renders List Items. No logic currently */
-const ListOfItems = () => {
+/* Renders List Items. No logic currently. Please edit the styles its messy */
+const ListOfItems = ( {navigation} ) => {
 
   return (
-    <View style={{ marginTop: 50, flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 40 }}>
+    <View style={{ flex: 1, marginBottom: 50,  flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 70 }}>
       <Text style={styles.textOptions}> You haven’t added any items. </Text>
       <Text style={[styles.textOptions, { textAlign: 'center' }]}> Tap to add items that you need from your vendor </Text>
+      <Button
+        style={{borderRadius: 5, width: '100%', height: 50, justifyContent: 'center'}}
+        icon='plus-thick'
+        mode='outlined'
+        onPress={() => navigation.navigate('Search Items')}>
+        Add Items
+      </Button>
     </View>
   )
 }
@@ -42,6 +46,8 @@ const App = () => {
 
   const bottomSheetRef = useRef(null);
   const theme = useTheme();
+
+  const navigation = useNavigation();
 
   const bottomTabHeight = useBottomTabBarHeight();
 
@@ -76,15 +82,15 @@ const App = () => {
         <View style={styles.body}>
 
           <ListHeader />
-          <ListOfItems />
+          <ListOfItems navigation={navigation} />
 
-          {/* The Bottom Sheet. */}
+          {/* The Bottom Sheet. Currently DISABLED */}
           <BottomSheet
             ref={bottomSheetRef}
-            index={0}
+            index={-1}
             snapPoints={snapPoints}
             onChange={handleSheetChanges}
-            backgroundStyle={{backgroundColor: theme.colors.surfaceVariant}}
+            backgroundStyle={{ backgroundColor: theme.colors.surfaceVariant }}
             backdropComponent={renderBackdrop}
             keyboardBehavior='extend'
           >
