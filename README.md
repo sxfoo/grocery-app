@@ -16,9 +16,11 @@ yarn add expo
 ## App Layout
 - **Main overall App:** Starts from `App.js`
 
-- **Screens (using React Navigation):** Located in `/screens`
+- **Screens navigation (using React Navigation):** Located in `src/navigation`
 
-- **Assets (such as images / fonts):** Located in `/assets`
+- **Screens:** Located in `src/screens`
+
+- **Misc data (such as images / fonts):** Located in `/assets`
 
 ## Libraries Used Currently
 
