@@ -4,141 +4,198 @@ import { View, StyleSheet, Animated, KeyboardAvoidingView, FlatList } from 'reac
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import groceryListItem from '../assets/mockDataResource/listOfGroceryItems'
 
-// A singular accordian Card item (used in renderItem in the FlatList)
+// A singular accordion Card item (used in renderItem in the FlatList)
 const AccordionCardItem = ({ textTitle, theme }) => {
 
     // Used to set the card expanded state
     const [isOpen, setIsOpen] = useState(false);
 
-    // States to keep track of unitValue, totalValue and quantity
-    const [unitValue, setUnitValue] = useState('0.00')
-    const [totalValue, setTotalValue] = useState('0.00')
-    const [quantity, setQuantity] = useState('1');
+    // States to keep track of unitValue, totalValue, and quantity
+    const [values, setValues] = useState({
+        unitValue: '0.00',
+        totalValue: '0.00',
+        quantity: '1'
+    });
 
-    // Function to handle onPress of Card
+    // Function to handle onPressoftheCard.
     const handleOpenCloseCard = () => {
-        setIsOpen(!isOpen)
-        if (unitValue === '') {
-            setUnitValue('0.00')
-            setTotalValue('0.00')
-        }
-        if (quantity === '' || '0') {
-            setQuantity('1')
-        }
-    }
-    
-    // Function to handle onChange of quantityValue text input
-    const handleQuantityValueChange = (text) => {
-        setQuantity(text);
-    }
-    
 
-    // Function to handle onChange of unitValue text input
-    // Function used with TotalValue also for now
-    const handleUnitValueChange = (text) => {
+        setIsOpen(!isOpen);
 
-        // Remove any non-numeric characters from the input
+        // If card is closed (not expanded)
+        if (!isOpen) {
+
+            // If invalid values such as empty string, or quantity 0 - set values to default
+            if (values.unitValue === '') {
+                setValues(prevValues => ({
+                    ...prevValues,
+                    unitValue: '0.00',
+                    totalValue: '0.00'
+                }));
+            }
+
+            if (values.quantity === '' || values.quantity === '0') {
+                setValues(prevValues => ({
+                    ...prevValues,
+                    quantity: '1'
+                }));
+            }
+        }
+    };
+
+    // Function to handle onChange of unitValue or totalValue text input
+    const handleValueChange = (text, inputName) => {
+
+        // numericValue to replace text with decimal only numbers (including decimal point)
         const numericValue = text.replace(/[^0-9.]/g, '');
 
-        // Split the value by the decimal point
+        /* To limit the text to 2 decimal points. */
+        // Split string by the first decimal point if present
+        // Take 2 digits to form decimal part.
         const parts = numericValue.split('.');
-
-        // Keep only the first two decimal places, if present
         let limitedValue = numericValue;
         if (parts.length > 1) {
             const decimalPart = parts[1].slice(0, 2);
             limitedValue = `${parts[0]}.${decimalPart}`;
         }
 
-        // Convert limitedValue to a number and multiply it by quantity
-        const multipliedValue = parseFloat(limitedValue) * parseInt(quantity);
+        // Calculate unit value from total value / quantity if the changed input is totalValue
+        // Calculate total value from unit value * quantity if the changed input is unitValue
+        const newOtherValue = inputName === 'totalValue'
+            ? parseFloat(limitedValue) / parseInt(values.quantity)
+            : parseFloat(limitedValue) * parseInt(values.quantity);
 
-        // Set the value to string value or empty string if it's empty
-        setUnitValue(limitedValue || '');
-        setTotalValue(multipliedValue.toFixed(2) || '');
+        // Check if newOtherValue is NaN
+        const isOtherValueNaN = isNaN(newOtherValue);
+
+        // Set values of unit value and total value accordingly
+        setValues(prevValues => ({
+            ...prevValues,
+            unitValue: inputName === 'totalValue' ? (isOtherValueNaN ? '0.00' : newOtherValue.toFixed(2)) : limitedValue,
+            totalValue: inputName === 'totalValue' ? limitedValue : (isOtherValueNaN ? '0.00' : newOtherValue.toFixed(2))
+        }));
     };
 
-    // Function to handle what happens when textinput is not focused
-    // Used with both unitValue and totalValue text input for now.
-    const handleInputBlur = () => {
-        if (unitValue === '') {
-            // Set the value to '0.00' if it's empty and loses focus
-            setUnitValue('0.00');
-            setTotalValue('0.00');
+    // Function to handle onChange of quantityValue text input
+    const handleQuantityValueChange = (text) => {
+
+        const textValue = text.replace(/\D/g, '');
+
+        // Set total Value with a change in quantity
+        const multipliedValue = parseFloat(values.unitValue) * parseInt(text);
+        
+        setValues(prevValues => ({
+            ...prevValues,
+            quantity: textValue,
+            totalValue: multipliedValue.toFixed(2)
+        }));
+    };
+
+    // Function to handle what happens when the value input is focused or blurred
+    const handleValueInputFocusBlur = (inputName) => {
+
+        const value = values[inputName];
+
+        if (value === '0.00') {
+            setValues(prevValues => ({
+                ...prevValues,
+                [inputName]: ''
+            }));
+
+        } else if (value === '') {
+            setValues(prevValues => ({
+                ...prevValues,
+                [inputName]: '0.00'
+            }));
         }
     };
 
-    // Function to handle what happens when textinput is focused
-    // Used with both unitValue and totalValue text input for now.
-    const handleInputFocus = () => {
-        if (unitValue === '0.00') {
-            // Set the value to '0.00' if it's empty and loses focus
-            setUnitValue('');
-            setTotalValue('');
+    // Function to handle what happens when the quantity input is focused or blurred
+    const handleQuantityInputFocusBlur = () => {
+        if (values.quantity === '1') {
+            setValues(prevValues => ({
+                ...prevValues,
+                quantity: ''
+            }));
+        } else if (values.quantity === '' || values.quantity === '0') {
+            setValues(prevValues => ({
+                ...prevValues,
+                quantity: '1'
+            }));
         }
     };
 
     return (
-
-        // React native paper card component
+        // An item is a card 
         <Card
-            mode='elevated'
+            mode="elevated"
             elevation={3}
             style={{
                 borderRadius: 5,
                 backgroundColor: isOpen ? theme.colors.elevation.level1 : theme.colors.background,
-                marginBottom: 15,
+                marginBottom: 15
             }}
             onPress={handleOpenCloseCard}
         >
-
-            {/* List item name */}
             <Card.Title
                 title={textTitle}
-                right={(props) => <IconButton {...props} icon={isOpen ? "minus-thick" : "plus-thick"} />}
+                right={(props) => <IconButton {...props} icon={isOpen ? 'minus-thick' : 'plus-thick'} />}
             />
 
-            {/* Render only if card is expanded */}
+            {/* Only render user's additional options if card is expanded */}
             {isOpen && (
                 <Card.Content style={{ flexDirection: 'column', gap: 20, alignItems: 'center' }}>
+
                     <View style={{ flexDirection: 'row', gap: 10, alignItems: 'center' }}>
+
+                        {/* Unit Value Text Input */}
                         <TextInput
                             style={{ flex: 1 }}
-                            mode='outlined'
+                            mode="outlined"
                             label="Unit Value"
-                            value={unitValue}
-                            onChangeText={handleUnitValueChange}
-                            onFocus={handleInputFocus}
-                            onBlur={handleInputBlur}
-                            left={<TextInput.Affix text='$' />}
-                            keyboardAppearance='dark'
-                            keyboardType='decimal-pad'
+                            value={values.unitValue}
+                            onChangeText={(text) => handleValueChange(text, 'unitValue')}
+                            onFocus={() => handleValueInputFocusBlur('unitValue')}
+                            onBlur={() => handleValueInputFocusBlur('unitValue')}
+                            left={<TextInput.Affix text="$" />}
+                            keyboardAppearance="dark"
+                            keyboardType="decimal-pad"
                         />
+
+                        {/* Total Value Text Input */}
                         <TextInput
                             style={{ flex: 1 }}
-                            mode='outlined'
+                            mode="outlined"
                             label="Total Value"
-                            value={totalValue}
-                            left={<TextInput.Affix text='$' />}
-                            keyboardAppearance='dark'
-                            keyboardType='decimal-pad'
+                            value={values.totalValue}
+                            onChangeText={(text) => handleValueChange(text, 'totalValue')}
+                            onFocus={() => handleValueInputFocusBlur('totalValue')}
+                            onBlur={() => handleValueInputFocusBlur('totalValue')}
+                            left={<TextInput.Affix text="$" />}
+                            keyboardAppearance="dark"
+                            keyboardType="decimal-pad"
                         />
+
+                        {/* Quantity amount Text Input. Caret placement have issues on android (empty string) */}
                         <TextInput
                             style={{ flex: 1, textAlign: 'center' }}
-                            mode='outlined'
+                            mode="outlined"
                             label="Quantity"
-                            value={quantity}
+                            value={values.quantity}
                             onChangeText={handleQuantityValueChange}
-                            keyboardAppearance='dark'
-                            keyboardType='number-pad'
+                            onFocus={handleQuantityInputFocusBlur}
+                            onBlur={handleQuantityInputFocusBlur}
+                            keyboardAppearance="dark"
+                            keyboardType="number-pad"
                         />
                     </View>
 
-                    {/* Button actions for adding item to list. Does not work for now */}
+                    {/* Not working buttons */}
                     <Card.Actions>
                         <Button>Cancel</Button>
                         <Button>Add to list</Button>
                     </Card.Actions>
+
                 </Card.Content>
             )}
         </Card>
