@@ -1,8 +1,8 @@
-import { useState, useRef, useEffect } from 'react';
-import { Text, Searchbar, List, Divider, useTheme, Card, IconButton, Button, TextInput, SegmentedButtons } from 'react-native-paper'
+import { useState, useRef, useEffect, useMemo } from 'react';
+import { Text, Searchbar, List, Divider, useTheme, Card, IconButton, Button, TextInput, Chip } from 'react-native-paper'
 import { View, StyleSheet, Animated, KeyboardAvoidingView, FlatList } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import groceryListItem from '../assets/mockDataResource/listOfGroceryItems'
+import groceryListItem from '../../../assets/mockDataResource/listOfGroceryItems'
 
 // A singular accordion Card item (used in renderItem in the FlatList)
 const AccordionCardItem = ({ textTitle, theme }) => {
@@ -83,7 +83,7 @@ const AccordionCardItem = ({ textTitle, theme }) => {
 
         // Set total Value with a change in quantity
         const multipliedValue = parseFloat(values.unitValue) * parseInt(text);
-        
+
         setValues(prevValues => ({
             ...prevValues,
             quantity: textValue,
@@ -246,11 +246,15 @@ const SearchItemsBar = () => {
 
     // filteredItems is a letter filter (based on searchQuery) of groceryListItem array.
     // returns an array that matches the front few characters of searchQuery
-    const filteredItems = [...groceryListItem.filter((item) => {
-        return (
+    const filteredItems = useMemo(() => {
+        if (searchQuery === '') {
+            return [];
+        }
+        const matchedItems = groceryListItem.filter((item) =>
             item.toLowerCase().startsWith(searchQuery.toLowerCase())
-        )
-    }), searchQuery];
+        );
+        return [...matchedItems, searchQuery];
+    }, [groceryListItem, searchQuery]);
 
     // Animation state variables
     const animationVariable = useRef(new Animated.Value(-40)).current;
@@ -296,12 +300,17 @@ const SearchItemsBar = () => {
             style={styles.searchContainer}
             keyboardVerticalOffset={Platform.OS == "ios" ? 100 : 150} // Adjust the offset as needed
         >
-            <Searchbar
-                style={{ borderRadius: 10, marginHorizontal: 10 }}
-                placeholder="Search"
-                onChangeText={onChangeSearch}
-                value={searchQuery}
-            />
+
+            <View style={{ paddingHorizontal: 10, gap: 10 }}>
+                <Searchbar
+                    style={{ borderRadius: 10 }}
+                    placeholder="Search"
+                    onChangeText={onChangeSearch}
+                    value={searchQuery}
+                />
+
+                <Chip icon="information" onPress={() => console.log('Pressed')}>Example Chip</Chip>
+            </View>
 
             {/* if searchinput value is empty, do not render Flat List */}
             {searchQuery !== '' && (
