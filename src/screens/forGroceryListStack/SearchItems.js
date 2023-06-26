@@ -87,7 +87,7 @@ const AccordionCardItem = ({ textTitle, theme }) => {
         setValues(prevValues => ({
             ...prevValues,
             quantity: textValue,
-            totalValue: multipliedValue.toFixed(2)
+            totalValue: isNaN(multipliedValue) ? prevValues.unitValue : multipliedValue.toFixed(2)
         }));
     };
 

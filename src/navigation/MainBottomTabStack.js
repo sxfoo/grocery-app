@@ -13,7 +13,6 @@ export default function MainBottomTabStack() {
             screenOptions={{
                 tabBarHideOnKeyboard: Platform.OS !== 'ios',
                 tabBarStyle: {
-                    backgroundColor: '#2d2d2d',
                     borderTopWidth: 0,
                 },
             }}

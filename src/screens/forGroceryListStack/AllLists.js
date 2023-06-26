@@ -5,7 +5,8 @@ import { StatusBar } from 'expo-status-bar';
 import { useNavigation } from '@react-navigation/native';
 
 /* A Card that shows Title of the list, no. of items, and users */
-const GroceryCardComponent = ({ navigation }) => (
+const GroceryCardComponent = ({ navigation, theme }) => (
+
     <Card
         style={styles.card}
         onPress={() => { navigation.navigate('List', { title: 'Home' }) }}
@@ -27,14 +28,15 @@ const GroceryCardComponent = ({ navigation }) => (
         <Card.Actions>
             <IconButton
                 icon='account'
-                iconColor='#3E4C59'
-                containerColor='#E4E7EB'
+                iconColor={theme.colors.inverseOnSurface}
+                containerColor= {theme.colors.inverseSurface}
                 mode='contained'
                 size={24}
             />
             <IconButton
                 icon='account-plus'
-                iconColor='#F5F7FA'
+                iconColor={theme.colors.onSurfaceVariant}
+                containerColor= {theme.colors.surfaceVariant}
                 mode='contained'
                 size={24}
             />
@@ -43,8 +45,8 @@ const GroceryCardComponent = ({ navigation }) => (
 );
 
 /* A Card to navigate users to create a new list */
-const NewListComponent = ({ navigation }) => {
-    const theme = useTheme();
+const NewListComponent = ({ navigation, theme }) => {
+
     return (
         <Card
             style={[styles.card, { backgroundColor: theme.colors.elevation.level3 }]}
@@ -64,12 +66,15 @@ const NewListComponent = ({ navigation }) => {
 
 /* The overall Screen to be displayed. Shows all the user's created grocery lists */
 const HomeScreen = () => {
+
     const navigation = useNavigation();
+    const theme = useTheme();
+
     return (
         <SafeAreaView style={styles.container}>
             <ScrollView style={styles.scrollView}>
-                <GroceryCardComponent navigation={navigation} />
-                <NewListComponent navigation={navigation} />
+                <GroceryCardComponent navigation={navigation} theme={theme} />
+                <NewListComponent navigation={navigation} theme={theme} />
                 <Button title="This is the button title"
                     onPress={() => navigation.navigate('Trial')}> Click me to navigate to the profile</Button>
             </ScrollView>
