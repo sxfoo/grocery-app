@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect, useMemo } from 'react';
-import { Text, Searchbar, List, Divider, useTheme, Card, IconButton, Button, TextInput, Chip, TouchableRipple} from 'react-native-paper'
+import { Text, Searchbar, List, Divider, useTheme, Card, IconButton, Button, TextInput, Chip, TouchableRipple } from 'react-native-paper'
 import { View, StyleSheet, Animated, KeyboardAvoidingView, FlatList } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import groceryListItem from '../../../assets/mockDataResource/listOfGroceryItems'
@@ -135,16 +135,24 @@ const AccordionCardItem = ({ textTitle, theme }) => {
                 backgroundColor: isOpen ? theme.colors.elevation.level1 : theme.colors.background,
                 marginBottom: 15
             }}
-            onPress={handleOpenCloseCard}
         >
-            <Card.Title
-                title={textTitle}
-                right={(props) => <IconButton {...props} icon={isOpen ? 'minus-thick' : 'plus-thick'} />}
-            />
+            <TouchableRipple onPress={handleOpenCloseCard}>
+                <Card.Title
+                    title={textTitle}
+                    titleVariant={'bodyLarge'}
+                    right={(props) => (
+                        <IconButton
+                            {...props}
+                            size={24}
+                            icon={isOpen ? 'minus-thick' : 'plus-thick'}
+                        />
+                    )}
+                />
+            </TouchableRipple>
 
             {/* Only render user's additional options if card is expanded */}
             {isOpen && (
-                <Card.Content style={{ flexDirection: 'column', gap: 20, alignItems: 'center' }}>
+                <Card.Content style={{ flexDirection: 'column', gap: 40 }}>
 
                     <View style={{ flexDirection: 'row', gap: 10, alignItems: 'center' }}>
 
@@ -191,10 +199,13 @@ const AccordionCardItem = ({ textTitle, theme }) => {
                     </View>
 
                     {/* Not working buttons */}
+
                     <Card.Actions>
-                        <Button>Cancel</Button>
+                        <Button onPress={handleOpenCloseCard}>Cancel</Button>
+                        <View style={{flex : 1}} />
                         <Button>Add to list</Button>
                     </Card.Actions>
+
 
                 </Card.Content>
             )}
@@ -253,7 +264,7 @@ const SearchItemsBar = () => {
         const matchedItems = groceryListItem.filter((item) =>
             item.name.toLowerCase().startsWith(searchQuery.toLowerCase())
         );
-        return [...matchedItems, {id: "userInput", name: searchQuery, category: "Uncategorised"}];
+        return [...matchedItems, { id: "userInput", name: searchQuery, category: "Uncategorised" }];
     }, [groceryListItem, searchQuery]);
 
     // Animation state variables
