@@ -4,28 +4,43 @@ import { View, StyleSheet, Animated, KeyboardAvoidingView, FlatList } from 'reac
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import groceryListItem from '../../../assets/mockDataResource/listOfGroceryItems'
 
-import { db, collection, addDoc } from '../../../firebaseConfig'
+import { db, ref, set, push } from '../../../firebaseConfig'
 
-{/* Send item details to server */}
-const TestingAdd = async ( { item, values } ) => {
+{/* Send item details to server */ }
+const TestingAdd = ({ item, values }) => {
 
+    // Replace listID with current listID
+    const listId = "-Mk29uV8ULSgYp2s1";
+
+    // Reference to list/${listId}/items node
+    const itemRef = ref(db, `lists/${listId}/items`);
+
+    // Append data to the list with a unique key
+    const newItemRef = push(itemRef)
+    const newItemId = newItemRef.key
+
+    // Data of the item to be added to server
     const data = {
-        itemID: item.id, 
+        itemID: newItemId,
         itemName: item.name,
         category: item.category,
         quantity: values.quantity,
         unitPrice: values.unitValue,
         totalPrice: values.totalValue,
+        completed: false
     }
 
-    console.log("Document written: ", data)
+    console.log(data)
 
     try {
-        const docRef = await addDoc(collection(db, "/users/LJoaz5f58mqE5X6TyO21/Home"), data);
-        console.log("Document written with ID: ", docRef.id);
-    } catch (e) {
-        console.error("Error adding document: ", e);
-    } 
+        set(newItemRef, data);
+        console.log('New item added successfully!');
+        console.log('Generated item ID:', newItemId);
+    }
+
+    catch (error) {
+        console.error('Error adding new item:', error);
+    }; 
 }
 
 // A singular accordion Card item (used in renderItem in the FlatList)
@@ -227,7 +242,7 @@ const AccordionCardItem = ({ item, textTitle, theme }) => {
                     <Card.Actions>
                         <Button onPress={handleOpenCloseCard}>Cancel</Button>
                         <View style={{ flex: 1 }} />
-                        <Button onPress={() => {TestingAdd({item: item, values: values})}}>Add to list</Button>
+                        <Button onPress={() => { TestingAdd({ item: item, values: values }) }}>Add to list</Button>
                     </Card.Actions>
 
                 </Card.Content>

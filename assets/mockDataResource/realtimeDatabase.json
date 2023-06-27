@@ -1,0 +1,43 @@
+{
+    "lists": {
+        "-Mk29uV8ULSgYp2s1": {
+            "name": "Grocery List 1",
+            "createdBy": "user1",
+            "timestamp": 1624847200,
+            "items": {
+                "-Mk29vGKwZrWdmlRq": {
+                    "name": "Apples",
+                    "quantity": 5,
+                    "completed": false
+                },
+                "-Mk29vWXi1pdxzm7a": {
+                    "name": "Milk",
+                    "quantity": 2,
+                    "completed": true
+                },
+                "-Mk29wAix0T1GPNUS": {
+                    "name": "Bread",
+                    "quantity": 1,
+                    "completed": false
+                }
+            }
+        },
+        "-Mk29x9F1zCzWzVUW": {
+            "name": "Grocery List 2",
+            "createdBy": "user2",
+            "timestamp": 1624850800,
+            "items": {
+                "-Mk29xSujBg1zBOnL": {
+                    "name": "Eggs",
+                    "quantity": 12,
+                    "completed": false
+                },
+                "-Mk29xjVeyl0FjCvh": {
+                    "name": "Chicken",
+                    "quantity": 2,
+                    "completed": false
+                }
+            }
+        }
+    }
+}
