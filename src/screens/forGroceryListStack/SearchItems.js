@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect, useMemo } from 'react';
-import { Text, Searchbar, List, Divider, useTheme, Card, IconButton, Button, TextInput, Chip } from 'react-native-paper'
+import { Text, Searchbar, List, Divider, useTheme, Card, IconButton, Button, TextInput, Chip, TouchableRipple} from 'react-native-paper'
 import { View, StyleSheet, Animated, KeyboardAvoidingView, FlatList } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import groceryListItem from '../../../assets/mockDataResource/listOfGroceryItems'
@@ -209,8 +209,8 @@ const renderItem = ({ item, theme, searchQuery }) => {
     // sets the color for the rest of the letters to be onSurfaceDisabled (react paper theme)
     const inputTextLength = searchQuery.length;
 
-    const front = item.slice(0, inputTextLength);
-    const back = item.slice(inputTextLength);
+    const front = item.name.slice(0, inputTextLength);
+    const back = item.name.slice(inputTextLength);
 
     const textTitle = (
         <Text>
@@ -251,9 +251,9 @@ const SearchItemsBar = () => {
             return [];
         }
         const matchedItems = groceryListItem.filter((item) =>
-            item.toLowerCase().startsWith(searchQuery.toLowerCase())
+            item.name.toLowerCase().startsWith(searchQuery.toLowerCase())
         );
-        return [...matchedItems, searchQuery];
+        return [...matchedItems, {id: "userInput", name: searchQuery, category: "Uncategorised"}];
     }, [groceryListItem, searchQuery]);
 
     // Animation state variables
@@ -327,7 +327,7 @@ const SearchItemsBar = () => {
                     {delayedRendering && (
                         <FlatList
                             data={filteredItems}
-                            keyExtractor={(_, index) => index.toString()}
+                            keyExtractor={(item) => item.id.toString()}
                             renderItem={(props) => renderItem({ ...props, theme, searchQuery })}
                             keyboardShouldPersistTaps='handled'
 
