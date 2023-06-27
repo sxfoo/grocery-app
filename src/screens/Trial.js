@@ -1,8 +1,12 @@
 import React, {useState, useEffect} from "react";
-import {View, ScrollView, SafeAreaView, Text, StyleSheet} from "react-native";
+import {View, ScrollView, SafeAreaView, Text, StyleSheet, TouchableOpacity} from "react-native";
 import {FontAwesome} from '@expo/vector-icons';
 import {Dropdown} from 'react-native-element-dropdown'
 import { StatusBar, Platform } from "react-native";
+import { FlatList } from "react-native-gesture-handler";
+import { Card, Divider, IconButton} from "react-native-paper";
+import { useNavigation } from "@react-navigation/native";
+
 
 const styles = StyleSheet.create({
     container: {
@@ -10,20 +14,16 @@ const styles = StyleSheet.create({
         paddingLeft: '4%',
         paddingRight: '4%',
     },
-    header: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-    },
 
     title: {
-        fontSize: 30,
+        fontSize: 20,
         fontWeight: 'bold',
         color: 'white',
     },
     user: {
         fontWeight:'medium',
         color: 'grey',
-        fontSize: 20,
+        fontSize: 18,
     },
 
     items: {
@@ -35,12 +35,14 @@ const styles = StyleSheet.create({
     itemstitle:{
         fontWeight: 'medium',
         color: 'white',
-        fontSize: 15,
+        fontSize: 16,
         width: '70%',
     },
 
     itemprice:{
         color: '#FDB2AD',
+        fontSize: 18,
+        fontWeight: 'medium',
         width: '25%',
         marginTop: 'auto',
         marginBottom: 'auto',
@@ -78,43 +80,25 @@ const styles = StyleSheet.create({
 
 
 const Profile = () => {
+    const navigation = useNavigation()
     return(
-        <View style = {[styles.container, styles.header, {paddingTop: '2%',}]}> 
-            <View> 
-                <Text style={styles.title}>Hello, </Text>
-                <Text style = {styles.user}>User </Text>
-            </View>
-            <FontAwesome style={{marginBottom:'auto', marginTop:'auto'}} name="user-circle" size = {42} color='gray'/>    
+        <View style = {[styles.container, {paddingTop: 2}]}> 
+            <Card onPress={() => {navigation.navigate('Settings')}} >
+                <Card.Title
+                    title="Hello"
+                    subtitle="User"
+                    right={(props) => <IconButton {...props} icon="account-circle" size={40}/>}
+                    titleStyle = {styles.title}
+                    titleVariant="titleLarge"
+                    subtitleStyle = {styles.user}
+                />
+            </Card>
+            
         </View>
     )
 };
 
 const Recent_expense = () =>{
-    const [selected, setSelected] = useState(""); /* default select is None*/
-/*
-    const data = [
-        {label:'Recent', value: '1'},
-        {label:'Ascending order', value: '2'},
-        {label:'Descending order', value: '3'},
-    ];
-
-    return(
-        <Dropdown
-            data = {data}
-            style = {style.dropdown}
-            selectedTextStyle = {style.selectedTextStyle}
-            placeholderStyle = {style.placeholderStyle}
-            maxHeight={200}
-            value = "selected"
-            valueField="value"
-            labelField="label"
-            placeholder="Recent"
-            onChange={item => {setSelected(item.value)}}
-
-        />
-    )
-};
-*/
     const [data, setData] = useState([])
     const [loading, setLoading] = useState(true)
     const url = "https://fakestoreapi.com/products";
@@ -123,43 +107,74 @@ const Recent_expense = () =>{
         fetch(url)
         .then((response) => response.json()) /*sucessful response in json format*/
         
-        .then((json) => setData(json)) /*Convert response to json format*/
+        .then((json) => setData(json)) /*Convert response to json format in data*/
         .catch((error) => console.error(error)) /*fails to fetch*/
         .finally(()=> setLoading(false)); /*Regardless whether it fails or not*/
         
     },[])
 
+    const renderItem = ({item}) => (
+        <View key={item.id} style={{ marginTop: '2%' }}>
+        <View style={styles.items}>
+          <Text numberOfLines={1} ellipsizeMode="tail" style={styles.itemstitle}>
+            {item.title}
+          </Text>
+          <Text style={styles.itemprice}>-${item.price}</Text>
+        </View>
+        <View>
+          <Text style={{ color: 'grey' }}>04 Nov 2022</Text>
+        </View>
+      </View>
+    );
+
     return(
-        <ScrollView style = {styles.container}>
+        <View style = {styles.container}>
+        <Card>
+            <View style = {styles.container}>
+            <Text style = {styles.title}>Expenses </Text>
+            <TouchableOpacity>
+                <IconButton icon = "filter-outline" iconColor='white'/>
+            </TouchableOpacity>
             {
                 loading? <Text> Loading...</Text>: (
-                    data.map((post) =>
+                    <FlatList
+                        data={data}
+                        renderItem={renderItem} /*will be called each item in the array*/
+                        keyExtractor={(item) => item.id.toString()}
+                        style = {{height: 200}}
+                        showsVerticalScrollIndicator = {false}
+                    />
+                    )
+                /*
+                   data.map((post) =>
                     (
-                        <View style = {{marginTop: '1%'}}>
+                      <View key = {post.id} style = {{marginTop: '2%'}}>
                             <View style = {styles.items}> 
-                                <Text style = {styles.itemstitle}> {post.title}</Text>
-                                <Text style = {styles.itemprice}> -{post.price}</Text>
+                                <Text numberOfLines={1} ellipsizeMode="tail" style = {styles.itemstitle}>
+                                    {post.title}
+                                </Text>
+                                <Text style = {styles.itemprice}> -${post.price}</Text>
                             </View>
                             <View>
                                 <Text style = {{color: 'grey',}}> 04 Nov 2022</Text>
                             </View>
                         </View>
                     ))
-                    )
-                
-            }
-        </ScrollView>
+                */
+            }       
+            </View>
+
+        </Card>
+        </View>
     );
 }
 
 const TrialScreen = () => {
     return(
         <SafeAreaView style = {[{marginTop: StatusBar.currentHeight}]}>
-            <ScrollView> 
             <Profile/>
             <Text style = {{fontSize: 48}}>Insert graph here </Text>
             <Recent_expense/>
-            </ScrollView>
         </SafeAreaView>
 
         
