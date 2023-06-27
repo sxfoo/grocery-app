@@ -35,7 +35,7 @@ export default function MainBottomTabStack() {
                 name="Profile"
                 component={Trial}
                 options={{
-                    headerShown: true,
+                    headerShown: false, /*used to be true*/
                     title: 'Profile',
                     tabBarIcon: ({ color, size }) => (
                         <MaterialCommunityIcons name="account-outline" color={color} size={size} />
