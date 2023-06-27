@@ -4,8 +4,32 @@ import { View, StyleSheet, Animated, KeyboardAvoidingView, FlatList } from 'reac
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import groceryListItem from '../../../assets/mockDataResource/listOfGroceryItems'
 
+import { db, collection, addDoc } from '../../../firebaseConfig'
+
+{/* Send item details to server */}
+const TestingAdd = async ( { item, values } ) => {
+
+    const data = {
+        itemID: item.id, 
+        itemName: item.name,
+        category: item.category,
+        quantity: values.quantity,
+        unitPrice: values.unitValue,
+        totalPrice: values.totalValue,
+    }
+
+    console.log("Document written: ", data)
+
+    try {
+        const docRef = await addDoc(collection(db, "/users/LJoaz5f58mqE5X6TyO21/Home"), data);
+        console.log("Document written with ID: ", docRef.id);
+    } catch (e) {
+        console.error("Error adding document: ", e);
+    } 
+}
+
 // A singular accordion Card item (used in renderItem in the FlatList)
-const AccordionCardItem = ({ textTitle, theme }) => {
+const AccordionCardItem = ({ item, textTitle, theme }) => {
 
     // Used to set the card expanded state
     const [isOpen, setIsOpen] = useState(false);
@@ -202,10 +226,9 @@ const AccordionCardItem = ({ textTitle, theme }) => {
 
                     <Card.Actions>
                         <Button onPress={handleOpenCloseCard}>Cancel</Button>
-                        <View style={{flex : 1}} />
-                        <Button>Add to list</Button>
+                        <View style={{ flex: 1 }} />
+                        <Button onPress={() => {TestingAdd({item: item, values: values})}}>Add to list</Button>
                     </Card.Actions>
-
 
                 </Card.Content>
             )}
@@ -232,7 +255,7 @@ const renderItem = ({ item, theme, searchQuery }) => {
 
     // How each item in flatlist is rendered: 
     return (
-        <AccordionCardItem textTitle={textTitle} theme={theme} />
+        <AccordionCardItem item={item} textTitle={textTitle} theme={theme} />
     );
 };
 
