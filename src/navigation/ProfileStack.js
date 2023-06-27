@@ -16,13 +16,11 @@ export default function ProfileStack() {
     return (
 
         <Stack.Navigator initialRouteName='Profile main'>
-
             <Stack.Screen
                 name = "Trial"
                 component={Trial}
                 options = {{headerShown: false}}
             />
-
             <Stack.Screen
                 name="Settings"
                 component={Settings}
