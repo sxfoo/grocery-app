@@ -75,8 +75,6 @@ const HomeScreen = () => {
             <ScrollView style={styles.scrollView}>
                 <GroceryCardComponent navigation={navigation} theme={theme} />
                 <NewListComponent navigation={navigation} theme={theme} />
-                <Button title="This is the button title"
-                    onPress={() => navigation.navigate('Trial')}> Click me to navigate to the profile</Button>
             </ScrollView>
         </SafeAreaView>
     );

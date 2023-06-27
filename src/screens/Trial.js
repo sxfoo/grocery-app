@@ -82,7 +82,7 @@ const styles = StyleSheet.create({
 const Profile = () => {
     const navigation = useNavigation()
     return(
-        <View style = {[styles.container, {paddingTop: 2}]}> 
+        <View style = {[styles.container, {paddingTop: 4}]}> 
             <Card onPress={() => {navigation.navigate('Settings')}} >
                 <Card.Title
                     title="Hello"
@@ -131,10 +131,12 @@ const Recent_expense = () =>{
         <View style = {styles.container}>
         <Card>
             <View style = {styles.container}>
-            <Text style = {styles.title}>Expenses </Text>
-            <TouchableOpacity>
-                <IconButton icon = "filter-outline" iconColor='white'/>
-            </TouchableOpacity>
+                <View style = {{flexDirection: 'row', justifyContent: 'space-between'}}> 
+                    <Text style = {[styles.title, {marginBottom:'auto', marginTop: 'auto'}]}>Expenses </Text>
+                    <TouchableOpacity>
+                        <IconButton icon = "filter-outline" iconColor='white' onPress = {() => {}}/>
+                    </TouchableOpacity>
+                </View>
             {
                 loading? <Text> Loading...</Text>: (
                     <FlatList

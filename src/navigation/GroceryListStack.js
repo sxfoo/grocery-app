@@ -33,20 +33,11 @@ export default function ListStack() {
             />
 
             <Stack.Screen
-                name="Trial"
-                component={Trial}
-            />
-
-            <Stack.Screen
                 name="Search Items"
                 component={SearchItems}
             />
 
-            <Stack.Screen
-                name = "Settings"
-                component={Settings}
-            />
-
         </Stack.Navigator>
+
     );
 }

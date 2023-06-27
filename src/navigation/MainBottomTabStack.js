@@ -1,8 +1,10 @@
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
+import ProfileStack from './ProfileStack';
 import ListStack from './GroceryListStack'
 import Trial from '../screens/Trial'
+import Settings from '../screens/Settings'
 
 const BottomTab = createBottomTabNavigator();
 
@@ -33,7 +35,7 @@ export default function MainBottomTabStack() {
 
             <BottomTab.Screen
                 name="Profile"
-                component={Trial}
+                component={ProfileStack}
                 options={{
                     headerShown: false, /*used to be true*/
                     title: 'Profile',
