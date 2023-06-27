@@ -1,31 +1,32 @@
 import React from "react";
-import { View, Text, TouchableOpacity } from "react-native-ui-lib";
+import { StyleSheet } from "react-native";
+import { View, Text, TouchableOpacity, Icon } from "react-native-ui-lib";
 import { Card, Divider, IconButton} from "react-native-paper";
-import { FlatList } from "react-native-gesture-handler";
+import { FlatList, ScrollView } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 const customisation = [
     {
         header: 'General',
         items: [
-            { id: 'Language', icon: 'globe', label: 'Language', type: 'select'},
-            { id: 'darkMode', icon: 'moon', label: 'Dark Mode', type: 'toggle'},
+            { id: 'Language', icon: 'translate', label: 'Change Language', type: 'select'},
+            { id: 'darkMode', icon: 'theme-light-dark', label: 'Dark Mode', type: 'toggle'},
         ],
     },
     {
         header: 'Notification',
         items:[
-            {id: 'Notification', icon: 'notification', label: 'Enable push-notification', type: 'toggle'},
+            {id: 'Notification', icon: 'bell-alert', label: 'Enable push-notification', type: 'toggle'},
 
         ],
     },
     {
         header: 'Account',
         items:[
-            {id: 'Username', icon: 'name', label: 'Change Username', type:'link'},
+            {id: 'Username', icon: 'account-box', label: 'Change Username', type:'link'},
             {id: 'Email', icon: 'email', label: 'Change Email', type: 'link'},
-            {id: 'Password', icon: 'password', label: 'Change Password', type:'link'},
-            {id: 'Delete', icon: 'data', label:'Delete account', type: 'link'},
+            {id: 'Password', icon: 'lock', label: 'Change Password', type:'link'},
+            {id: 'Delete', icon: 'delete', label:'Delete account', type: 'link'},
         ],
     },
 
@@ -37,25 +38,46 @@ const customisation = [
     }
 ];
 
+const styles = StyleSheet.create({
+    headertext: {
+        fontSize: 14,
+        fontWeight: 'bold',
+        color: 'grey',
+        textTransform: 'uppercase',
+        letterSpacing: 1.1,
+    },
+    header: {
+        marginBottom: 12,
+        paddingHorizontal: 12,
+    },
+})
+
+
+
 const Settings = () => {
     return(
         <SafeAreaView>
+            <ScrollView> 
+        {/* it's basically a loop*/}
             {customisation.map(({header, items}) => (
-                <View key={header}>
-                    <Text> {header} </Text>
-                </View>
-            
+                <View key={header} style = {styles.header}>
+                    <Text style = {styles.headertext}>{header} </Text>        
                 <View>
-                    {items.map(({label}) => (
-                        <View>
-                        <TouchableOpacity> 
-                            <Text>{label}</Text>
-                    
+                {/* Another loop*/}
+                    {items.map(({label, id, type, icon}) => (
+                        <View key={id}>
+                        <TouchableOpacity onPress ={() => {}}>
+                            <View>
+                                <IconButton icon = {icon} />
+                                <Text>{label}</Text>
+                            </View>
                         </TouchableOpacity>
                         </View>
                     ))}
                 </View>
+                </View>
             ))}
+            </ScrollView>
         </SafeAreaView>
     )
 };
