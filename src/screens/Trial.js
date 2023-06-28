@@ -1,10 +1,10 @@
 import React, {useState, useEffect} from "react";
-import {View, ScrollView, SafeAreaView, Text, StyleSheet, TouchableOpacity} from "react-native";
+import {View, ScrollView, SafeAreaView, StyleSheet, TouchableOpacity} from "react-native";
 import {FontAwesome} from '@expo/vector-icons';
 import {Dropdown} from 'react-native-element-dropdown'
 import { StatusBar, Platform } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
-import { Card, Divider, IconButton} from "react-native-paper";
+import { Card, Divider, IconButton, Text, useTheme} from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
 
 
@@ -18,11 +18,9 @@ const styles = StyleSheet.create({
     title: {
         fontSize: 20,
         fontWeight: 'bold',
-        color: 'white',
     },
     user: {
         fontWeight:'medium',
-        color: 'grey',
         fontSize: 18,
     },
 
@@ -34,7 +32,6 @@ const styles = StyleSheet.create({
 
     itemstitle:{
         fontWeight: 'medium',
-        color: 'white',
         fontSize: 16,
         width: '70%',
     },
@@ -81,9 +78,10 @@ const styles = StyleSheet.create({
 
 const Profile = () => {
     const navigation = useNavigation()
+    const theme = useTheme()
     return(
         <View style = {[styles.container, {paddingTop: 4}]}> 
-            <Card onPress={() => {navigation.navigate('Settings')}} >
+            <Card onPress={() => {navigation.navigate('Settings')}} style= {{backgroundColor: theme.colors.inverseOnSurface}} >
                 <Card.Title
                     title="Hello,"
                     subtitle="Sally Wong"
@@ -102,6 +100,7 @@ const Recent_expense = () =>{
     const [data, setData] = useState([])
     const [loading, setLoading] = useState(true)
     const url = "https://fakestoreapi.com/products";
+    const theme = useTheme()
 
     useEffect(() => {
         fetch(url)
@@ -129,7 +128,7 @@ const Recent_expense = () =>{
 
     return(
         <View style = {styles.container}>
-        <Card>
+        <Card style = {{backgroundColor: theme.colors.elevation.level3}}>
             <View style = {styles.container}>
                 <View style = {{flexDirection: 'row', justifyContent: 'space-between'}}> 
                     <Text style = {[styles.title, {marginBottom:'auto', marginTop: 'auto'}]}>Expenses </Text>

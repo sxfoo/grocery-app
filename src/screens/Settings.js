@@ -1,8 +1,8 @@
 import React from "react";
 import { StyleSheet } from "react-native";
 import { Image } from "react-native-ui-lib";
-import { View, Text, TouchableOpacity, Icon } from "react-native-ui-lib";
-import { Card, Divider, IconButton, useTheme} from "react-native-paper";
+import { View, TouchableOpacity, Icon } from "react-native-ui-lib";
+import { Card, Divider, IconButton, Text, useTheme} from "react-native-paper";
 import { FlatList, ScrollView, Switch } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
 import FeatherIcon from 'react-native-vector-icons/Feather';
@@ -83,7 +83,6 @@ const styles = StyleSheet.create({
         fontSize: 20,
         marginTop: 15,
         fontWeight: '600',
-        color: 'white',
     },
 
     profile_email: {
@@ -97,7 +96,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center', /*items in this view container will be aligned in center vertically*/
         justifyContent: 'flex-start',
-        backgroundColor: '#6b7a87',
+        /*backgroundColor: '#6b7a87',*/
         height: 60,
         marginBottom: 10,
         paddingHorizontal: 6,
@@ -117,6 +116,7 @@ const Settings = () => {
         Notification: true,
         location: true,
     });
+    const theme = useTheme()
     return(
         <SafeAreaView>
             <ScrollView>
@@ -149,7 +149,7 @@ const Settings = () => {
                     {items.map(({label, id, type, icon}) => (
                         <View key={id}>
                         <TouchableOpacity onPress ={() => {}}>
-                            <View style = {styles.row}>
+                            <View style = {[styles.row, {backgroundColor: theme.colors.inverseOnSurface,}]}>
                                 <View style = {styles.icon}> 
                                     <IconButton icon = {icon} />
                                 </View>
