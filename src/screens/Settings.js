@@ -1,5 +1,6 @@
 import React from "react";
 import { StyleSheet } from "react-native";
+import { Image } from "react-native-ui-lib";
 import { View, Text, TouchableOpacity, Icon } from "react-native-ui-lib";
 import { Card, Divider, IconButton} from "react-native-paper";
 import { FlatList, ScrollView } from "react-native-gesture-handler";
@@ -50,14 +51,45 @@ const styles = StyleSheet.create({
         marginBottom: 12,
         paddingHorizontal: 12,
     },
-})
+    profile: {
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    profile_avatar:{
+        width: 72,
+        height: 72,
+        borderRadius: 9999,
+    },
+    profile_name:{
+        fontSize: 18,
+        fontWeight: '600',
+        color: 'white',
+    },
+});
 
-
+const PROFILE_PIC = "https://static.wikia.nocookie.net/disney/images/3/3c/Profile_-_Sulley.jpg/revision/latest?cb=20200817112818";
 
 const Settings = () => {
     return(
         <SafeAreaView>
-            <ScrollView> 
+            <ScrollView>
+            <View style = {styles.profile}>
+                <TouchableOpacity onPress = {() => {}}>
+                    <View style = {styles.avatar}>
+                        <Image
+                            alt = "Profile Picture"
+                            source={{ uri: PROFILE_PIC}}
+                            style = {styles.profile_avatar}
+                        />
+                    </View>
+
+                    <View style = {styles.profile_write}>
+                        <IconButton icon='pencil-circle' size={42}/>
+                    </View>
+                </TouchableOpacity>
+
+                <Text style = {styles.profile_name}> Sally Wong</Text>
+            </View>
         {/* it's basically a loop*/}
             {customisation.map(({header, items}) => (
                 <View key={header} style = {styles.header}>
@@ -81,5 +113,7 @@ const Settings = () => {
         </SafeAreaView>
     )
 };
+
+
 
 export default Settings;
