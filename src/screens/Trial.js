@@ -85,8 +85,8 @@ const Profile = () => {
         <View style = {[styles.container, {paddingTop: 4}]}> 
             <Card onPress={() => {navigation.navigate('Settings')}} >
                 <Card.Title
-                    title="Hello"
-                    subtitle="User"
+                    title="Hello,"
+                    subtitle="Sally Wong"
                     right={(props) => <IconButton {...props} icon="account-circle" size={40}/>}
                     titleStyle = {styles.title}
                     titleVariant="titleLarge"
