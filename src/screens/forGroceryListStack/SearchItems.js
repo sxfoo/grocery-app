@@ -2,26 +2,34 @@ import { useState, useRef, useEffect, useMemo } from 'react';
 import { Text, Searchbar, List, Divider, useTheme, Card, IconButton, Button, TextInput, Chip, TouchableRipple } from 'react-native-paper'
 import { View, StyleSheet, Animated, KeyboardAvoidingView, FlatList } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+
+// Mock Data Resource
 import groceryListItem from '../../../assets/mockDataResource/listOfGroceryItems'
 
+// Unique key generator
+import { randomUUID } from 'expo-crypto'; 
+
+// Storage imports (AsyncStorage for offline, Firebase database for online)
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { db, ref, set, push } from '../../../firebaseConfig'
+import { remove } from 'firebase/database';
 
-{/* Send item details to server */ }
-const TestingAdd = ({ item, values }) => {
+// Utility functions
+import { printAllData, removeAllData, storeItemData } from '../../usefulFunctions/asyncStorageUtils';
 
+
+const AddToList = ({ item, values, setSearchQuery }) => {
+
+    /*  OFFLINE STORAGE */
     // Replace listID with current listID
     const listId = "-Mk29uV8ULSgYp2s1";
-
-    // Reference to list/${listId}/items node
-    const itemRef = ref(db, `lists/${listId}/items`);
-
-    // Append data to the list with a unique key
-    const newItemRef = push(itemRef)
-    const newItemId = newItemRef.key
+    
+    // Random unique ID for item:
+    const itemUUID = randomUUID();
 
     // Data of the item to be added to server
     const data = {
-        itemID: newItemId,
+        itemID: itemUUID,
         itemName: item.name,
         category: item.category,
         quantity: values.quantity,
@@ -30,21 +38,29 @@ const TestingAdd = ({ item, values }) => {
         completed: false
     }
 
-    console.log(data)
+    console.log(data);
+
+    storeItemData(listId, data, itemUUID)
+
+    /* ONLINE STORAGE */
+
+    // Reference to list/${listId}/items node
+    const itemRef = ref(db, `lists/${listId}/items/`+ itemUUID);
 
     try {
-        set(newItemRef, data);
-        console.log('New item added successfully!');
-        console.log('Generated item ID:', newItemId);
+        set(itemRef, data);
+        console.log('New item added successfully to Realtime Database:', itemUUID);
     }
 
     catch (error) {
-        console.error('Error adding new item:', error);
+        console.error('Error adding new item to Realtime Database:', error);
     }; 
+
+    setSearchQuery('');
 }
 
 // A singular accordion Card item (used in renderItem in the FlatList)
-const AccordionCardItem = ({ item, textTitle, theme }) => {
+const AccordionCardItem = ({ item, textTitle, theme, setSearchQuery }) => {
 
     // Used to set the card expanded state
     const [isOpen, setIsOpen] = useState(false);
@@ -237,12 +253,12 @@ const AccordionCardItem = ({ item, textTitle, theme }) => {
                         />
                     </View>
 
-                    {/* Not working buttons */}
-
                     <Card.Actions>
                         <Button onPress={handleOpenCloseCard}>Cancel</Button>
                         <View style={{ flex: 1 }} />
-                        <Button onPress={() => { TestingAdd({ item: item, values: values }) }}>Add to list</Button>
+                        <Button onPress={() => {
+                            AddToList({ item: item, values: values, setSearchQuery: setSearchQuery })
+                        }}>Add to list</Button>
                     </Card.Actions>
 
                 </Card.Content>
@@ -252,7 +268,7 @@ const AccordionCardItem = ({ item, textTitle, theme }) => {
 };
 
 // renderItem function is used to describe the rendering of each item in the Flat list
-const renderItem = ({ item, theme, searchQuery }) => {
+const renderItem = ({ item, theme, searchQuery, setSearchQuery }) => {
 
     // For animation stuff, bolds the matching letters,
     // sets the color for the rest of the letters to be onSurfaceDisabled (react paper theme)
@@ -270,7 +286,7 @@ const renderItem = ({ item, theme, searchQuery }) => {
 
     // How each item in flatlist is rendered: 
     return (
-        <AccordionCardItem item={item} textTitle={textTitle} theme={theme} />
+        <AccordionCardItem item={item} textTitle={textTitle} theme={theme} setSearchQuery={setSearchQuery} />
     );
 };
 
@@ -299,9 +315,21 @@ const SearchItemsBar = () => {
         if (searchQuery === '') {
             return [];
         }
+
+        // Filter items in groceryListItem (mock data resource) based on searchQuery
+        const lowerCaseSearchQuery = searchQuery.toLowerCase();
         const matchedItems = groceryListItem.filter((item) =>
-            item.name.toLowerCase().startsWith(searchQuery.toLowerCase())
+            item.name.toLowerCase().startsWith(lowerCaseSearchQuery)
         );
+
+        // If searchQuery exist in list, do not include user search inside
+        const lowerCaseMatchedItems = matchedItems.map((item) => item.name.toLowerCase());
+        const searchQueryExists = lowerCaseMatchedItems.includes(lowerCaseSearchQuery);
+
+        if (searchQueryExists) {
+            return matchedItems;
+        }
+
         return [...matchedItems, { id: "userInput", name: searchQuery, category: "Uncategorised" }];
     }, [groceryListItem, searchQuery]);
 
@@ -341,6 +369,9 @@ const SearchItemsBar = () => {
         }
     }, [searchQuery]);
 
+
+    const searchInputRef = useRef(null);
+
     return (
 
         // Renders the search bar, and the flat list.
@@ -352,13 +383,15 @@ const SearchItemsBar = () => {
 
             <View style={{ paddingHorizontal: 10, gap: 10 }}>
                 <Searchbar
+                    ref={searchInputRef}
                     style={{ borderRadius: 10 }}
                     placeholder="Search"
                     onChangeText={onChangeSearch}
                     value={searchQuery}
                 />
 
-                <Chip icon="information" onPress={() => console.log('Pressed')}>Example Chip</Chip>
+                {/* <Chip icon="information" onPress={() => console.log('Pressed')}>Example Chip</Chip> */}
+
             </View>
 
             {/* if searchinput value is empty, do not render Flat List */}
@@ -377,9 +410,8 @@ const SearchItemsBar = () => {
                         <FlatList
                             data={filteredItems}
                             keyExtractor={(item) => item.id.toString()}
-                            renderItem={(props) => renderItem({ ...props, theme, searchQuery })}
+                            renderItem={(props) => renderItem({ ...props, theme, searchQuery, setSearchQuery })}
                             keyboardShouldPersistTaps='handled'
-
                         />
                     )}
                 </View>
