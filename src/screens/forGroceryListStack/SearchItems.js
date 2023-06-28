@@ -1,29 +1,19 @@
 import { useState, useRef, useEffect, useMemo } from 'react';
-import { Text, Searchbar, List, Divider, useTheme, Card, IconButton, Button, TextInput, Chip, TouchableRipple } from 'react-native-paper'
-import { View, StyleSheet, Animated, KeyboardAvoidingView, FlatList } from 'react-native';
+import { Text, Searchbar, List, Divider, useTheme, Card, IconButton, Button, TextInput, Chip, TouchableRipple, HelperText } from 'react-native-paper'
+import { View, StyleSheet, Animated, KeyboardAvoidingView, FlatList, ScrollView } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
-// Mock Data Resource
 import groceryListItem from '../../../assets/mockDataResource/listOfGroceryItems'
-
-// Unique key generator
-import { randomUUID } from 'expo-crypto'; 
-
-// Storage imports (AsyncStorage for offline, Firebase database for online)
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { db, ref, set, push } from '../../../firebaseConfig'
-import { remove } from 'firebase/database';
-
-// Utility functions
+import { randomUUID } from 'expo-crypto';
+import { db, ref, set } from '../../../firebaseConfig'
 import { printAllData, removeAllData, storeItemData } from '../../usefulFunctions/asyncStorageUtils';
 
+// Function to occur on adding to list
+const AddToList = ({ item, values, setSearchQuery, setAddedItems }) => {
 
-const AddToList = ({ item, values, setSearchQuery }) => {
-
-    /*  OFFLINE STORAGE */
     // Replace listID with current listID
     const listId = "-Mk29uV8ULSgYp2s1";
-    
+
     // Random unique ID for item:
     const itemUUID = randomUUID();
 
@@ -38,29 +28,36 @@ const AddToList = ({ item, values, setSearchQuery }) => {
         completed: false
     }
 
-    console.log(data);
+    const addDataToStorage = async () => {
+        try {
+            // Offline Storage
+            await storeItemData(listId, data, itemUUID); // Wait for offline storage to complete
 
-    storeItemData(listId, data, itemUUID)
+            // To add as chip items on search screen
+            setAddedItems(prevValues => {
+                return (
+                    [...prevValues, data]
+                )
+            })
 
-    /* ONLINE STORAGE */
+            // Online Storage
+            const itemRef = ref(db, `lists/${listId}/items/` + itemUUID);
+            await set(itemRef, data); // Wait for online storage to complete
 
-    // Reference to list/${listId}/items node
-    const itemRef = ref(db, `lists/${listId}/items/`+ itemUUID);
+            console.log('New item added successfully to Realtime Database:', itemUUID);
+            console.log(data);
 
-    try {
-        set(itemRef, data);
-        console.log('New item added successfully to Realtime Database:', itemUUID);
-    }
+        } catch (error) {
+            console.error('Error adding new item:', error);
+        }
+    };
 
-    catch (error) {
-        console.error('Error adding new item to Realtime Database:', error);
-    }; 
-
+    addDataToStorage();
     setSearchQuery('');
 }
 
 // A singular accordion Card item (used in renderItem in the FlatList)
-const AccordionCardItem = ({ item, textTitle, theme, setSearchQuery }) => {
+const AccordionCardItem = ({ item, textTitle, theme, setSearchQuery, setAddedItems }) => {
 
     // Used to set the card expanded state
     const [isOpen, setIsOpen] = useState(false);
@@ -180,6 +177,35 @@ const AccordionCardItem = ({ item, textTitle, theme, setSearchQuery }) => {
         }
     };
 
+    // Helper Text object if invalid
+    const [validInputs, setValidInputs] = useState({
+        quantity: true,
+        totalValue: true,
+        unitValue: true,
+    })
+
+    // Function to check if input is valid
+    const isValidInput = (value) => {
+        return !isNaN(value) && value >= 0;
+    };
+
+    // Function to check All Valid Input Submit before storing as data
+    const validInputSubmit = () => {
+        const quantity = parseInt(values.quantity);
+        const totalValue = parseFloat(values.totalValue);
+        const unitValue = parseFloat(values.unitValue);
+
+        const isQuantityValid = isValidInput(quantity);
+        const isTotalValueValid = isValidInput(totalValue);
+        const isUnitValueValid = isValidInput(unitValue);
+
+        return {
+            quantity: isQuantityValid,
+            totalValue: isTotalValueValid,
+            unitValue: isUnitValueValid,
+        };
+    };
+
     return (
         // An item is a card 
         <Card
@@ -212,55 +238,76 @@ const AccordionCardItem = ({ item, textTitle, theme, setSearchQuery }) => {
                     <View style={{ flexDirection: 'row', gap: 10, alignItems: 'center' }}>
 
                         {/* Unit Value Text Input */}
-                        <TextInput
-                            style={{ flex: 1 }}
-                            mode="outlined"
-                            label="Unit Value"
-                            value={values.unitValue}
-                            onChangeText={(text) => handleValueChange(text, 'unitValue')}
-                            onFocus={() => handleValueInputFocusBlur('unitValue')}
-                            onBlur={() => handleValueInputFocusBlur('unitValue')}
-                            left={<TextInput.Affix text="$" />}
-                            keyboardAppearance="dark"
-                            keyboardType="decimal-pad"
-                        />
+                        <View style={{ flex: 1 }}>
+                            <TextInput
+                                mode="outlined"
+                                label="Unit Value"
+                                error={!validInputs.unitValue}
+                                value={values.unitValue}
+                                onChangeText={(text) => handleValueChange(text, 'unitValue')}
+                                onFocus={() => handleValueInputFocusBlur('unitValue')}
+                                onBlur={() => handleValueInputFocusBlur('unitValue')}
+                                left={<TextInput.Affix text="$" />}
+                                keyboardAppearance="dark"
+                                keyboardType="decimal-pad"
+                            />
+                            <HelperText type="error" visible={!validInputs.unitValue}>
+                                Invalid input
+                            </HelperText>
+                        </View>
 
                         {/* Total Value Text Input */}
-                        <TextInput
-                            style={{ flex: 1 }}
-                            mode="outlined"
-                            label="Total Value"
-                            value={values.totalValue}
-                            onChangeText={(text) => handleValueChange(text, 'totalValue')}
-                            onFocus={() => handleValueInputFocusBlur('totalValue')}
-                            onBlur={() => handleValueInputFocusBlur('totalValue')}
-                            left={<TextInput.Affix text="$" />}
-                            keyboardAppearance="dark"
-                            keyboardType="decimal-pad"
-                        />
+                        <View style={{ flex: 1 }}>
+                            <TextInput
+                                mode="outlined"
+                                label="Total Value"
+                                error={!validInputs.totalValue}
+                                value={values.totalValue}
+                                onChangeText={(text) => handleValueChange(text, 'totalValue')}
+                                onFocus={() => handleValueInputFocusBlur('totalValue')}
+                                onBlur={() => handleValueInputFocusBlur('totalValue')}
+                                left={<TextInput.Affix text="$" />}
+                                keyboardAppearance="dark"
+                                keyboardType="decimal-pad"
+                            />
+                            <HelperText type="error" visible={!validInputs.totalValue}>
+                                Invalid input
+                            </HelperText>
+                        </View>
 
                         {/* Quantity amount Text Input. Caret placement have issues on android (empty string) */}
-                        <TextInput
-                            style={{ flex: 1, textAlign: 'center' }}
-                            mode="outlined"
-                            label="Quantity"
-                            value={values.quantity}
-                            onChangeText={handleQuantityValueChange}
-                            onFocus={handleQuantityInputFocusBlur}
-                            onBlur={handleQuantityInputFocusBlur}
-                            keyboardAppearance="dark"
-                            keyboardType="number-pad"
-                        />
+                        <View style={{ flex: 1 }}>
+                            <TextInput
+                                style={{ textAlign: 'center' }}
+                                mode="outlined"
+                                label="Quantity"
+                                error={!validInputs.quantity}
+                                value={values.quantity}
+                                onChangeText={handleQuantityValueChange}
+                                onFocus={handleQuantityInputFocusBlur}
+                                onBlur={handleQuantityInputFocusBlur}
+                                keyboardAppearance="dark"
+                                keyboardType="number-pad"
+                            />
+                            <HelperText type="error" visible={!validInputs.quantity}>
+                                Invalid input
+                            </HelperText>
+                        </View>
                     </View>
 
                     <Card.Actions>
                         <Button onPress={handleOpenCloseCard}>Cancel</Button>
                         <View style={{ flex: 1 }} />
                         <Button onPress={() => {
-                            AddToList({ item: item, values: values, setSearchQuery: setSearchQuery })
+                            setValidInputs(() => {
+                                const updatedValidInputs = validInputSubmit();
+                                if (updatedValidInputs.quantity && updatedValidInputs.totalValue && updatedValidInputs.unitValue) {
+                                    AddToList({ item, values, setSearchQuery, setAddedItems });
+                                }
+                                return updatedValidInputs;
+                            });
                         }}>Add to list</Button>
                     </Card.Actions>
-
                 </Card.Content>
             )}
         </Card>
@@ -268,7 +315,7 @@ const AccordionCardItem = ({ item, textTitle, theme, setSearchQuery }) => {
 };
 
 // renderItem function is used to describe the rendering of each item in the Flat list
-const renderItem = ({ item, theme, searchQuery, setSearchQuery }) => {
+const renderItem = ({ item, theme, searchQuery, setSearchQuery, setAddedItems }) => {
 
     // For animation stuff, bolds the matching letters,
     // sets the color for the rest of the letters to be onSurfaceDisabled (react paper theme)
@@ -286,9 +333,34 @@ const renderItem = ({ item, theme, searchQuery, setSearchQuery }) => {
 
     // How each item in flatlist is rendered: 
     return (
-        <AccordionCardItem item={item} textTitle={textTitle} theme={theme} setSearchQuery={setSearchQuery} />
+        <AccordionCardItem
+            item={item}
+            textTitle={textTitle}
+            theme={theme}
+            setSearchQuery={setSearchQuery}
+            setAddedItems={setAddedItems} />
     );
 };
+
+const ScrollChipView = ({ addedItems }) => {
+    return (
+        <ScrollView
+            ref={ref => { this.scrollView = ref }}
+            onContentSizeChange={() => this.scrollView.scrollToEnd({ animated: true })}
+            horizontal={true}
+            contentContainerStyle={{ gap: 10 }}
+        >
+            {addedItems.map(item => (
+                <Chip
+                    onClose={() => { }}
+                    key={item.itemID}
+                >
+                    {item.itemName} qty:{item.quantity}
+                </Chip>
+            ))}
+        </ScrollView>
+    );
+}
 
 /* Renders the search item bar + Flat List */
 const SearchItemsBar = () => {
@@ -308,6 +380,8 @@ const SearchItemsBar = () => {
             setDelayedRendering(false);
         }
     };
+
+    const [addedItems, setAddedItems] = useState([]);
 
     // filteredItems is a letter filter (based on searchQuery) of groceryListItem array.
     // returns an array that matches the front few characters of searchQuery
@@ -389,9 +463,7 @@ const SearchItemsBar = () => {
                     onChangeText={onChangeSearch}
                     value={searchQuery}
                 />
-
-                {/* <Chip icon="information" onPress={() => console.log('Pressed')}>Example Chip</Chip> */}
-
+                <ScrollChipView addedItems={addedItems} />
             </View>
 
             {/* if searchinput value is empty, do not render Flat List */}
@@ -410,7 +482,7 @@ const SearchItemsBar = () => {
                         <FlatList
                             data={filteredItems}
                             keyExtractor={(item) => item.id.toString()}
-                            renderItem={(props) => renderItem({ ...props, theme, searchQuery, setSearchQuery })}
+                            renderItem={(props) => renderItem({ ...props, theme, searchQuery, setSearchQuery, setAddedItems })}
                             keyboardShouldPersistTaps='handled'
                         />
                     )}
