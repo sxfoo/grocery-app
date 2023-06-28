@@ -3,7 +3,6 @@ import { View, StyleSheet, TouchableWithoutFeedback, Keyboard } from 'react-nati
 import BottomSheet, { BottomSheetTextInput, BottomSheetBackdrop, BottomSheetView } from '@gorhom/bottom-sheet';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { IconButton, Divider, Card, Text, useTheme, Button } from 'react-native-paper';
-import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import { useNavigation } from '@react-navigation/native';
 
 /* Displays User's Location at the top*/
@@ -24,14 +23,14 @@ const ListHeader = () => {
 }
 
 /* Renders List Items. No logic currently. Please edit the styles its messy */
-const ListOfItems = ( {navigation} ) => {
+const ListOfItems = ({ navigation }) => {
 
   return (
-    <View style={{ flex: 1, marginBottom: 50,  flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 70 }}>
+    <View style={{ flex: 1, marginBottom: 50, flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 70 }}>
       <Text style={styles.textOptions}> You haven’t added any items. </Text>
       <Text style={[styles.textOptions, { textAlign: 'center' }]}> Tap to add items that you need from your vendor </Text>
       <Button
-        style={{borderRadius: 5, width: '100%', height: 50, justifyContent: 'center'}}
+        style={{ borderRadius: 5, width: '100%', height: 50, justifyContent: 'center' }}
         icon='plus-thick'
         mode='outlined'
         onPress={() => navigation.navigate('Search Items')}>
@@ -49,10 +48,8 @@ const App = () => {
 
   const navigation = useNavigation();
 
-  const bottomTabHeight = useBottomTabBarHeight();
-
   /* The % of screen the bottom Sheet should snap to */
-  const snapPoints = useMemo(() => [bottomTabHeight + 100, '90%'], []);
+  const snapPoints = useMemo(() => ['15%', '90%'], []);
 
   /* This is not needed. Currently logs the position which the bottomSheet snaps */
   const handleSheetChanges = useCallback((index) => {

@@ -1,18 +1,12 @@
 import AllListsScreen from '../screens/forGroceryListStack/AllLists';
 import ListScreen from '../screens/forGroceryListStack/List';
-import Trial from '../screens/Trial';
-import Settings from '../screens/Settings';
 import SearchItems from '../screens/forGroceryListStack/SearchItems';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { useTheme } from 'react-native-paper';
-import { SafeAreaView } from 'react-native-safe-area-context';
-
 
 const Stack = createNativeStackNavigator();
 
 /* Stack for displaying Grocery List. Refer to screens directory */
 export default function ListStack() {
-    const theme = useTheme()
 
     return (
 

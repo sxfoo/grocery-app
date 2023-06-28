@@ -11,7 +11,6 @@ const Stack = createNativeStackNavigator();
 
 /* Stack for displaying Grocery List. Refer to screens directory */
 export default function ProfileStack() {
-    const theme = useTheme()
 
     return (
 
