@@ -6,20 +6,30 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useTheme } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-
 const Stack = createNativeStackNavigator();
 
-/* Stack for displaying Grocery List. Refer to screens directory */
+/* Stack for displaying Profile Screens */
 export default function ProfileStack() {
+
+    const theme = useTheme();
 
     return (
 
-        <Stack.Navigator initialRouteName='Profile main'>
+        <Stack.Navigator
+            initialRouteName='Trial'
+            screenOptions={{
+                headerStyle: {
+                    backgroundColor: theme.colors.background,
+                }
+            }}
+        >
+
             <Stack.Screen
-                name = "Trial"
+                name="Trial"
                 component={Trial}
-                options = {{headerShown: false}}
+                options={{ headerShown: false }}
             />
+
             <Stack.Screen
                 name="Settings"
                 component={Settings}

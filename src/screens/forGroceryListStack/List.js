@@ -4,7 +4,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { IconButton, Divider, Card, Text, useTheme, Button } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
 
-import { printAllData, removeAllData } from '../../usefulFunctions/asyncStorageUtils';
+import { printAllData, removeAllData } from '../../utilityFunctions/asyncStorageUtils';
 
 /* Displays User's Location at the top*/
 const ListHeader = () => {
