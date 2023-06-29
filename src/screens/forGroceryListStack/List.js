@@ -1,9 +1,10 @@
 import { useCallback, useMemo, useRef, useState } from 'react';
 import { View, StyleSheet, TouchableWithoutFeedback, Keyboard } from 'react-native';
-import BottomSheet, { BottomSheetTextInput, BottomSheetBackdrop, BottomSheetView } from '@gorhom/bottom-sheet';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { IconButton, Divider, Card, Text, useTheme, Button } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
+
+import { printAllData, removeAllData } from '../../usefulFunctions/asyncStorageUtils';
 
 /* Displays User's Location at the top*/
 const ListHeader = () => {
@@ -22,7 +23,7 @@ const ListHeader = () => {
   )
 }
 
-/* Renders List Items. No logic currently. Please edit the styles its messy */
+/* Renders List Items. No logic currently. Clean up the styles */
 const ListOfItems = ({ navigation }) => {
 
   return (
@@ -36,86 +37,43 @@ const ListOfItems = ({ navigation }) => {
         onPress={() => navigation.navigate('Search Items')}>
         Add Items
       </Button>
+
+      {/* Debug purposes. Remove if necessary*/}
+      <View style={{ flexDirection: 'row', gap: 10 }}>
+        <Button
+          mode='outlined'
+          onPress={() => { printAllData() }}>
+          Check storage
+        </Button>
+
+        <Button
+          mode='outlined'
+          onPress={() => { removeAllData() }}>
+          Remove local storage
+        </Button>
+        
+      </View>
     </View>
   )
 }
 
 /* The overall Screen to be displayed. */
-const App = () => {
-
-  const bottomSheetRef = useRef(null);
-  const theme = useTheme();
+const ListScreen = () => {
 
   const navigation = useNavigation();
-
-  /* The % of screen the bottom Sheet should snap to */
-  const snapPoints = useMemo(() => ['15%', '90%'], []);
-
-  /* This is not needed. Currently logs the position which the bottomSheet snaps */
-  const handleSheetChanges = useCallback((index) => {
-    console.log('handleSheetChanges', index);
-  }, []);
-
-  /* Callback function to render only once.
-     Currently only used for => tapping the backdrop will close keyboard */
-  const renderBackdrop = useCallback(
-    (props) => (
-      <BottomSheetBackdrop
-        {...props}
-        pressBehavior={'collapse'}
-      />
-    ),
-    []
-  );
 
   return (
 
     /* Used for react native gesture handler */
     <GestureHandlerRootView style={{ flex: 1 }}>
 
-      <TouchableWithoutFeedback onPress={() => { Keyboard.dismiss() }}>
+      {/* The overall screen. */}
+      <View style={styles.body}>
 
-        {/* The overall screen. */}
-        <View style={styles.body}>
+        <ListHeader />
+        <ListOfItems navigation={navigation} />
 
-          <ListHeader />
-          <ListOfItems navigation={navigation} />
-
-          {/* The Bottom Sheet. Currently DISABLED */}
-          <BottomSheet
-            ref={bottomSheetRef}
-            index={-1}
-            snapPoints={snapPoints}
-            onChange={handleSheetChanges}
-            backgroundStyle={{ backgroundColor: theme.colors.surfaceVariant }}
-            backdropComponent={renderBackdrop}
-            keyboardBehavior='extend'
-          >
-
-            <BottomSheetView style={styles.contentContainer}>
-
-              {/* The row containing the text input */}
-              <BottomSheetView style={styles.row}>
-                <BottomSheetTextInput
-                  style={styles.searchbar}
-                  placeholder='e.g. Milk'
-                  placeholderTextColor='rgba(199, 199, 204, 0.4)' />
-                <IconButton
-                  icon='plus-thick'
-                  iconColor={theme.colors.inverseOnSurface}
-                  containerColor={theme.colors.onSurfaceVariant}
-                  mode='contained'
-                  size={28}
-                />
-              </BottomSheetView>
-
-            </BottomSheetView>
-
-          </BottomSheet>
-
-        </View>
-
-      </TouchableWithoutFeedback>
+      </View>
 
     </GestureHandlerRootView>
   );
@@ -132,18 +90,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
   },
 
-  searchbar: {
-    flex: 1,
-    marginTop: 0,
-    marginRight: 8,
-    padding: 16,
-    borderRadius: 12,
-    fontSize: 16,
-    height: 50,
-    backgroundColor: '#1f2933',
-    color: '#f5f7fa',
-  },
-
   row: {
     flexDirection: 'row',
     alignItems: 'center'
@@ -155,4 +101,4 @@ const styles = StyleSheet.create({
 
 });
 
-export default App;
+export default ListScreen;

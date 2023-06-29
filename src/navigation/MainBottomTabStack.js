@@ -1,10 +1,11 @@
 import { createMaterialBottomTabNavigator } from 'react-native-paper/react-navigation';
-
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import ProfileStack from './ProfileStack';
 import ListStack from './GroceryListStack'
 
 
-const BottomTab = createMaterialBottomTabNavigator();
+const BottomTab = createBottomTabNavigator();
 
 /* Bottom Tab Navigation. */
 export default function MainBottomTabStack() {
@@ -25,7 +26,9 @@ export default function MainBottomTabStack() {
                 options={{
                     headerShown: false,
                     title: 'Grocery List',
-                    tabBarIcon: 'view-list'
+                    tabBarIcon: ({ color, size }) => (
+                        <MaterialCommunityIcons name="view-list" color={color} size={size} />
+                    ),
                 }}
             />
 
@@ -35,7 +38,9 @@ export default function MainBottomTabStack() {
                 options={{
                     headerShown: false, /*used to be true*/
                     title: 'Profile',
-                    tabBarIcon: 'account-outline'
+                    tabBarIcon: ({ color, size }) => (
+                        <MaterialCommunityIcons name="account" color={color} size={size} />
+                    ),
                 }}
             />
 
