@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect, useMemo } from 'react';
 import { Text, Searchbar, List, Divider, useTheme } from 'react-native-paper'
-import { View, StyleSheet, Animated, KeyboardAvoidingView, FlatList } from 'react-native';
+import { View, StyleSheet, Animated, KeyboardAvoidingView, FlatList, UIManager } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import groceryListItem from '../../../assets/mockDataResource/listOfGroceryItems'
@@ -136,7 +136,7 @@ const SearchItemsBar = () => {
                     onChangeText={onChangeSearch}
                     value={searchQuery}
                 />
-                <ScrollChipView addedItems={addedItems} theme={theme}/>
+                <ScrollChipView addedItems={addedItems} theme={theme} />
             </View>
 
             {/* if searchinput value is empty, do not render Flat List */}
@@ -167,6 +167,13 @@ const SearchItemsBar = () => {
 
 /* The Overall Screen */
 const SimpleScreen = () => {
+
+    {/* Disabled animations on android */}
+    if (Platform.OS === 'android') {
+        if (UIManager.setLayoutAnimationEnabledExperimental) {
+          UIManager.setLayoutAnimationEnabledExperimental(true);
+        }
+      }
 
     return (
         <SafeAreaProvider>

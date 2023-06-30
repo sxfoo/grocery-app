@@ -59,7 +59,7 @@ export const AccordionCardItem = ({ item, textTitle, theme, setSearchQuery, setA
 
             {/* Only render user's additional options if card is expanded */}
             {isOpen && (
-                <Card.Content style={{ flexDirection: 'column', gap: 40 }}>
+                <Card.Content style={{ flexDirection: 'column' }}>
 
                     <View style={{ flexDirection: 'row', gap: 10, alignItems: 'center' }}>
 

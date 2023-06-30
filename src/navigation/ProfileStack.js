@@ -30,11 +30,6 @@ export default function ProfileStack() {
                 options={{ headerShown: false }}
             />
 
-            <Stack.Screen
-                name="Settings"
-                component={Settings}
-            />
-
         </Stack.Navigator>
 
     );

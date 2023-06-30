@@ -1,6 +1,7 @@
 import { storeItemData } from './asyncStorageUtils';
 import { randomUUID } from 'expo-crypto';
 import { db, ref, set } from '../../firebaseConfig'
+import { LayoutAnimation } from 'react-native';
 
 /* For Accordian Card Item */
 
@@ -56,6 +57,7 @@ export const AddToList = ({ item, values, setSearchQuery, setAddedItems }) => {
 // Function to handle onPressoftheCard.
 export const handleOpenCloseCard = (isOpen, setIsOpen, values, setValues) => {
 
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
     setIsOpen(!isOpen);
 
     // If card is closed (not expanded)
