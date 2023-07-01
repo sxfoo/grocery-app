@@ -21,7 +21,6 @@ export default function App() {
     <PaperProvider theme={MD3DarkTheme}>
       <NavigationContainer theme={DarkTheme}>
         <MainBottomTabStack />
-        {/*<SettingsStack />*/}
       </NavigationContainer>
     </PaperProvider>
   );

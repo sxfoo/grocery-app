@@ -5,7 +5,7 @@ import Entypo from 'react-native-vector-icons/Entypo'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import ProfileStack from './ProfileStack';
 import ListStack from './GroceryListStack'
-import Settings from '../screens/Settings'
+import SettingsStack from './SettingsStack';
 
 const BottomTab = createBottomTabNavigator();
 
@@ -48,7 +48,7 @@ export default function MainBottomTabStack() {
 
             <BottomTab.Screen
                 name="Settings"
-                component={Settings}
+                component={SettingsStack}
                 options={{
                     headerShown: false, /*used to be true*/
                     title: 'Settings',
