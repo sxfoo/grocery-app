@@ -13,7 +13,7 @@ const customisation = [
     {
         header: 'General',
         items: [
-            { id: 'Language', icon: 'translate', label: 'Change Language', type: 'link', nav: null},
+            { id: 'Language', icon: 'translate', label: 'Change Language', type: 'link'},
             { id: 'Budget', icon: 'hand-coin', label: 'Set budget', type: 'link'},
             { id: 'darkMode', icon: 'theme-light-dark', label: 'Dark Mode', type: 'toggle'},
             { id: 'Location', icon: 'navigation-variant', label: 'Sync location', type: 'toggle'},
@@ -152,7 +152,10 @@ const Settings = () => {
                 {/* Another loop*/}
                     {items.map(({label, id, type, icon, nav}) => (
                         <View key={id}>
-                        <TouchableOpacity onPress ={() => {Navigation.navigate(nav)}}>
+                        <TouchableOpacity onPress ={() => {
+                                if (nav) 
+                                {Navigation.navigate(nav)}
+                        }}>
                             <View style = {[styles.row, {backgroundColor: theme.colors.inverseOnSurface,}]}>
                                 <View style = {styles.icon}> 
                                     <IconButton icon = {icon} />
