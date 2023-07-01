@@ -6,12 +6,14 @@ import { Card, Divider, IconButton, Text, useTheme} from "react-native-paper";
 import { FlatList, ScrollView, Switch } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
 import FeatherIcon from 'react-native-vector-icons/Feather';
+import { useNavigation } from "@react-navigation/native";
+
 
 const customisation = [
     {
         header: 'General',
         items: [
-            { id: 'Language', icon: 'translate', label: 'Change Language', type: 'link'},
+            { id: 'Language', icon: 'translate', label: 'Change Language', type: 'link', nav: null},
             { id: 'Budget', icon: 'hand-coin', label: 'Set budget', type: 'link'},
             { id: 'darkMode', icon: 'theme-light-dark', label: 'Dark Mode', type: 'toggle'},
             { id: 'Location', icon: 'navigation-variant', label: 'Sync location', type: 'toggle'},
@@ -29,7 +31,7 @@ const customisation = [
         items:[
             {id: 'Username', icon: 'account-box', label: 'Change Username', type:'link'},
             {id: 'Email', icon: 'email', label: 'Change Email', type: 'link'},
-            {id: 'Password', icon: 'lock', label: 'Change Password', type:'link'},
+            {id: 'Password', icon: 'lock', label: 'Change Password', type:'link', nav:"ResetPassword"},
             {id: 'Delete', icon: 'delete', label:'Delete account', type: 'link'},
         ],
     },
@@ -37,7 +39,7 @@ const customisation = [
     {
         header: 'Log out',
         items: [
-            {id: 'logout', icon:'logout', label: 'Log out', type: 'link'},
+            {id: 'logout', icon:'logout', label: 'Log out', type: 'link', nav:"SignIn"},
         ]
     }
 ];
@@ -111,6 +113,8 @@ const styles = StyleSheet.create({
 const PROFILE_PIC = "https://static.wikia.nocookie.net/disney/images/3/3c/Profile_-_Sulley.jpg/revision/latest?cb=20200817112818";
 
 const Settings = () => {
+    const Navigation = useNavigation();
+
     const [form, setForm] = React.useState({
         darkMode: true,
         Notification: true,
@@ -146,9 +150,9 @@ const Settings = () => {
                     <Text style = {styles.headertext}>{header} </Text>        
                 <View>
                 {/* Another loop*/}
-                    {items.map(({label, id, type, icon}) => (
+                    {items.map(({label, id, type, icon, nav}) => (
                         <View key={id}>
-                        <TouchableOpacity onPress ={() => {}}>
+                        <TouchableOpacity onPress ={() => {Navigation.navigate(nav)}}>
                             <View style = {[styles.row, {backgroundColor: theme.colors.inverseOnSurface,}]}>
                                 <View style = {styles.icon}> 
                                     <IconButton icon = {icon} />
