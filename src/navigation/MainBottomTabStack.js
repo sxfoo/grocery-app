@@ -2,6 +2,7 @@ import { createMaterialBottomTabNavigator } from 'react-native-paper/react-navig
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Entypo from 'react-native-vector-icons/Entypo'
+import Octicons from 'react-native-vector-icons/Octicons'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import ProfileStack from './ProfileStack';
 import ListStack from './GroceryListStack'
@@ -17,11 +18,11 @@ export default function MainBottomTabStack() {
                 tabBarHideOnKeyboard: Platform.OS !== 'ios',
                 tabBarStyle: {
                     borderTopWidth: 0,
-                },
+                }
             }}
         >
 
-            {/* Grocery List Tab. Goes to ListStack (see navigation/ListStack.js) */}
+            {/* Grocery List Tab. Goes to ListStack (see navigatlsion/ListStack.js) */}
             <BottomTab.Screen
                 name="Grocery List"
                 component={ListStack}
@@ -29,7 +30,7 @@ export default function MainBottomTabStack() {
                     headerShown: false,
                     title: 'Grocery List',
                     tabBarIcon: ({ color, size }) => (
-                        <MaterialCommunityIcons name="view-list" color={color} size={size} />
+                        <Octicons name="checklist" color={color} size={size} />
                     ),
                 }}
             />
@@ -47,7 +48,7 @@ export default function MainBottomTabStack() {
             />
 
             <BottomTab.Screen
-                name="Settings"
+                name="Settings Stack"
                 component={SettingsStack}
                 options={{
                     headerShown: false, /*used to be true*/

@@ -18,7 +18,7 @@ const renderItem = ({ item, theme, searchQuery, setSearchQuery, setAddedItems })
     const back = item.name.slice(inputTextLength);
 
     const textTitle = (
-        <Text>
+        <Text variant='bodyLarge'>
             <Text style={{ fontWeight: 'bold' }}>{front}</Text>
             <Text style={{ color: theme.colors.onSurfaceDisabled }}>{back}</Text>
         </Text>
