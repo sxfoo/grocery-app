@@ -50,7 +50,7 @@ const NewListComponent = ({ navigation, theme }) => {
     return (
         <Card
             style={[styles.card, { backgroundColor: theme.colors.elevation.level3 }]}
-            onPress={() => { navigation.navigate('List') }}
+            onPress={() => { navigation.navigate('List', { title: 'New List' }) }}
         >
             <Card.Content style={{ flexDirection: 'row', flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                 <Text variant="titleMedium"> Add new list</Text>

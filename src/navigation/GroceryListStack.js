@@ -1,10 +1,12 @@
 import AllListsScreen from '../screens/forGroceryListStack/AllLists';
 import ListScreen from '../screens/forGroceryListStack/List';
 import SearchItems from '../screens/forGroceryListStack/SearchItems';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import {useTheme} from 'react-native-paper'
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
+import { createStackNavigator, TransitionPresets } from '@react-navigation/stack';
+import { useTheme, IconButton } from 'react-native-paper'
+import { Pressable } from 'react-native';
 
-const Stack = createNativeStackNavigator();
+const Stack = createStackNavigator();
 
 /* Stack for displaying Grocery List. Refer to screens directory */
 export default function ListStack() {
@@ -13,27 +15,43 @@ export default function ListStack() {
 
     return (
 
-        <Stack.Navigator 
-            initialRouteName='All Lists'
+        <Stack.Navigator
+            initialRouteName='List'
             screenOptions={{
                 headerStyle: {
-                  backgroundColor: theme.colors.background,
+                    backgroundColor: theme.colors.background,
+                    borderWidth: 0
                 },
-                headerTitleAlign: 'center'
+                headerTitleAlign: 'center',
+                presentation: 'card',
+                headerMode: 'screen',
+                ...TransitionPresets.SlideFromRightIOS,
             }}
-            >
+        >
 
             <Stack.Screen
                 name="All Lists"
                 component={AllListsScreen}
+                options={() => ({
+                    gestureDirection: 'horizontal-inverted',
+                    headerLeft: null,
+                })}
             />
 
             <Stack.Screen
                 name="List"
                 component={ListScreen}
-                initialParams={{ title: 'New list' }}
-                options={({ route }) => ({
-                    title: route.params.title
+                initialParams={{ title: 'Home' }}
+                options={({ route, navigation }) => ({
+                    title: route.params.title,
+                    headerLeft: () => (
+                        <IconButton
+                            icon="view-list"
+                            size={24}
+                            onPress={() => navigation.navigate('All Lists')}
+                        />
+                    ),
+                    
                 })}
             />
 
@@ -41,7 +59,6 @@ export default function ListStack() {
                 name="Search Items"
                 component={SearchItems}
             />
-
         </Stack.Navigator>
 
     );
