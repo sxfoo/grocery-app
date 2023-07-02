@@ -1,11 +1,12 @@
 import React from "react";
-import { StyleSheet } from "react-native";
+import { Alert, StyleSheet } from "react-native";
 import { Image } from "react-native-ui-lib";
 import { View, TouchableOpacity, Icon } from "react-native-ui-lib";
 import { IconButton, Text, useTheme} from "react-native-paper";
 import { FlatList, ScrollView, Switch } from "react-native-gesture-handler";
 import { SafeAreaProvider, useSafeAreaInsets } from "react-native-safe-area-context";
 import FeatherIcon from 'react-native-vector-icons/Feather';
+import { launchCamera, launchImageLibrary } from "react-native-image-picker";
 import { useNavigation } from "@react-navigation/native";
 
 /* Settings page, specify the individual settings, icons and type of change*/
@@ -116,14 +117,50 @@ const PROFILE_PIC = "https://static.wikia.nocookie.net/disney/images/3/3c/Profil
 
 const Settings = () => {
     const Navigation = useNavigation();
-
+    const [Pic, SetPic] = React.useState('');
     const [form, setForm] = React.useState({
         darkMode: true,
         Notification: true,
         location: true,
     });
-    const theme = useTheme()
+    const theme = useTheme();
     const insets = useSafeAreaInsets();
+    
+    const imagePick = () => {
+        console.log('Image pick pressed');
+        /*
+        let options = {
+            mediaType: 'photo',
+            quality: 1,
+            includeBase64: true,
+        }
+        launchImageLibrary(options, response =>
+            {
+                if (response.didCancel){
+                    console.log('Cancelled image');
+                }
+
+                else if ((response.errorCode = 'permission')){
+                    console.log('Permission not granted');
+                }
+
+                else if (response.assets[0].fileSize > 2097152){
+                    Alert.alert(" Maximum size exceeded");
+                }
+                else{
+                    SetPic(response.assets[0].base64);
+                }
+            })*/
+            /*
+            try{
+                const response = launchImageLibrary();
+                console.log(response);
+            } catch (error){
+                console.log('Image pPicker error: ', error);
+            }
+            */
+    };
+
     return(
         <SafeAreaProvider>
             <ScrollView>
@@ -134,7 +171,7 @@ const Settings = () => {
                 paddingRight: insets.right}]}>
 
                 {/* Profile picture*/}
-                <TouchableOpacity onPress = {() => {}}>
+                <TouchableOpacity onPress = {() => {imagePick()}}>
                     <View style = {styles.avatar}>
                         <Image
                             alt = "Profile Picture"
