@@ -5,8 +5,7 @@ import { View, TouchableOpacity, Icon } from "react-native-ui-lib";
 import { IconButton, Text, useTheme} from "react-native-paper";
 import { FlatList, ScrollView, Switch } from "react-native-gesture-handler";
 import { SafeAreaProvider, useSafeAreaInsets } from "react-native-safe-area-context";
-import FeatherIcon from 'react-native-vector-icons/Feather';
-import { launchCamera, launchImageLibrary } from "react-native-image-picker";
+import Card from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
 
 /* Settings page, specify the individual settings, icons and type of change*/
@@ -27,22 +26,6 @@ const customisation = [
 
         ],
     },
-    {
-        header: 'Account',
-        items:[
-            {id: 'Username', icon: 'account-box', label: 'Change Username', type:'link'},
-            {id: 'Email', icon: 'email', label: 'Change Email', type: 'link'},
-            {id: 'Password', icon: 'lock', label: 'Change Password', type:'link', nav:"ResetPassword"},
-            {id: 'Delete', icon: 'delete', label:'Delete account', type: 'link'},
-        ],
-    },
-
-    {
-        header: 'Log out',
-        items: [
-            {id: 'logout', icon:'logout', label: 'Log out', type: 'link', nav:"SignIn"},
-        ]
-    }
 ];
 /* CSS used to style the page */
 
@@ -112,10 +95,8 @@ const styles = StyleSheet.create({
         fontWeight: '500',
     },
 });
-/*temp profile pic from Monsters Inc */
-const PROFILE_PIC = "https://static.wikia.nocookie.net/disney/images/3/3c/Profile_-_Sulley.jpg/revision/latest?cb=20200817112818";
 
-const Settings = () => {
+const Unv_user_settings = () => {
     const Navigation = useNavigation();
     const [Pic, SetPic] = React.useState('');
     const [form, setForm] = React.useState({
@@ -128,37 +109,7 @@ const Settings = () => {
     
     const imagePick = () => {
         console.log('Image pick pressed');
-        /*
-        let options = {
-            mediaType: 'photo',
-            quality: 1,
-            includeBase64: true,
-        }
-        launchImageLibrary(options, response =>
-            {
-                if (response.didCancel){
-                    console.log('Cancelled image');
-                }
 
-                else if ((response.errorCode = 'permission')){
-                    console.log('Permission not granted');
-                }
-
-                else if (response.assets[0].fileSize > 2097152){
-                    Alert.alert(" Maximum size exceeded");
-                }
-                else{
-                    SetPic(response.assets[0].base64);
-                }
-            })*/
-            /*
-            try{
-                const response = launchImageLibrary();
-                console.log(response);
-            } catch (error){
-                console.log('Image pPicker error: ', error);
-            }
-            */
     };
 
     return(
@@ -171,29 +122,17 @@ const Settings = () => {
                 paddingRight: insets.right}]}>
 
                 {/* Profile picture*/}
-                <TouchableOpacity onPress = {() => {imagePick()}}>
                     <View style = {styles.avatar}>
                         <Image
-                            alt = "Profile Picture"
-                            source={{ uri: PROFILE_PIC}}
+                            alt = "Profile Pic"
+                            source = {{uri: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Default_pfp.svg/1200px-Default_pfp.svg.png'}}
                             style = {styles.profile_avatar}
                         />
                     </View>
-
-                    <View style = {styles.profile_write}>
-                        <FeatherIcon name="edit-3" size={15} color="#fff" />
-                    </View>
-                    
-                </TouchableOpacity>
-
-                <Text style = {styles.profile_name}>Sally Wong</Text>
-                <Text style = {styles.profile_email}>sallywong@gmail.com</Text>
-            </View>
-
-            <View>
-                <TouchableOpacity onPress={() => {Navigation.navigate('Unv_user')}}>
-                    <Text style = {{marginLeft:'auto', marginRight: 'auto'}}> Click to navigate to unverified user settings</Text>
-                </TouchableOpacity>
+                
+            <Card> 
+                <Text style = {styles.profile_name}>You are not signed in</Text>
+            </Card>
             </View>
         {/* it's basically a loop to map the header and the text*/}
             {customisation.map(({header, items}) => (
@@ -234,4 +173,4 @@ const Settings = () => {
 
 
 
-export default Settings;
+export default Unv_user_settings;
