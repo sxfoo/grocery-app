@@ -136,7 +136,7 @@ const SearchItemsBar = () => {
                     onChangeText={onChangeSearch}
                     value={searchQuery}
                 />
-                <ScrollChipView addedItems={addedItems} theme={theme} />
+                <ScrollChipView addedItems={addedItems} setAddedItems={setAddedItems} theme={theme} />
             </View>
 
             {/* if searchinput value is empty, do not render Flat List */}
