@@ -2,13 +2,13 @@ import React from "react";
 import { StyleSheet } from "react-native";
 import { Image } from "react-native-ui-lib";
 import { View, TouchableOpacity, Icon } from "react-native-ui-lib";
-import { Card, Divider, IconButton, Text, useTheme} from "react-native-paper";
+import { IconButton, Text, useTheme} from "react-native-paper";
 import { FlatList, ScrollView, Switch } from "react-native-gesture-handler";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { SafeAreaProvider, useSafeAreaInsets } from "react-native-safe-area-context";
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import { useNavigation } from "@react-navigation/native";
 
-
+/* Settings page, specify the individual settings, icons and type of change*/
 const customisation = [
     {
         header: 'General',
@@ -43,8 +43,10 @@ const customisation = [
         ]
     }
 ];
+/* CSS used to style the page */
 
 const styles = StyleSheet.create({
+    
     headertext: {
         fontSize: 14,
         fontWeight: 'bold',
@@ -107,9 +109,9 @@ const styles = StyleSheet.create({
     label: {
         fontSize: 16,
         fontWeight: '500',
-    }
+    },
 });
-
+/*temp profile pic from Monsters Inc */
 const PROFILE_PIC = "https://static.wikia.nocookie.net/disney/images/3/3c/Profile_-_Sulley.jpg/revision/latest?cb=20200817112818";
 
 const Settings = () => {
@@ -121,10 +123,17 @@ const Settings = () => {
         location: true,
     });
     const theme = useTheme()
+    const insets = useSafeAreaInsets();
     return(
-        <SafeAreaView>
+        <SafeAreaProvider>
             <ScrollView>
-            <View style = {styles.profile}>
+                <View style = {[styles.profile, {        
+                paddingTop: insets.top,
+                paddingBottom: insets.bottom,
+                paddingLeft: insets.left,
+                paddingRight: insets.right}]}>
+
+                {/* Profile picture*/}
                 <TouchableOpacity onPress = {() => {}}>
                     <View style = {styles.avatar}>
                         <Image
@@ -135,7 +144,6 @@ const Settings = () => {
                     </View>
 
                     <View style = {styles.profile_write}>
-                        {/*<IconButton icon='pencil-circle' size={42}/>*/}
                         <FeatherIcon name="edit-3" size={15} color="#fff" />
                     </View>
                     
@@ -144,12 +152,12 @@ const Settings = () => {
                 <Text style = {styles.profile_name}> Sally Wong</Text>
                 <Text style = {styles.profile_email}> sallywong@gmail.com</Text>
             </View>
-        {/* it's basically a loop*/}
+        {/* it's basically a loop to map the header and the text*/}
             {customisation.map(({header, items}) => (
                 <View key={header} style = {styles.header}>
                     <Text style = {styles.headertext}>{header} </Text>        
                 <View>
-                {/* Another loop*/}
+                {/* Another loop, in the row, continue to load the icon and the chevron/toggle*/}
                     {items.map(({label, id, type, icon, nav}) => (
                         <View key={id}>
                         <TouchableOpacity onPress ={() => {
@@ -177,7 +185,7 @@ const Settings = () => {
                 </View>
             ))}
             </ScrollView>
-        </SafeAreaView>
+        </SafeAreaProvider>
     )
 };
 
