@@ -15,7 +15,6 @@ export default function MainBottomTabStack() {
     return (
         <BottomTab.Navigator
             screenOptions={{
-                tabBarHideOnKeyboard: Platform.OS !== 'ios',
                 tabBarStyle: {
                     borderTopWidth: 0,
                 }

@@ -20,7 +20,9 @@ export default function ListStack() {
             screenOptions={{
                 headerStyle: {
                     backgroundColor: theme.colors.background,
-                    borderWidth: 0
+                    elevation: 0,
+                    shadowOpacity : 0,
+                    borderBottomWidth: 0
                 },
                 headerTitleAlign: 'center',
                 presentation: 'card',
