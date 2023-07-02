@@ -18,7 +18,8 @@ export default function ListStack() {
             screenOptions={{
                 headerStyle: {
                   backgroundColor: theme.colors.background,
-                }
+                },
+                headerTitleAlign: 'center'
             }}
             >
 
