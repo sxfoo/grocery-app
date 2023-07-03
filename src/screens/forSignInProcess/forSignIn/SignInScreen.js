@@ -12,10 +12,21 @@ import CustomInput from "../../../components/CustomInput/CustomInput";
 import CustomButton from "../../../components/CustomButton/CustomButton";
 import SocialSignInButtons from "../../../components/SocialSignInButtons";
 import { useNavigation } from "@react-navigation/native";
+import { signInWithEmailAndPassword, getAuth } from "firebase/auth";
 
 const SignInScreen = () => {
 	const [username, setUsername] = useState("");
 	const [password, setPassword] = useState("");
+	const auth = getAuth()
+	const handleSignIn = () => {
+		signInWithEmailAndPassword(auth, username, password)
+		.then((userCredential) => {
+			const user = userCredential.user;
+		})
+		.catch((error) => {
+			alert(error.message);
+		});
+	}
 
 	const { height } = useWindowDimensions();
 	const navigation = useNavigation();
@@ -47,7 +58,7 @@ const SignInScreen = () => {
 				/>
 
 				<CustomInput
-					placeholder="Username"
+					placeholder="Email" /* Changed from username to email to use firebase function*/
 					value={username}
 					setValue={setUsername}
 				/>
@@ -59,7 +70,7 @@ const SignInScreen = () => {
 					secureTextEntry
 				/>
 
-				<CustomButton text="Sign In" onPress={onSignInPressed} />
+				<CustomButton text="Sign In" onPress={handleSignIn} />
 
 				<CustomButton
 					text="Forgot password?"

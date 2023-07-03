@@ -4,19 +4,33 @@ import CustomInput from "../../../components/CustomInput/CustomInput";
 import CustomButton from "../../../components/CustomButton/CustomButton";
 import SocialSignInButtons from "../../../components/SocialSignInButtons/SocialSignInButtons";
 import { useNavigation } from "@react-navigation/native";
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 
 const SignUpScreen = () => {
 	const [username, setUsername] = useState("");
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [passwordRepeat, setPasswordRepeat] = useState("");
-
+	const auth = getAuth();
+	const handleSignUp = () => {
+		if (email.length == 0 || password.length == 0){
+			alert('Missing fields')
+			return;
+		}
+		createUserWithEmailAndPassword(auth, email, password)
+		.then(userCredentials =>{
+			const user = userCredentials.user;
+			console.log(user.email);
+		})
+		.catch(error => alert(error.message))
+	}
+	
 	const navigation = useNavigation();
 
-	const onRegisterPressed = () => {
+	/*const onRegisterPressed = () => {
 		console.warn("Sign in");
 		navigation.navigate("ConfirmEmail")
-	};
+	};*/
 
 	const onSignInPressed = () => {
 		navigation.navigate("SignInScreen");
@@ -59,7 +73,7 @@ const SignUpScreen = () => {
 					secureTextEntry
 				/>
 
-				<CustomButton text="Register" onPress={onRegisterPressed} />
+				<CustomButton text="Register" onPress={handleSignUp} />
 
 				<Text style={styles.text}>
 					By registering, you confirm that you accept our {' '}

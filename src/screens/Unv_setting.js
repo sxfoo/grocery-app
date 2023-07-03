@@ -29,7 +29,6 @@ const customisation = [
     },
 ];
 /* CSS used to style the page */
-
 const styles = StyleSheet.create({
     
     headertext: {
@@ -97,6 +96,11 @@ const styles = StyleSheet.create({
     },
 });
 
+export const toggledark = (dark) => {
+    var d_value = dark
+    console.log('Dark is' + d_value)
+}
+
 const Unv_setting = () => {
     const Navigation = useNavigation();
     const [form, setForm] = React.useState({
@@ -161,10 +165,12 @@ const Unv_setting = () => {
                                 <Text style = {styles.label}>{label}</Text>
                                 <View style = {{flex: 1,}}/> 
                                 {/*takes up the available space*/}
-                                {type === 'toggle' && 
+                                {type === 'toggle' && id ==='darkMode' &&
                                 (<Switch 
                                     value = {form[id]}
-                                    onValueChange = {value => setForm({ ...form, [id]: value})}
+                                    onValueChange = {value => {setForm({ ...form, [id]: value});
+                                    toggledark(value);
+                                    }}
                                 />)}
                                 {type === 'link' && <IconButton icon = "chevron-right"/>}
                             </View>
@@ -177,6 +183,7 @@ const Unv_setting = () => {
             </ScrollView>
         </SafeAreaProvider>
     )
+
 };
 
 
