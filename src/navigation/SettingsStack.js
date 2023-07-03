@@ -9,7 +9,7 @@ import { createAnimatedPropAdapter } from "react-native-reanimated";
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import ForgotPasswordScreen from "../screens/forSignInProcess/forForgotPassword/ForgotPasswordScreen";
 import SignUpScreen from "../screens/forSignInProcess/forSignUp/SignUpScreen";
-
+import ConfirmEmailScreen from "../screens/forSignInProcess/forConfirmEmail/ConfirmEmailScreen";
 
 
 const Stack = createNativeStackNavigator()
@@ -22,6 +22,7 @@ const SignInStack2 = () => {
 			<Drawer.Screen name = "ResetPassword" component={ResetPasswordScreen}/>
 			<Drawer.Screen name = "ForgotPassword" component = {ForgotPasswordScreen}/>
 			<Drawer.Screen name = "SignUp" component={SignUpScreen}/>
+			<Drawer.Screen name = "ConfirmEmail" component={ConfirmEmailScreen}/>
 		</Drawer.Navigator>
 	)
 }

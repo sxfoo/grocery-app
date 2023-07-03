@@ -15,13 +15,14 @@ import { useNavigation } from "@react-navigation/native";
 import { signInWithEmailAndPassword, getAuth } from "firebase/auth";
 
 const SignInScreen = () => {
-	const [username, setUsername] = useState("");
+	const [username, setUsername] = useState(""); 
 	const [password, setPassword] = useState("");
 	const auth = getAuth()
 	const handleSignIn = () => {
 		signInWithEmailAndPassword(auth, username, password)
 		.then((userCredential) => {
 			const user = userCredential.user;
+			console.log('New user signed in: ' )
 		})
 		.catch((error) => {
 			alert(error.message);

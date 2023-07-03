@@ -4,7 +4,7 @@ import CustomInput from "../../../components/CustomInput/CustomInput";
 import CustomButton from "../../../components/CustomButton/CustomButton";
 import SocialSignInButtons from "../../../components/SocialSignInButtons/SocialSignInButtons";
 import { useNavigation } from "@react-navigation/native";
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword, sendEmailVerification } from "firebase/auth";
 
 const SignUpScreen = () => {
 	const [username, setUsername] = useState("");
@@ -18,12 +18,23 @@ const SignUpScreen = () => {
 			return;
 		}
 		createUserWithEmailAndPassword(auth, email, password)
-		.then(userCredentials =>{
+		.then((userCredentials) =>{
 			const user = userCredentials.user;
-			console.log(user.email);
-		})
+			console.log('New user signed up:');
+			/*sends verification email*/
+			sendEmailVerification(auth.currentUser)
+			.then(() => {
+				// Verification email sent successfully
+				console.log('Verification email sent');
+			  })
+			  .catch((error) => {
+				// An error occurred while sending the verification email
+				console.error('Error sending verification email:', error);
+			/*navigation.navigate('ConfirmEmail');*/
+		});
+	})
 		.catch(error => alert(error.message))
-	}
+	};
 	
 	const navigation = useNavigation();
 
