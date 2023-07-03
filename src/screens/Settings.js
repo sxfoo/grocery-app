@@ -9,6 +9,7 @@ import FeatherIcon from 'react-native-vector-icons/Feather';
 import { launchCamera, launchImageLibrary } from "react-native-image-picker";
 import { useNavigation } from "@react-navigation/native";
 import SignInStack from "../navigation/SignInStack";
+import { signOut, getAuth } from "@firebase/auth";
 
 /* Settings page, specify the individual settings, icons and type of change*/
 const customisation = [
@@ -126,7 +127,16 @@ const Settings = () => {
     });
     const theme = useTheme();
     const insets = useSafeAreaInsets();
-    
+    const auth = getAuth();
+    const handleSignOut = () => {
+        signOut(auth).then(() => {
+        console.log('user signed out')
+        navigation.replace('SignIn')
+        })
+        .catch((error) => {
+        alert(error.message);
+    });
+    }
     const imagePick = () => {
         console.log('Image pick pressed');
         /*
@@ -161,7 +171,7 @@ const Settings = () => {
             }
             */
     };
-
+    const email = auth.currentUser.email
     return(
         <SafeAreaProvider>
             <ScrollView>
@@ -187,14 +197,14 @@ const Settings = () => {
                     
                 </TouchableOpacity>
 
-                <Text style = {styles.profile_name}>Sally Wong</Text>
-                <Text style = {styles.profile_email}>sallywong@gmail.com</Text>
+                <Text style = {styles.profile_name}> {email.slice(0, email.indexOf("@"))}</Text>
+                <Text style = {styles.profile_email}> {auth.currentUser.email}</Text>
             </View>
 
             <View>
-                <TouchableOpacity onPress={() => {navigation.navigate('Unv_setting')}}>
+                {/*<TouchableOpacity onPress={() => {navigation.navigate('Unv_setting')}}>
                     <Text style = {{marginLeft:'auto', marginRight: 'auto'}}> Click to navigate to unverified user settings</Text>
-                </TouchableOpacity>
+                </TouchableOpacity> */}
             </View>
         {/* it's basically a loop to map the header and the text*/}
             {customisation.map(({header, items}) => (
@@ -205,10 +215,17 @@ const Settings = () => {
                     {items.map(({label, id, type, icon, nav}) => (
                         <View key={id}>
                         <TouchableOpacity onPress ={() => {
+                                if (nav === 'SignIn'){
+                                    {console.log("Successful sign out")};
+                                    {handleSignOut()};
+                                    return;
+                                }
+                                
                                 if (nav)
-                                {console.log('Screen page:' + nav)};
-                                {navigation.navigate("SignIn", {screen: nav})};
-                                {/*navigation.navigate(nav)*/}
+                                {
+                                    {console.log('Screen page:' + nav)};
+                                    {navigation.navigate(nav)};
+                                }
 
                         }}>
                             <View style = {[styles.row, {backgroundColor: theme.colors.inverseOnSurface,}]}>

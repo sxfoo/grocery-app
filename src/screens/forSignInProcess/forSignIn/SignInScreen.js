@@ -6,18 +6,30 @@ import {
 	useWindowDimensions,
 	ScrollView,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Logo from "../../../../assets/images/shoppingcart.png";
 import CustomInput from "../../../components/CustomInput/CustomInput";
 import CustomButton from "../../../components/CustomButton/CustomButton";
 import SocialSignInButtons from "../../../components/SocialSignInButtons";
 import { useNavigation } from "@react-navigation/native";
-import { signInWithEmailAndPassword, getAuth } from "firebase/auth";
+import { signInWithEmailAndPassword, getAuth, onAuthStateChanged } from "firebase/auth";
 
 const SignInScreen = () => {
 	const [username, setUsername] = useState(""); 
 	const [password, setPassword] = useState("");
-	const auth = getAuth()
+	const auth = getAuth();
+	const navigation = useNavigation();
+
+	useEffect(() => {
+		const unsubscribe = onAuthStateChanged(auth, user => {
+			if (user) {
+				navigation.replace("Settings")
+			}
+		}) 
+
+		return unsubscribe
+	}, [])
+
 	const handleSignIn = () => {
 		signInWithEmailAndPassword(auth, username, password)
 		.then((userCredential) => {
@@ -30,7 +42,7 @@ const SignInScreen = () => {
 	}
 
 	const { height } = useWindowDimensions();
-	const navigation = useNavigation();
+	
 
 	const onSignInPressed = () => {
 		console.warn("Sign in");
