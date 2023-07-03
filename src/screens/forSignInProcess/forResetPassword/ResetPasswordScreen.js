@@ -11,8 +11,8 @@ const ResetPasswordScreen = () => {
 	const navigation = useNavigation()
 
 	const onSignInPressed = () => {
-		console.warn("onResendCodePressed");
-		navigation.navigate("SignIn")
+		navigation.navigate('SignInScreen');
+		console.warn("SignInPressed");
 	};
 
 	const onSubmitPressed = () => {

@@ -7,6 +7,8 @@ import SignInScreen from "../screens/forSignInProcess/forSignIn/SignInScreen";
 import ResetPasswordScreen from "../screens/forSignInProcess/forResetPassword/ResetPasswordScreen";
 import { createAnimatedPropAdapter } from "react-native-reanimated";
 import { createDrawerNavigator } from '@react-navigation/drawer';
+import ForgotPasswordScreen from "../screens/forSignInProcess/forForgotPassword/ForgotPasswordScreen";
+import SignUpScreen from "../screens/forSignInProcess/forSignUp/SignUpScreen";
 
 
 
@@ -15,9 +17,11 @@ const Drawer = createDrawerNavigator()
 
 const SignInStack2 = () => {
 	return(
-		<Drawer.Navigator useLegacyImplementation>
+		<Drawer.Navigator useLegacyImplementation screenOptions={{headerShown: false}}>
 			<Drawer.Screen name = "SignInScreen" component = {SignInScreen}/>
 			<Drawer.Screen name = "ResetPassword" component={ResetPasswordScreen}/>
+			<Drawer.Screen name = "ForgotPassword" component = {ForgotPasswordScreen}/>
+			<Drawer.Screen name = "SignUp" component={SignUpScreen}/>
 		</Drawer.Navigator>
 	)
 }
