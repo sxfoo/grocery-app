@@ -19,8 +19,9 @@ const SignUpScreen = () => {
 	};
 
 	const onSignInPressed = () => {
+		navigation.navigate("SignInScreen");
 		console.warn("SignInPressed");
-		navigation.navigate("SignIn")
+		
 	};
 
 	const onTermsOfUsePressed = () => {

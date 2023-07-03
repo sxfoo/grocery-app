@@ -8,6 +8,7 @@ import { SafeAreaProvider, useSafeAreaInsets } from "react-native-safe-area-cont
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import { launchCamera, launchImageLibrary } from "react-native-image-picker";
 import { useNavigation } from "@react-navigation/native";
+import SignInStack from "../navigation/SignInStack";
 
 /* Settings page, specify the individual settings, icons and type of change*/
 const customisation = [
@@ -204,8 +205,11 @@ const Settings = () => {
                     {items.map(({label, id, type, icon, nav}) => (
                         <View key={id}>
                         <TouchableOpacity onPress ={() => {
-                                if (nav) 
-                                {navigation.navigate(nav)}
+                                if (nav)
+                                {console.log('Screen page:' + nav)};
+                                {navigation.navigate("SignIn", {screen: nav})};
+                                {/*navigation.navigate(nav)*/}
+
                         }}>
                             <View style = {[styles.row, {backgroundColor: theme.colors.inverseOnSurface,}]}>
                                 <View style = {styles.icon}> 
