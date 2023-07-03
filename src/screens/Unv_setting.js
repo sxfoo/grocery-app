@@ -5,8 +5,9 @@ import { View, TouchableOpacity, Icon } from "react-native-ui-lib";
 import { IconButton, Text, useTheme} from "react-native-paper";
 import { FlatList, ScrollView, Switch } from "react-native-gesture-handler";
 import { SafeAreaProvider, useSafeAreaInsets } from "react-native-safe-area-context";
-import Card from "react-native-paper";
+import {Card} from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
+import FeatherIcon from 'react-native-vector-icons/Feather';
 
 /* Settings page, specify the individual settings, icons and type of change*/
 const customisation = [
@@ -103,7 +104,7 @@ const Unv_setting = () => {
         Notification: true,
         location: true,
     });
-    const theme = useTheme();
+    const themes = useTheme();
     const insets = useSafeAreaInsets();
     
     const imagePick = () => {
@@ -119,21 +120,26 @@ const Unv_setting = () => {
                 paddingBottom: insets.bottom,
                 paddingLeft: insets.left,
                 paddingRight: insets.right}]}>
-
-                {/* Profile picture*/}
+                <TouchableOpacity onPress = {() => {{}}}>
                     <View style = {styles.avatar}>
                         <Image
-                            alt = "Profile Pic"
-                            source = {{uri: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Default_pfp.svg/1200px-Default_pfp.svg.png'}}
+                            alt = "Profile Picture"
+                            source={{ uri: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Default_pfp.svg/1200px-Default_pfp.svg.png'}}
                             style = {styles.profile_avatar}
                         />
-                        <Text> Hi </Text>
                     </View>
-                
-            <Card> 
-                <Text style = {styles.profile_name}>You are not signed in</Text>
-            </Card>
-            </View>
+
+                    <View style = {[styles.profile_write, {backgroundColor: themes.colors.inverseOnSurface}]}>
+                        <FeatherIcon name="alert-triangle" size={15} style={{color: themes.colors.inverseSurface}} />
+                    </View>
+                    
+                </TouchableOpacity>
+
+
+                    <Text style={styles.profile_name}>You are not signed in</Text>
+                    <Text style={styles.profile_email}>Sign in to gain access to full features</Text>
+                {/* Profile picture*/}
+                </View>
         {/* it's basically a loop to map the header and the text*/}
             {customisation.map(({header, items}) => (
                 <View key={header} style = {styles.header}>
@@ -146,7 +152,7 @@ const Unv_setting = () => {
                                 if (nav) 
                                 {Navigation.navigate(nav)}
                         }}>
-                            <View style = {[styles.row, {backgroundColor: theme.colors.inverseOnSurface,}]}>
+                            <View style = {[styles.row, {backgroundColor: themes.colors.inverseOnSurface,}]}>
                                 <View style = {styles.icon}> 
                                     <IconButton icon = {icon} />
                                 </View>

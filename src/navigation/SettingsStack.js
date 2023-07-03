@@ -13,9 +13,9 @@ const Stack = createNativeStackNavigator()
 
 const SettingsStack = () => {
   return (
-		<Stack.Navigator screenOptions={{ headerShown: false }}>
+		<Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="Settings">
 			<Stack.Screen name="Settings" component={Settings} />
-			<Stack.Screen name="Unv_user" component={Unv_setting}/>
+			<Stack.Screen name="Unv_setting" component={Unv_setting}/>
 			<Stack.Screen name="SignIn" component={SignInScreen} />
 			<Stack.Screen name="ResetPassword" component={ResetPasswordScreen} />
 		</Stack.Navigator>

@@ -116,7 +116,7 @@ const styles = StyleSheet.create({
 const PROFILE_PIC = "https://static.wikia.nocookie.net/disney/images/3/3c/Profile_-_Sulley.jpg/revision/latest?cb=20200817112818";
 
 const Settings = () => {
-    const Navigation = useNavigation();
+    const navigation = useNavigation();
     const [Pic, SetPic] = React.useState('');
     const [form, setForm] = React.useState({
         darkMode: true,
@@ -191,7 +191,7 @@ const Settings = () => {
             </View>
 
             <View>
-                <TouchableOpacity onPress={() => {Navigation.navigate('Unv_user')}}>
+                <TouchableOpacity onPress={() => {navigation.navigate('Unv_setting')}}>
                     <Text style = {{marginLeft:'auto', marginRight: 'auto'}}> Click to navigate to unverified user settings</Text>
                 </TouchableOpacity>
             </View>
@@ -205,7 +205,7 @@ const Settings = () => {
                         <View key={id}>
                         <TouchableOpacity onPress ={() => {
                                 if (nav) 
-                                {Navigation.navigate(nav)}
+                                {navigation.navigate(nav)}
                         }}>
                             <View style = {[styles.row, {backgroundColor: theme.colors.inverseOnSurface,}]}>
                                 <View style = {styles.icon}> 
