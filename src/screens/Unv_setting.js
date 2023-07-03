@@ -2,7 +2,7 @@ import React from "react";
 import { Alert, StyleSheet } from "react-native";
 import { Image } from "react-native-ui-lib";
 import { View, TouchableOpacity, Icon } from "react-native-ui-lib";
-import { IconButton, Text, useTheme} from "react-native-paper";
+import { Divider, IconButton, Text, useTheme} from "react-native-paper";
 import { FlatList, ScrollView, Switch } from "react-native-gesture-handler";
 import { SafeAreaProvider, useSafeAreaInsets } from "react-native-safe-area-context";
 import {Card} from "react-native-paper";
@@ -115,12 +115,15 @@ const Unv_setting = () => {
     return(
         <SafeAreaProvider>
             <ScrollView>
-                <View style = {[styles.profile, {        
+                <TouchableOpacity style = {[styles.profile, {        
                 paddingTop: insets.top,
                 paddingBottom: insets.bottom,
                 paddingLeft: insets.left,
-                paddingRight: insets.right}]}>
-                <TouchableOpacity onPress = {() => {{}}}>
+                paddingRight: insets.right
+                }]}
+                onPress = {() => {Navigation.navigate("SignIn", {screen: 'SignInScreen'})}}
+                >
+                <TouchableOpacity>
                     <View style = {styles.avatar}>
                         <Image
                             alt = "Profile Picture"
@@ -132,14 +135,13 @@ const Unv_setting = () => {
                     <View style = {[styles.profile_write, {backgroundColor: themes.colors.inverseOnSurface}]}>
                         <FeatherIcon name="alert-triangle" size={15} style={{color: themes.colors.inverseSurface}} />
                     </View>
-                    
-                </TouchableOpacity>
-
-
-                    <Text style={styles.profile_name}>You are not signed in</Text>
-                    <Text style={styles.profile_email}>Sign in to gain access to full features</Text>
+                </TouchableOpacity> 
+                <Text style={styles.profile_name}>You are not signed in</Text>
+                <Text style={styles.profile_email}>Sign in to gain access to full features</Text>
+            
                 {/* Profile picture*/}
-                </View>
+                </TouchableOpacity>
+                <Divider style = {{marginBottom: 15}}/> 
         {/* it's basically a loop to map the header and the text*/}
             {customisation.map(({header, items}) => (
                 <View key={header} style = {styles.header}>
