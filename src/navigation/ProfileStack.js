@@ -1,12 +1,11 @@
-
 import Trial from '../screens/Trial';
 import Settings from '../screens/Settings';
 import SearchItems from '../screens/forGroceryListStack/SearchItems';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { createStackNavigator } from '@react-navigation/stack';
 import { useTheme } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-const Stack = createNativeStackNavigator();
+const Stack = createStackNavigator();
 
 /* Stack for displaying Profile Screens */
 export default function ProfileStack() {
@@ -20,6 +19,9 @@ export default function ProfileStack() {
             screenOptions={{
                 headerStyle: {
                     backgroundColor: theme.colors.background,
+                    elevation: 0,
+                    shadowOpacity : 0,
+                    borderBottomWidth: 0
                 }
             }}
         >
@@ -27,7 +29,9 @@ export default function ProfileStack() {
             <Stack.Screen
                 name="Trial"
                 component={Trial}
-                options={{ headerShown: false }}
+                options={{ 
+                    title: null,
+                }}
             />
 
         </Stack.Navigator>

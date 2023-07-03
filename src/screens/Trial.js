@@ -1,18 +1,17 @@
-import React, {useState, useEffect} from "react";
-import {View, ScrollView, SafeAreaView, StyleSheet, TouchableOpacity} from "react-native";
-import {FontAwesome} from '@expo/vector-icons';
-import {Dropdown} from 'react-native-element-dropdown'
-import { StatusBar, Platform } from "react-native";
+import React, { useState, useEffect, useRef } from "react";
+import { View, StyleSheet, TouchableOpacity, Dimensions } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
-import { Card, Divider, IconButton, Text, useTheme} from "react-native-paper";
+import { Card, IconButton, Text, useTheme, Divider } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
 
+import { Image } from "react-native-ui-lib";
+
+import { BarChart, LineChart, PieChart } from "react-native-gifted-charts";
 
 const styles = StyleSheet.create({
     container: {
         width: '100%',
-        paddingLeft: '4%',
-        paddingRight: '4%',
+        alignItems: 'center'
     },
 
     title: {
@@ -20,7 +19,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
     },
     user: {
-        fontWeight:'medium',
+        fontWeight: 'medium',
         fontSize: 18,
     },
 
@@ -30,155 +29,245 @@ const styles = StyleSheet.create({
         justifyContent: "space-between",
     },
 
-    itemstitle:{
+    itemstitle: {
         fontWeight: 'medium',
         fontSize: 16,
         width: '70%',
     },
 
-    itemprice:{
+    itemprice: {
         color: '#FDB2AD',
         fontSize: 18,
         fontWeight: 'medium',
         width: '25%',
         marginTop: 'auto',
         marginBottom: 'auto',
-    },
-
-    /*
-    recent_exp: {
-        fontWeight: 'medium',
-        color: 'white',
-        fontSize: 28,
-    },
-    dropdown: {
-        margin: 16,
-        height: 50,
-        width: 150,
-        backgroundColor: '#EEEEEE',
-        borderRadius: 22,
-        paddingHorizontal: 8,
-      },
-        
-      imageStyle: {
-        width: 24,
-        height: 24,
-        borderRadius: 12,
-      },
-      placeholderStyle: {
-        fontSize: 16,
-      },
-      selectedTextStyle: {
-        fontSize: 16,
-        marginLeft: 8,
-      },*/
-    
+    }
 });
 
+const Profile = ({ navigation, theme }) => {
 
-const Profile = () => {
-    const navigation = useNavigation()
-    const theme = useTheme()
-    return(
-        <View style = {[styles.container, {paddingTop: 4}]}> 
-            <Card onPress={() => {navigation.navigate('Settings')}} style= {{backgroundColor: theme.colors.inverseOnSurface}} >
+    const PROFILE_PIC = "https://static.wikia.nocookie.net/disney/images/3/3c/Profile_-_Sulley.jpg/revision/latest?cb=20200817112818";
+
+    return (
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+
+            {/* <Card onPress={() => { }} style={{ backgroundColor: theme.colors.inverseOnSurface }} >
                 <Card.Title
                     title="Hello,"
                     subtitle="Sally Wong"
-                    right={(props) => <IconButton {...props} icon="account-circle" size={40}/>}
-                    titleStyle = {styles.title}
+                    right={(props) => <IconButton {...props} icon="account-circle" size={40} />}
+                    titleStyle={styles.title}
                     titleVariant="titleLarge"
-                    subtitleStyle = {styles.user}
+                    subtitleStyle={styles.user}
                 />
-            </Card>
-            
+            </Card> */}
+
+            <Text variant='headlineMedium' style={{ fontWeight: 'bold' }}> Expenses </Text>
+            <View style={{ flex: 1 }} />
+            <TouchableOpacity style={{ flexDirection: 'column', alignItems: 'center' }} onPress={() => { }}>
+                <View style={{}}>
+                    <Image
+                        alt="Profile Picture"
+                        source={{ uri: PROFILE_PIC }}
+                        style={{
+                            width: 56,
+                            height: 56,
+                            borderRadius: 9999,
+                        }}
+                    />
+                </View>
+                <Text variant='bodySmall' style={{}}> Sally Wong </Text>
+            </TouchableOpacity>
         </View>
     )
 };
 
-const Recent_expense = () =>{
+const Budget = ({ theme }) => {
+    return (
+        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 20 }}>
+
+            <View style={{ flexDirection: 'column', alignItems: 'center' }}>
+                <Text variant='titleMedium' style={{ color: theme.colors.onSurfaceVariant }}>Budget for the week</Text>
+                <Text variant='headlineMedium' style={{ fontWeight: 'bold', color: theme.colors.secondary }}>$97.00</Text>
+            </View>
+
+            <View style={{ flexDirection: 'column', alignItems: 'center' }}>
+                <Text variant='titleSmall' style={{ color: theme.colors.error }}>Spent</Text>
+                <Text variant='headlineSmall' style={{ fontWeight: 'bold', color: theme.colors.error }}>$50.70</Text>
+            </View>
+
+            <View style={{ flexDirection: 'column', alignItems: 'center' }}>
+                <Text variant='titleSmall' style={{ color: theme.colors.primary }}>Remaining</Text>
+                <Text variant='headlineSmall' style={{ fontWeight: 'bold', color: theme.colors.primary }}>$46.30</Text>
+            </View>
+
+        </View>
+    )
+}
+
+const ExpenditureChart = ({ theme }) => {
+
+    const screenWidth = Dimensions.get('window').width;
+
+    const LabelComponent = ({ label }) => (
+        <View style={{ alignSelf: 'center' }}>
+            <Text variant='labelSmall' style={{ fontWeight: 'bold', color: theme.colors.secondary }}>{label}</Text>
+        </View>
+    )
+
+    const barData = [
+        {
+            value: 10.20,
+            labelComponent: () => <LabelComponent label={'Mon'} />,
+            topLabelComponent: () => <LabelComponent label={'10.2'} />
+        },
+        {
+            value: 7.50,
+            labelComponent: () => <LabelComponent label={'Tue'} />,
+            topLabelComponent: () => <LabelComponent label={'7.5'} />
+        },
+        {
+            value: 12.30,
+            labelComponent: () => <LabelComponent label={'Wed'} />,
+            topLabelComponent: () => <LabelComponent label={'12.3'} />
+        },
+        {
+            value: 8.60,
+            labelComponent: () => <LabelComponent label={'Thur'} />,
+            topLabelComponent: () => <LabelComponent label={'8.6'} />
+        },
+        {
+            value: 12.10,
+            labelComponent: () => <LabelComponent label={'Fri'} />,
+            topLabelComponent: () => <LabelComponent label={'12.1'} />,
+            frontColor: theme.colors.primary
+        },
+        {
+            value: 0,
+            labelComponent: () => <LabelComponent label={'Sat'} />,
+        },
+        {
+            value: 0,
+            labelComponent: () => <LabelComponent label={'Sun'} />,
+        },
+    ];
+
+    return (
+        <View>
+            <BarChart
+                data={barData}
+                frontColor={theme.colors.error}
+                animationDuration={250}
+                barBorderRadius={8}
+                width={350}
+                dashGap={30}
+                dashWidth={5}
+                barWidth={25}
+                initialSpacing={30}
+                noOfSections={4}
+                hideRules={true}
+                yAxisThickness={0}
+                xAxisThickness={0}
+                yAxisLabelPrefix={'$'}
+                yAxisTextStyle={{ fontWeight: 'bold', color: theme.colors.primary }}
+                isAnimated={true}
+            />
+        </View>
+    );
+};
+
+const Recent_expense = ( {theme} ) => {
     const [data, setData] = useState([])
     const [loading, setLoading] = useState(true)
     const url = "https://fakestoreapi.com/products";
-    const theme = useTheme()
 
     useEffect(() => {
         fetch(url)
-        .then((response) => response.json()) /*sucessful response in json format*/
-        
-        .then((json) => setData(json)) /*Convert response to json format in data*/
-        .catch((error) => console.error(error)) /*fails to fetch*/
-        .finally(()=> setLoading(false)); /*Regardless whether it fails or not*/
-        
-    },[])
+            .then((response) => response.json()) /*sucessful response in json format*/
 
-    const renderItem = ({item}) => (
+            .then((json) => setData(json)) /*Convert response to json format in data*/
+            .catch((error) => console.error(error)) /*fails to fetch*/
+            .finally(() => setLoading(false)); /*Regardless whether it fails or not*/
+
+    }, [])
+
+    const renderItem = ({ item }) => (
         <View key={item.id} style={{ marginTop: '2%' }}>
-        <View style={styles.items}>
-          <Text numberOfLines={1} ellipsizeMode="tail" style={styles.itemstitle}>
-            {item.title}
-          </Text>
-          <Text style={styles.itemprice}>-${item.price}</Text>
+            <View style={styles.items}>
+                <Text numberOfLines={1} ellipsizeMode="tail" style={styles.itemstitle}>
+                    {item.title}
+                </Text>
+                <Text style={styles.itemprice}>-${item.price}</Text>
+            </View>
+            <View>
+                <Text style={{ color: 'grey' }}>04 Nov 2022</Text>
+            </View>
         </View>
-        <View>
-          <Text style={{ color: 'grey' }}>04 Nov 2022</Text>
-        </View>
-      </View>
     );
 
-    return(
-        <View style = {styles.container}>
-        <Card style = {{backgroundColor: theme.colors.elevation.level3}}>
-            <View style = {styles.container}>
-                <View style = {{flexDirection: 'row', justifyContent: 'space-between'}}> 
-                    <Text style = {[styles.title, {marginBottom:'auto', marginTop: 'auto'}]}>Expenses </Text>
-                    <TouchableOpacity>
-                        <IconButton icon = "filter-outline" iconColor='white' onPress = {() => {}}/>
-                    </TouchableOpacity>
-                </View>
-            {
-                loading? <Text> Loading...</Text>: (
-                    <FlatList
-                        data={data}
-                        renderItem={renderItem} /*will be called each item in the array*/
-                        keyExtractor={(item) => item.id.toString()}
-                        style = {{height: 200}}
-                        showsVerticalScrollIndicator = {false}
-                    />
-                    )
-                /*
-                   data.map((post) =>
-                    (
-                      <View key = {post.id} style = {{marginTop: '2%'}}>
-                            <View style = {styles.items}> 
-                                <Text numberOfLines={1} ellipsizeMode="tail" style = {styles.itemstitle}>
-                                    {post.title}
-                                </Text>
-                                <Text style = {styles.itemprice}> -${post.price}</Text>
-                            </View>
-                            <View>
-                                <Text style = {{color: 'grey',}}> 04 Nov 2022</Text>
-                            </View>
-                        </View>
-                    ))
-                */
-            }       
+    return (
+        <View style={{ marginTop: 20, flexDirection: 'column', alignSelf: 'flex-start'}}>
+
+            <View style={{ flexDirection: 'row' }}>
+                <Text variant='titleLarge' style={{ fontWeight: 'bold' }}>Recent Expenses</Text>
             </View>
 
-        </Card>
+            {/*
+            <Card style={{ backgroundColor: theme.colors.elevation.level3 }}>
+                <View style={styles.container}>
+                    <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                        <Text style={[styles.title, { marginBottom: 'auto', marginTop: 'auto' }]}>Expenses </Text>
+                        <TouchableOpacity>
+                            <IconButton icon="filter-outline" iconColor='white' onPress={() => { }} />
+                        </TouchableOpacity>
+                    </View>
+                    {
+                        loading ? <Text> Loading...</Text> : (
+                            <FlatList
+                                data={data}
+                                renderItem={renderItem} // will be called each item in the array
+                                keyExtractor={(item) => item.id.toString()}
+                                style={{ height: 200 }}
+                                showsVerticalScrollIndicator={false}
+                            />
+                        )
+                        // data.map((post) => (
+                        //   <View key={post.id} style={{ marginTop: '2%' }}>
+                        //     <View style={styles.items}>
+                        //       <Text numberOfLines={1} ellipsizeMode="tail" style={styles.itemstitle}>
+                        //         {post.title}
+                        //       </Text>
+                        //       <Text style={styles.itemprice}>-${post.price}</Text>
+                        //     </View>
+                        //     <View>
+                        //       <Text style={{ color: 'grey' }}>04 Nov 2022</Text>
+                        //     </View>
+                        //   </View>
+                        // ))
+                    }
+                </View>
+            </Card>
+            */}
         </View>
     );
 }
 
 const TrialScreen = () => {
-    return(
-        <SafeAreaView style = {[{marginTop: StatusBar.currentHeight}]}>
-            <Profile/>
-            <Text style = {{fontSize: 48}}>Insert graph here </Text>
-            <Recent_expense/>
-        </SafeAreaView>
 
-        
+    const navigation = useNavigation()
+    const theme = useTheme()
+
+    return (
+        <View style={{ flex: 1, flexDirection: 'column', gap: 10, alignItems: 'center', paddingLeft: 16, paddingRight: 16 }}>
+
+            <Profile navigation={navigation} theme={theme} />
+            <Divider />
+            <Budget theme={theme} />
+            <ExpenditureChart theme={theme} />
+            <Recent_expense theme={theme} />
+
+        </View>
     )
 };
 
