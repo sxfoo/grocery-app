@@ -2,56 +2,12 @@ import { storeItemData } from './asyncStorageUtils';
 import { randomUUID } from 'expo-crypto';
 import { db, ref, set } from '../../firebaseConfig'
 import { LayoutAnimation } from 'react-native';
-import checkifauth from './checkifauth';
-import { auth } from '../../firebaseConfig';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { checkifauth, getUserId } from './checkifauth';
 
 /* For Accordian Card Item */
 
 // Function to occur on adding to list
 export const AddToList = ({ item, values, setSearchQuery, setAddedItems }) => {
-    // Get the user's unique identifier
-    /*
-        //User is not signed in
-        // Use a unique ID for unverified user stored in local storage
-        let userId = localStorage.getItem('userId');
-        if (!userId) { //if new user
-            userId = randomUUID(); // Generate a random UUID
-            
-            localStorage.setItem('userId', userId); // Store the generated ID locally
-        }
-        console.log(userId);
-        return userId;
-        
-    }; */
-    // Get the user's unique account data
-    const getUserId = async () => {
-        if (checkifauth) {
-          if (auth.currentUser) { //If user is signed in
-            console.log('Authenticated UID: ' ,auth.currentUser.uid);
-            return auth.currentUser.uid;} // return UID
-        } 
-        //If user not authenticated
-        let userId = null;
-        try {
-        userId = await AsyncStorage.getItem('userId');
-        } catch (error) {
-        console.error('Error retrieving userId from AsyncStorage:', error);
-        }
-        if (!userId) {
-        userId = randomUUID; // Generate a random UUID
-        try {
-            await AsyncStorage.setItem('userId', userId); //store uid
-        } catch (error) {
-            console.error('Error storing userId in AsyncStorage:', error);
-        }
-        }
-            console.log('Unverified UID: ' ,userId);
-            return userId;
-        };
-    
-    
-    // Old listId = "-Mk29uV8ULSgYp2s1"
 
     // Random unique ID for item:
     const itemUUID = randomUUID();
@@ -69,12 +25,13 @@ export const AddToList = ({ item, values, setSearchQuery, setAddedItems }) => {
     }
 
     const addDataToStorage = async () => {
-        
+
         try {
             //getUserId is an asynchronous function (take some time)
             //it causes listId to be assigned the promise object instead of the actual value
             //await can onlyn be used in an async function
             const listId = await getUserId(); //This retrieves the user data, according to the device / authenticated user account
+
             // Offline Storage
             await storeItemData(listId, data, itemUUID); // Wait for offline storage to complete
 
@@ -85,16 +42,23 @@ export const AddToList = ({ item, values, setSearchQuery, setAddedItems }) => {
                 )
             })
 
+        } catch (error) {
+            console.error('Error adding new item:', error);
+        }
+
+        const loggedIn = false;
+
+        if (loggedIn) {
             // Online Storage
             const itemRef = ref(db, `lists/${listId}/items/` + itemUUID);
             await set(itemRef, data); // Wait for online storage to complete
 
             console.log('New item added successfully to Realtime Database:', itemUUID);
             console.log(data);
-
-        } catch (error) {
-            console.error('Error adding new item:', error);
+        } else {
+            console.log('Not logged in!')
         }
+        
     };
 
     addDataToStorage();
