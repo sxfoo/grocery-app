@@ -33,11 +33,11 @@ const ResetPasswordScreen = () => {
 
 				<CustomButton text="Submit" onPress={onSubmitPressed} />
 
-				<CustomButton
+				{/*<CustomButton
 					text="Back to Sign in"
 					onPress={onSignInPressed}
 					type="TERTIARY"
-				/>
+				/>*/}
 			</View>
 		</ScrollView>
 	);

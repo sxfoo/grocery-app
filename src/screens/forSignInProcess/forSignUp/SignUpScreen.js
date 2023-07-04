@@ -4,7 +4,8 @@ import CustomInput from "../../../components/CustomInput/CustomInput";
 import CustomButton from "../../../components/CustomButton/CustomButton";
 import SocialSignInButtons from "../../../components/SocialSignInButtons/SocialSignInButtons";
 import { useNavigation } from "@react-navigation/native";
-import { getAuth, createUserWithEmailAndPassword, sendEmailVerification, onAuthStateChanged } from "firebase/auth";
+import { createUserWithEmailAndPassword, sendEmailVerification, onAuthStateChanged } from "firebase/auth";
+import { auth } from "../../../../firebaseConfig";
 
 const SignUpScreen = () => {
 	const [username, setUsername] = useState("");
@@ -12,25 +13,19 @@ const SignUpScreen = () => {
 	const [password, setPassword] = useState("");
 	const [passwordRepeat, setPasswordRepeat] = useState("");
 	const navigation = useNavigation();
-	const auth = getAuth();
+	
 
-	useEffect(() => {
-		const unsubscribe = onAuthStateChanged(auth, user => {
-			if (user) {
-				navigation.navigate("Settings")
-			}
-		}) 
-		/* Listens to input, checks whether the user is signed in or not*/
-		/* Plan to integrate with the bottom tab so that user won't default to the 
-		sign out page*/
-		return unsubscribe
-	}, [])
 	
 	const handleSignUp = () => {
 		if (email.length == 0 || password.length == 0){
-			alert('Missing fields')
+			alert('Missing fields.');
 			return;
 		}
+		else if (password !== passwordRepeat){
+			alert('Passwords do not match.');
+			return;
+		}
+
 		createUserWithEmailAndPassword(auth, email, password)
 		.then((userCredentials) =>{
 			const user = userCredentials.user;
@@ -58,9 +53,8 @@ const SignUpScreen = () => {
 	};*/
 
 	const onSignInPressed = () => {
-		navigation.navigate("SignInScreen");
+		navigation.navigate("SignIn");
 		console.warn("SignInPressed");
-		
 	};
 
 	const onTermsOfUsePressed = () => {

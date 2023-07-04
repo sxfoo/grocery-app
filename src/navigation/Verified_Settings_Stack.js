@@ -15,22 +15,11 @@ import ConfirmEmailScreen from "../screens/forSignInProcess/forConfirmEmail/Conf
 const Stack = createNativeStackNavigator()
 const Drawer = createDrawerNavigator()
 
-const SignInStack2 = () => {
-	return(
-		<Drawer.Navigator useLegacyImplementation screenOptions={{headerShown: false}}>
-			<Drawer.Screen name = "ResetPassword" component={ResetPasswordScreen}/>
-			<Drawer.Screen name = "ConfirmEmail" component={ConfirmEmailScreen}/>
-		</Drawer.Navigator>
-	)
-}
-
 export const SettingsStack = () => {
   return (
 		<Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="Settings">
 			<Stack.Screen name="Settings" component={Settings} />
-			{/*<Stack.Screen name="SignIn" component={SignInScreen} /> <Stack.Screen name="Settings" component={Settings} />
-			<Stack.Screen name="ResetPassword" component={ResetPasswordScreen} />*/}
-			<Stack.Screen name = "SignIn" component={SignInStack2}/>
+			<Stack.Screen name="ResetPassword" component={ResetPasswordScreen} />
 		</Stack.Navigator>
 	);
 };
