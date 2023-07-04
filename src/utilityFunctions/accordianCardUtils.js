@@ -2,7 +2,7 @@ import { storeItemData } from './asyncStorageUtils';
 import { randomUUID } from 'expo-crypto';
 import { db, ref, set } from '../../firebaseConfig'
 import { LayoutAnimation } from 'react-native';
-import { checkifauth, getUserId } from './checkifauth';
+import { getUserId } from './checkifauth';
 
 /* For Accordian Card Item */
 
@@ -58,7 +58,7 @@ export const AddToList = ({ item, values, setSearchQuery, setAddedItems }) => {
         } else {
             console.log('Not logged in!')
         }
-        
+
     };
 
     addDataToStorage();

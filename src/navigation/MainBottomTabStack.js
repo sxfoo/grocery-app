@@ -13,9 +13,24 @@ import { auth } from '../../firebaseConfig';
 import SignInStack from './Unverified_Settings_Stack';
 import { checkifauth } from '../utilityFunctions/checkifauth';
 
+import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
+
+// function to set bottom tabs visibilty for settings screen
+const VisibleBottomTabs = (route) => {
+
+    // If the focused route is not found, we need to assume it's the initial screen
+    const routeName = getFocusedRouteNameFromRoute(route) ?? "Unv_setting";
+
+    if (routeName === "Unv_setting" || routeName === "Settings") {
+        return true;
+    } else {
+        return false;
+    }
+}
 
 /* Bottom Tab Navigation. */
 export default function MainBottomTabStack() {
+
     //This part of the code checks if an user has been authenticated or not
     const BottomTab = createBottomTabNavigator();
     /*const [isAuth, setIsAuth] = useState(false)
@@ -71,12 +86,19 @@ export default function MainBottomTabStack() {
             <BottomTab.Screen
                 name="Settings Stack"
                 component={checkifauth() ? SettingsStack : SignInStack}
-                options={{
-                    headerShown: false, /*used to be true*/
-                    title: 'Settings',
-                    tabBarIcon: ({ color, size }) => (
-                        <MaterialIcons name="settings" color={color} size={size} />
-                    ),
+                options={({ route }) => {
+                    const bottomTabVisible = VisibleBottomTabs(route);
+                    const options = {
+                        headerShown: false,
+                        title: 'Settings',
+                        tabBarIcon: ({ color, size }) => (
+                            <MaterialIcons name="settings" color={color} size={size} />
+                        )
+                    };
+                    if (!bottomTabVisible) {
+                        options.tabBarStyle = { display: "none" };
+                    }
+                    return options;
                 }}
             />
 
