@@ -32,7 +32,6 @@ export const SettingsStack = () => {
                 headerTitleAlign: 'center',
                 presentation: 'card',
                 headerMode: 'screen',
-                title: 'Settings',
                 ...TransitionPresets.SlideFromRightIOS
             }}
 		>
@@ -47,7 +46,7 @@ export const SettingsStack = () => {
 			/>
 
 			<Stack.Screen name="DeleteAccount" component={AccountDeletionScreen} />
-			
+
 		</Stack.Navigator>
 	);
 };

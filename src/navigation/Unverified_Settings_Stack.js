@@ -31,13 +31,15 @@ const SignInStack = () => {
                 headerTitleAlign: 'center',
                 presentation: 'card',
                 headerMode: 'screen',
-                title: 'Settings',
                 ...TransitionPresets.SlideFromRightIOS
             }}
         >
             <SignIn.Screen
                 name="Unv_setting"
                 component={Unv_setting}
+                options={{
+                    title: 'Settings'
+                }}
             />
 
             <SignIn.Screen
