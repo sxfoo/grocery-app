@@ -39,6 +39,7 @@ const styles = StyleSheet.create({
 
 		alignItems: "center",
 		borderRadius: 5,
+		justifyContent: 'center',
 	},
 
 	container_PRIMARY: {
@@ -50,7 +51,12 @@ const styles = StyleSheet.create({
 		borderWidth: 2,
 	},
 
-	container_TERTIARY: {},
+	container_TERTIARY: {
+		padding: 8,
+		borderColor: "gray",
+		borderWidth: 0.5,
+		marginTop: 5,
+	},
 
 	text: {
 		fontWeight: "bold",

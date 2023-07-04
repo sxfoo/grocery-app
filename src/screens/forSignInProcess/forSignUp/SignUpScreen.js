@@ -8,13 +8,11 @@ import { createUserWithEmailAndPassword, sendEmailVerification, onAuthStateChang
 import { auth } from "../../../../firebaseConfig";
 
 const SignUpScreen = () => {
-	const [username, setUsername] = useState("");
+	// const [username, setUsername] = useState("");
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [passwordRepeat, setPasswordRepeat] = useState("");
 	const navigation = useNavigation();
-	
-
 	
 	const handleSignUp = () => {
 		if (email.length == 0 || password.length == 0){
@@ -45,13 +43,6 @@ const SignUpScreen = () => {
 		.catch(error => alert(error.message))
 	};
 	
-	
-
-	/*const onRegisterPressed = () => {
-		console.warn("Sign in");
-		navigation.navigate("ConfirmEmail")
-	};*/
-
 	const onSignInPressed = () => {
 		navigation.navigate("SignIn");
 		console.warn("SignInPressed");
@@ -117,6 +108,7 @@ const SignUpScreen = () => {
 
 const styles = StyleSheet.create({
 	root: {
+		paddingVertical: 20,
 		alignItems: "center",
 		padding: 20,
 	},

@@ -7,11 +7,9 @@ import SignInScreen from "../screens/forSignInProcess/forSignIn/SignInScreen";
 import ResetPasswordScreen from "../screens/forSignInProcess/forResetPassword/ResetPasswordScreen";
 import { createAnimatedPropAdapter } from "react-native-reanimated";
 import { createDrawerNavigator } from '@react-navigation/drawer';
-import ForgotPasswordScreen from "../screens/forSignInProcess/forForgotPassword/ForgotPasswordScreen";
-import SignUpScreen from "../screens/forSignInProcess/forSignUp/SignUpScreen";
-import ConfirmEmailScreen from "../screens/forSignInProcess/forConfirmEmail/ConfirmEmailScreen";
 import { useTheme } from "react-native-paper";
 
+import AccountDeletionScreen from "../screens/forSignInProcess/forAccountDeletion/AccountDeletionScreen";
 
 const Stack = createStackNavigator()
 const Drawer = createDrawerNavigator()
@@ -48,6 +46,8 @@ export const SettingsStack = () => {
 				component={ResetPasswordScreen}
 			/>
 
+			<Stack.Screen name="DeleteAccount" component={AccountDeletionScreen} />
+			
 		</Stack.Navigator>
 	);
 };

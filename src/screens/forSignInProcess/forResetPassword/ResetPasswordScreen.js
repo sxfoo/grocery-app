@@ -1,37 +1,45 @@
-import { View, Text, StyleSheet, ScrollView } from "react-native";
+import { View, Text, StyleSheet, ScrollView, Alert } from "react-native";
 import React, { useState } from "react";
 import CustomInput from "../../../components/CustomInput/CustomInput";
 import CustomButton from "../../../components/CustomButton/CustomButton";
 import { useNavigation } from "@react-navigation/native";
+import { auth } from "../../../../firebaseConfig";
+import { sendPasswordResetEmail } from "@firebase/auth";
 
 const ResetPasswordScreen = () => {
-	const [code, setCode] = useState("");
-	const [newPassword, setNewPassword] = useState("");
-	
-	const navigation = useNavigation()
+	const [email, setEmail] = useState("");
 
-	const onSignInPressed = () => {
-		navigation.navigate('SignIn');
-		console.warn("SignInPressd");
-	};
+	const navigation = useNavigation();
 
-	const onSubmitPressed = () => {
+	const handleResetPassword = () => {
 		console.warn("onSubmitPressed");
-	};
+		
+		sendPasswordResetEmail(auth, email)
+		.then(() => {
+			Alert.alert(
+				"Password reset sent to your email address. \n Please check your email for further instructions."
+			);
+		})
+		.catch((error) => {
+			Alert.alert("Error", error.message);
+		});
+};
+
+
 	return (
-		<ScrollView showsVerticalScrollIndicator={false}>
+		<View>
 			<View style={styles.root}>
 				<Text style={styles.title}>Reset your password</Text>
 
-				<CustomInput placeholder="Code" value={code} setValue={setCode} />
+				<Text style={styles.text}>Enter your email to receive instructions on how to reset your password.</Text>
 
 				<CustomInput
-					placeholder="Enter your new password"
-					value={newPassword}
-					setValue={setNewPassword}
+					placeholder="Enter your email"
+					value={email}
+					setValue={setEmail}
 				/>
 
-				<CustomButton text="Submit" onPress={onSubmitPressed} />
+				<CustomButton text="Submit" onPress={handleResetPassword} />
 
 				{/*<CustomButton
 					text="Back to Sign in"
@@ -39,12 +47,13 @@ const ResetPasswordScreen = () => {
 					type="TERTIARY"
 				/>*/}
 			</View>
-		</ScrollView>
+		</View>
 	);
 };
 
 const styles = StyleSheet.create({
 	root: {
+		paddingVertical: 50,
 		alignItems: "center",
 		padding: 20,
 	},
@@ -52,17 +61,14 @@ const styles = StyleSheet.create({
 	title: {
 		fontSize: 24,
 		fontWeight: "bold",
-		color: "#051C60",
+		color: 'white',
 		margin: 10,
 	},
 
 	text: {
 		color: "gray",
 		marginVertical: 10,
-	},
-
-	link: {
-		color: "#FD8075",
+		fontSize: 15,
 	},
 });
 
