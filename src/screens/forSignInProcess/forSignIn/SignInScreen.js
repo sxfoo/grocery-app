@@ -54,13 +54,18 @@ const SignInScreen = () => {
 	};
 
 	return (
-		<ScrollView showsVerticalScrollIndicator={false}>
+		<View>
 			<View style={styles.root}>
 				<Image
 					source={Logo}
 					style={[styles.logo, { height: height * 0.3 }]}
 					resizeMode="contain"
 				/>
+
+				<Text style={styles.title}>
+					Grocery App
+				</Text>
+
 
 				<CustomInput
 					placeholder="Email" /* Changed from username to email to use firebase function*/
@@ -83,7 +88,7 @@ const SignInScreen = () => {
 					type="TERTIARY"
 				/>
 
-				<SocialSignInButtons />
+				{/* <SocialSignInButtons /> */}
 
 				<CustomButton
 					text="Don't have an account? Create one"
@@ -91,12 +96,13 @@ const SignInScreen = () => {
 					type="TERTIARY"
 				/>
 			</View>
-		</ScrollView>
+		</View>
 	);
 };
 
 const styles = StyleSheet.create({
 	root: {
+		paddingVertical: 50,
 		alignItems: "center",
 		padding: 20,
 	},
@@ -106,6 +112,13 @@ const styles = StyleSheet.create({
 		maxWidth: 300,
 		maxHeight: 200,
 	},
+	
+	title: {
+		color:"white",
+		fontSize: 40,
+		fontWeight: "bold",
+		paddingBottom: 10,
+	}
 });
 
 export default SignInScreen;

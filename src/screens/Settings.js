@@ -33,8 +33,8 @@ const customisation = [
         items:[
             {id: 'Username', icon: 'account-box', label: 'Change Username', type:'link'},
             {id: 'Email', icon: 'email', label: 'Change Email', type: 'link'},
-            {id: 'Password', icon: 'lock', label: 'Change Password', type:'link', nav:"ResetPassword"},
-            {id: 'Delete', icon: 'delete', label:'Delete account', type: 'link'},
+            {id: 'Password', icon: 'lock', label: 'Change Password', type:'link', nav: "ResetPassword"},
+            {id: 'Delete', icon: 'delete', label:'Delete account', type: 'link', nav: "DeleteAccount"},
         ],
     },
 
