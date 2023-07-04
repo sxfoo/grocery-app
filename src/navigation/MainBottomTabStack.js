@@ -11,7 +11,7 @@ import SettingsStack from './Verified_Settings_Stack';
 import { onAuthStateChanged } from '@firebase/auth';
 import { auth } from '../../firebaseConfig';
 import SignInStack from './Unverified_Settings_Stack';
-import checkifauth from '../utilityFunctions/checkifauth';
+import { checkifauth } from '../utilityFunctions/checkifauth';
 
 
 /* Bottom Tab Navigation. */
