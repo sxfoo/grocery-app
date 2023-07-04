@@ -200,11 +200,6 @@ const Settings = () => {
                 <Text style = {styles.profile_email}> {auth.currentUser.email}</Text>
             </View>
 
-            <View>
-                {/*<TouchableOpacity onPress={() => {navigation.navigate('Unv_setting')}}>
-                    <Text style = {{marginLeft:'auto', marginRight: 'auto'}}> Click to navigate to unverified user settings</Text>
-                </TouchableOpacity> */}
-            </View>
         {/* it's basically a loop to map the header and the text*/}
             {customisation.map(({header, items}) => (
                 <View key={header} style = {styles.header}>

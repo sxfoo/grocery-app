@@ -1,5 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+
 export const printAllData = async () => {
     try {
         // Get all keys from AsyncStorage

@@ -13,7 +13,6 @@ export default function ProfileStack() {
     const theme = useTheme();
 
     return (
-
         <Stack.Navigator
             initialRouteName='Trial'
             screenOptions={{

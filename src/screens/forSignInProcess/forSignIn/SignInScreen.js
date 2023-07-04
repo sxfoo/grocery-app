@@ -21,6 +21,8 @@ const SignInScreen = () => {
 	const navigation = useNavigation();
 
 	const handleSignIn = () => {
+		//Authenticate the user and changed it's state in auth. 
+		//No need to navigate because navigation is done in main bottom tab stack
 		signInWithEmailAndPassword(auth, username, password)
 		.then((userCredential) => {
 			const user = userCredential.user;
@@ -38,7 +40,7 @@ const SignInScreen = () => {
 		console.warn("Sign in");
 		// validate user
 
-		navigation.navigate("HomeScreen")
+		//navigation.navigate("HomeScreen")
 	};
 
 	const onForgotPasswordPressed = () => {

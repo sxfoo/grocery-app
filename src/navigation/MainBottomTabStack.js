@@ -11,14 +11,14 @@ import SettingsStack from './Verified_Settings_Stack';
 import { onAuthStateChanged } from '@firebase/auth';
 import { auth } from '../../firebaseConfig';
 import SignInStack from './Unverified_Settings_Stack';
-
+import checkifauth from '../utilityFunctions/checkifauth';
 
 
 /* Bottom Tab Navigation. */
 export default function MainBottomTabStack() {
     //This part of the code checks if an user has been authenticated or not
     const BottomTab = createBottomTabNavigator();
-    const [isAuth, setIsAuth] = useState(false)
+    /*const [isAuth, setIsAuth] = useState(false)
     useEffect(() => {
         const unsubscribeAuthStateChanged = onAuthStateChanged(
             auth, (authenticatedUser) => {
@@ -32,7 +32,7 @@ export default function MainBottomTabStack() {
         );
         //!CheckLater
         return () => unsubscribeAuthStateChanged();
-    }, []);
+    }, []);*/
 
     return (
         <BottomTab.Navigator
@@ -70,7 +70,7 @@ export default function MainBottomTabStack() {
 
             <BottomTab.Screen
                 name="Settings Stack"
-                component={isAuth ? SettingsStack : SignInStack}
+                component={checkifauth() ? SettingsStack : SignInStack}
                 options={{
                     headerShown: false, /*used to be true*/
                     title: 'Settings',
