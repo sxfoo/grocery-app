@@ -22,8 +22,8 @@ const SignInStack = () => {
             <SignIn.Screen name="ResetPassword" component={ResetPasswordScreen} />
 
             {/*Need to figure out a way to link it to homescreen stack, probably by using nested screen navigators*/}
-            <SignIn.Screen name="HomeScreen" component={HomeScreen}/>
-        </SignIn.Navigator >
+            {/*<SignIn.Screen name="HomeScreen" component={HomeScreen}/>*/}
+        </SignIn.Navigator>
         )}
 
 export default SignInStack;

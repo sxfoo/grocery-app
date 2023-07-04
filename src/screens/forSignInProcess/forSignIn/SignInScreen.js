@@ -20,21 +20,11 @@ const SignInScreen = () => {
 	const auth = getAuth();
 	const navigation = useNavigation();
 
-	useEffect(() => {
-		const unsubscribe = onAuthStateChanged(auth, user => {
-			if (user) {
-				navigation.replace("Settings")
-			}
-		}) 
-
-		return unsubscribe
-	}, [])
-
 	const handleSignIn = () => {
 		signInWithEmailAndPassword(auth, username, password)
 		.then((userCredential) => {
 			const user = userCredential.user;
-			console.log('New user signed in: ' )
+			console.log('User signed in' )
 		})
 		.catch((error) => {
 			alert(error.message);

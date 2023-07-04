@@ -12,7 +12,7 @@ const ForgotPasswordScreen = () => {
 
 	const onSignInPressed = () => {
 		console.warn("onSignInPressed");
-		navigation.navigate("SignInScreen")
+		navigation.navigate("SignIn")
 	};
 
 	const onSendPressed = () => {

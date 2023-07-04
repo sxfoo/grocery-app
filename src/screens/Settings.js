@@ -8,7 +8,6 @@ import { SafeAreaProvider, useSafeAreaInsets } from "react-native-safe-area-cont
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import { launchCamera, launchImageLibrary } from "react-native-image-picker";
 import { useNavigation } from "@react-navigation/native";
-import SignInStack from "../navigation/SignInStack";
 import { signOut, getAuth } from "@firebase/auth";
 
 /* Settings page, specify the individual settings, icons and type of change*/
@@ -131,7 +130,7 @@ const Settings = () => {
     const handleSignOut = () => {
         signOut(auth).then(() => {
         console.log('user signed out')
-        navigation.replace('SignIn')
+        //navigation.replace('SignIn')
         })
         .catch((error) => {
         alert(error.message);

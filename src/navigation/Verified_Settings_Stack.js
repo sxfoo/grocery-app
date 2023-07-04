@@ -18,19 +18,15 @@ const Drawer = createDrawerNavigator()
 const SignInStack2 = () => {
 	return(
 		<Drawer.Navigator useLegacyImplementation screenOptions={{headerShown: false}}>
-			<Drawer.Screen name = "SignInScreen" component = {SignInScreen}/>
 			<Drawer.Screen name = "ResetPassword" component={ResetPasswordScreen}/>
-			<Drawer.Screen name = "ForgotPassword" component = {ForgotPasswordScreen}/>
-			<Drawer.Screen name = "SignUp" component={SignUpScreen}/>
 			<Drawer.Screen name = "ConfirmEmail" component={ConfirmEmailScreen}/>
 		</Drawer.Navigator>
 	)
 }
 
-const SettingsStack = () => {
+export const SettingsStack = () => {
   return (
-		<Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="Unv_setting">
-			<Stack.Screen name="Unv_setting" component={Unv_setting}/>
+		<Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="Settings">
 			<Stack.Screen name="Settings" component={Settings} />
 			{/*<Stack.Screen name="SignIn" component={SignInScreen} /> <Stack.Screen name="Settings" component={Settings} />
 			<Stack.Screen name="ResetPassword" component={ResetPasswordScreen} />*/}
