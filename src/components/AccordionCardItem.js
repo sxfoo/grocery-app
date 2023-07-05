@@ -10,13 +10,15 @@ import {
     validInputSubmit,
     AddToList
 } from '../utilityFunctions/accordianCardUtils';
-
+import { checkifauth, useAuthStatus } from '../utilityFunctions/checkifauth';
 
 // A singular accordion Card item (used in renderItem in the FlatList)
 export const AccordionCardItem = ({ item, textTitle, theme, setSearchQuery, setAddedItems }) => {
 
     // Used to set the card expanded state
     const [isOpen, setIsOpen] = useState(false);
+
+    const loggedIn = useAuthStatus();
 
     // States to keep track of unitValue, totalValue, and quantity
     const [values, setValues] = useState({
@@ -128,7 +130,7 @@ export const AccordionCardItem = ({ item, textTitle, theme, setSearchQuery, setA
                             setValidInputs(() => {
                                 const updatedValidInputs = validInputSubmit(values);
                                 if (updatedValidInputs.quantity && updatedValidInputs.totalValue && updatedValidInputs.unitValue) {
-                                    AddToList({ item, values, setSearchQuery, setAddedItems });
+                                    AddToList({ item, values, setSearchQuery, setAddedItems, loggedIn });
                                 }
                                 return updatedValidInputs;
                             });
