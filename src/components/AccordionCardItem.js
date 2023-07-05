@@ -18,7 +18,7 @@ export const AccordionCardItem = ({ item, textTitle, theme, setSearchQuery, setA
     // Used to set the card expanded state
     const [isOpen, setIsOpen] = useState(false);
 
-    const loggedIn = useAuthStatus();
+    const loggedIn = checkifauth();
 
     // States to keep track of unitValue, totalValue, and quantity
     const [values, setValues] = useState({
