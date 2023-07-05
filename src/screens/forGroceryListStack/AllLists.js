@@ -3,11 +3,13 @@ import { View, StyleSheet, SafeAreaView, ScrollView, Pressable } from 'react-nat
 import { Button, IconButton, Card, Text, TextInput, useTheme } from 'react-native-paper';
 import { StatusBar } from 'expo-status-bar';
 import { useNavigation } from '@react-navigation/native';
-
+import { onlineCreateList } from '../../utilityFunctions/onlineCreateList';
 import { randomUUID } from 'expo-crypto';
 import { useFocusEffect } from '@react-navigation/native';
 import { initialiseAllListsIDsData } from '../../utilityFunctions/initialisationData';
 import { getItemData, storeItemData } from '../../utilityFunctions/asyncStorageUtils';
+import { checkifauth } from '../../utilityFunctions/checkifauth';
+import { auth } from '../../../firebaseConfig';
 
 /* A Card that shows each individual grocery list the user created
 // Displays Title of the list, no. of items, and users */
@@ -137,8 +139,12 @@ const NewListComponent = ({ setAllListsData }) => {
 
                         <Button
                             mode="contained"
-                            onPress={() => {
+                            onPress={async () => {
                                 handleCreateList(newListName);
+                                console.log(newListName);
+                                if (auth.currentUser){ //checkifauth
+                                    await onlineCreateList({ ListName:newListName});
+                                }
                                 setNewListName('');
                             }}
                         >

@@ -51,23 +51,4 @@ export const checkifauth = () => {
     return isAuth;
 }
 
-/*
-export const useAuthStatus = () => {
-    const [isAuth, setIsAuth] = useState(false);
 
-    useEffect(() => {
-        const unsubscribeAuthStateChanged = onAuthStateChanged(
-            auth, (authenticatedUser) => {
-                if (authenticatedUser) {
-                    setIsAuth(true);
-                } else {
-                    setIsAuth(false);
-                }
-            }
-        );
-
-        return () => unsubscribeAuthStateChanged();
-    }, []);
-    console.log('isAuth is' ,isAuth);
-    return isAuth;
-};*/

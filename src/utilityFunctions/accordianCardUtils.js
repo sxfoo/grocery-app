@@ -42,17 +42,22 @@ export const AddToList = ({ item, values, setSearchQuery, setAddedItems, loggedI
                 )
             })
 
-            } catch (error) {
+            } 
+            catch (error) {
                 console.error('Error adding new item:', error);
             }
 
-            
 
             if (loggedIn) {
                 // Online Storage
-                const listId = await getUserId();
-                const itemRef = ref(db, `lists/${listId}/items/` + itemUUID);
+                const listId = await getUserId(); //to be changed in the future
+                const userId = await getUserId();
+                const itemRef = ref(db, `list_node/${listId}/items/` + itemUUID);
                 await set(itemRef, data); // Wait for online storage to complete
+
+
+                const userRef = ref(db, `user_node/${userId}/lists/` );
+                await set(userRef, listId);
 
                 console.log('New item added successfully to Realtime Database:', itemUUID);
                 console.log(data);
