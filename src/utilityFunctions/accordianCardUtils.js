@@ -2,12 +2,12 @@ import { storeItemData } from './asyncStorageUtils';
 import { randomUUID } from 'expo-crypto';
 import { db, ref, set } from '../../firebaseConfig'
 import { LayoutAnimation } from 'react-native';
-import { getUserId } from './checkifauth';
+import { checkifauth, checkifauth2, getUserId, useAuthStatus } from './checkifauth';
 
 /* For Accordian Card Item */
 
 // Function to occur on adding to list
-export const AddToList = ({ item, values, setSearchQuery, setAddedItems }) => {
+export const AddToList = ({ item, values, setSearchQuery, setAddedItems, loggedIn }) => {
 
     // Random unique ID for item:
     const itemUUID = randomUUID();
@@ -42,24 +42,25 @@ export const AddToList = ({ item, values, setSearchQuery, setAddedItems }) => {
                 )
             })
 
-        } catch (error) {
-            console.error('Error adding new item:', error);
-        }
+            } catch (error) {
+                console.error('Error adding new item:', error);
+            }
 
-        const loggedIn = false;
+            
 
-        if (loggedIn) {
-            // Online Storage
-            const itemRef = ref(db, `lists/${listId}/items/` + itemUUID);
-            await set(itemRef, data); // Wait for online storage to complete
+            if (loggedIn) {
+                // Online Storage
+                const listId = await getUserId();
+                const itemRef = ref(db, `lists/${listId}/items/` + itemUUID);
+                await set(itemRef, data); // Wait for online storage to complete
 
-            console.log('New item added successfully to Realtime Database:', itemUUID);
-            console.log(data);
-        } else {
-            console.log('Not logged in!')
-        }
+                console.log('New item added successfully to Realtime Database:', itemUUID);
+                console.log(data);
+            } else {
+                console.log('Not logged in!')
+            }
 
-    };
+        };
 
     addDataToStorage();
     setSearchQuery('');

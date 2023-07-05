@@ -47,6 +47,27 @@ export const checkifauth = () => {
 
         return () => unsubscribeAuthStateChanged();
     }, []);
-    console.log('isAuth is', isAuth);
+    //console.log('isAuth is:', isAuth);
     return isAuth;
 }
+
+/*
+export const useAuthStatus = () => {
+    const [isAuth, setIsAuth] = useState(false);
+
+    useEffect(() => {
+        const unsubscribeAuthStateChanged = onAuthStateChanged(
+            auth, (authenticatedUser) => {
+                if (authenticatedUser) {
+                    setIsAuth(true);
+                } else {
+                    setIsAuth(false);
+                }
+            }
+        );
+
+        return () => unsubscribeAuthStateChanged();
+    }, []);
+    console.log('isAuth is' ,isAuth);
+    return isAuth;
+};*/
