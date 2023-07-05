@@ -5,21 +5,21 @@ import { TextInput, Button } from 'react-native-paper'
 // TO BE UPDATED and organised properly
 const ListSettingsScreen = ({ navigation, route }) => {
 
-  const { item } = route.params;
-  const [title, setTitle] = React.useState(item.title);
+  const { listMetaData } = route.params;
+  const [title, setTitle] = React.useState(listMetaData.title);
 
   // Function to handle on Save button Press
   const handleSave = () => {
 
     if (title.trim() !== '') {
 
-      // Need to use a key value for this instead of previous title.
+      // Use list key value
       // To compare and replace the new title name
-      const previousItemTitle = item.title
+      const listKey = listMetaData.key
 
       // Save the updated title, navigate back to the AllListScreen.
-      const updatedItem = { ...item, title: title };
-      navigation.navigate('All Lists', { action: 'TitleEdit', prevTitle: previousItemTitle, updatedItem: updatedItem });
+      const updatedItem = { ...listMetaData, title: title };
+      navigation.navigate('All Lists', { action: 'TitleEdit', listKey: listKey, updatedItem: updatedItem });
     }
 
   };

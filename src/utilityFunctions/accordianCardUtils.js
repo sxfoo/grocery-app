@@ -33,7 +33,7 @@ export const AddToList = ({ item, values, setSearchQuery, setAddedItems }) => {
             const listId = await getUserId(); //This retrieves the user data, according to the device / authenticated user account
 
             // Offline Storage
-            await storeItemData(listId, data, itemUUID); // Wait for offline storage to complete
+            await storeItemData(itemUUID, data); // Wait for offline storage to complete
 
             // To add as chip items on search screen
             setAddedItems(prevValues => {

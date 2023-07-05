@@ -33,12 +33,12 @@ export const removeAllData = async () => {
 };
 
 // For Search Items List, store an item on list ID
-export const storeItemData = async (listId, value, key) => {
+export const storeItemData = async (key, value) => {
     try {
         const jsonValue = JSON.stringify(value);
-        await AsyncStorage.setItem(listId + '/' + key, jsonValue);
+        await AsyncStorage.setItem(key, jsonValue);
 
-        console.log('New item added successfully to Async Storage:', key);
+        // console.log('New item added successfully to Async Storage:', key);
 
     } catch (e) {
         // Display Error
@@ -52,7 +52,7 @@ export const getItemData = async (key) => {
         const jsonValue = await AsyncStorage.getItem(key);
         const parsedValue = jsonValue != null ? JSON.parse(jsonValue) : null;
 
-        console.log(`Retrieved data for key '${key}':`, parsedValue);
+        // console.log(`Retrieved data for key '${key}':`, parsedValue);
 
         return parsedValue;
     } catch (error) {

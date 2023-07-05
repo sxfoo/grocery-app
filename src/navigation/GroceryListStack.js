@@ -5,6 +5,8 @@ import ListSettings from '../screens/forGroceryListStack/ListSettings';
 import { createStackNavigator, TransitionPresets } from '@react-navigation/stack';
 import { useTheme, IconButton } from 'react-native-paper'
 
+import { auth } from '../../firebaseConfig'
+
 const Stack = createStackNavigator();
 
 /* Stack for displaying Grocery List. Refer to screens directory */
@@ -15,7 +17,7 @@ export default function ListStack() {
     return (
 
         <Stack.Navigator
-            initialRouteName='List'
+            initialRouteName='All Lists'
             screenOptions={{
                 headerStyle: {
                     backgroundColor: theme.colors.background,
@@ -65,7 +67,7 @@ export default function ListStack() {
                 component={ListScreen}
                 initialParams={{ title: 'Home' }}
                 options={({ route, navigation }) => ({
-                    title: route.params.title,
+                    title: route.params.listMetaData.title,
                     headerLeft: () => (
                         <IconButton
                             icon="view-list"

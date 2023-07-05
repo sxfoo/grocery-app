@@ -12,7 +12,6 @@ import { onAuthStateChanged } from '@firebase/auth';
 import { auth } from '../../firebaseConfig';
 import SignInStack from './Unverified_Settings_Stack';
 import { checkifauth } from '../utilityFunctions/checkifauth';
-
 import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
 
 // function to set bottom tabs visibilty for settings screen
