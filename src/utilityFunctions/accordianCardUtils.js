@@ -2,7 +2,8 @@ import { storeItemData } from './asyncStorageUtils';
 import { randomUUID } from 'expo-crypto';
 import { db, ref, set } from '../../firebaseConfig'
 import { LayoutAnimation } from 'react-native';
-import { checkifauth, checkifauth2, getUserId, useAuthStatus } from './checkifauth';
+import { checkifauth, getUserId } from './checkifauth';
+import { fetchlistUID } from './onlineCreateList';
 
 /* For Accordian Card Item */
 

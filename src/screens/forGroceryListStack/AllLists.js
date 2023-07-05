@@ -143,7 +143,7 @@ const NewListComponent = ({ setAllListsData }) => {
                                 handleCreateList(newListName);
                                 console.log(newListName);
                                 if (auth.currentUser){ //checkifauth
-                                    await onlineCreateList({ ListName:newListName});
+                                    await onlineCreateList({ ListName:newListName}); //May return listId in the future to sync the list
                                 }
                                 setNewListName('');
                             }}
