@@ -5,33 +5,32 @@ import { useNavigation } from "@react-navigation/native";
 import { auth } from "../../../../firebaseConfig";
 import { deleteUser} from "@firebase/auth"; 
 import SignUpScreen from "../forSignUp/SignUpScreen";
-import Checkbox from "../../../components/Checkbox/Checkbox";
+import { Checkbox } from "react-native-paper";
 
 const AccountDeletionScreen = () => {
 	const navigation = useNavigation();
 
-	// const [isChecked, setIsChecked] = useState(false);
-	
-	// const handleCheckboxToggle = (checked) => {
-    // 	setIsChecked(checked);
-  	// };	
+	const [isChecked, setIsChecked] = useState(false);
+
+	const handleCheckbox = () => {
+		setIsChecked(!isChecked)
+	}
 
 	const handleDeleteAccount = () => {
-		console.warn("onDeletePressed");
-		
-		// To be added:
-		// Check if checkbox is checked, then proceed with deletion
-		// Currently deletes upon pressing delete button, with or without permission
-		deleteUser(auth.currentUser)
-		.then(() => {
-			Alert.alert(
-				"Account has been deleted. "
-			);
-		})
-		.catch((error) => {
-			Alert.alert("Error", error.message);
-		});
-
+		if (isChecked){
+			deleteUser(auth.currentUser)
+			.then(() => {
+				Alert.alert(
+					"Account has been deleted. "
+				);
+			})
+			.catch((error) => {
+				Alert.alert("Error", error.message);
+			});
+		}
+		else {
+			Alert.alert("Please check the box before pressing delete button.")
+		}
 		// Add navigation to forward to sign up screen
 };
 
@@ -41,18 +40,13 @@ const AccountDeletionScreen = () => {
 			<View style={styles.root}>
 				<Text style={styles.title}>Delete your account</Text>
 
-				<Text style={styles.text}>
-					Are you sure you want to delete your account?{"\n"}All your data will
-					be lost.
-				</Text>
-				{/* <Checkbox onToggle={handleCheckboxToggle}/> */}
-				<CustomButton text="Delete" onPress={handleDeleteAccount} />
+				<Checkbox.Item
+					label={"Are you sure you want to delete your account? All your data will be lost. \n(Click here to agree)"}
+					status={isChecked ? "checked" : "unchecked"}
+					onPress={handleCheckbox}
+				/>
 
-				{/*<CustomButton
-					text="Back to Sign in"
-					onPress={onSignInPressed}
-					type="TERTIARY"
-				/>*/}
+				<CustomButton text="Delete" onPress={handleDeleteAccount} />
 			</View>
 		</View>
 	);
