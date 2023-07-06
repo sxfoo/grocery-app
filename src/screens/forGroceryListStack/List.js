@@ -24,10 +24,70 @@ const ListHeader = () => {
   )
 }
 
+// Function to display the category name, v1.0 without accordion
+const CategoryHeader = ({ categoryName, categoryCost, collapseCheck }) => {
+  const [isCollapsed, setIsCollapsed] = useState(collapseCheck);
 
-/* Renders List Items. No logic currently. Clean up the styles */
+  const toggleCollapse = () => {
+    setIsCollapsed(!isCollapsed);
+  };
+
+  return (
+    <View style={styles2.categoryContainer}>
+
+        <MaterialCommunityIcons name="bread-slice-outline" size={24} color="#FFd3E1" />
+
+        <View style={{ flexShrink: '1' }}>
+          <Text style={{ color: '#FFd3E1', marginLeft: 10, flexShrink: '1' }} variant="titleSmall">{categoryName}</Text>
+        </View>
+
+        <View style={styles2.arrowContainer}>
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <Text style={{ color: '#FFd3E1' }} variant="bodySmall" >
+              {categoryCost}
+            </Text>
+
+            <IconButton
+              icon={isCollapsed ? 'chevron-up' : 'chevron-down'}
+              size={24}
+              color="grey"
+              onPress={toggleCollapse}
+            />
+          </View>
+
+        </View>
+    </View>
+  )
+};
+
+
+
+// Function to display the list of item for each category
+const SubCategoryList = ({ listName, checklistCheck }) => {
+  const [isChecked, setIsChecked] = useState(checklistCheck);
+
+  const toggleCheck = () => {
+    setIsChecked(!isChecked);
+  };
+  return (
+    <View style={[styles2.subCategoryRow, styles2.subCategoryBorder, { borderColor: '#FFd3E1' }]}>
+      <View style={styles2.circleContainer}>
+        <IconButton
+          icon={isChecked ? 'checkbox-marked-circle-outline' : 'checkbox-blank-circle-outline'}
+          size={24}
+          color="grey"
+          onPress={toggleCheck}
+        />
+        <View style={{ flexShrink: 1 }}>
+          <Text style={{ flexShrink: 1 }} variant="bodyMedium">{listName}</Text>
+        </View>
+
+      </View>
+    </View>
+  )
+}
+
 const ListOfItems = ({ navigation }) => {
-
   return (
     <View style={styles.container}>
       <Button
@@ -38,150 +98,7 @@ const ListOfItems = ({ navigation }) => {
       >
         Add Items
       </Button>
-
-      <ScrollView>
-        <View style={styles2.itemsContainer}>
-          <View style={{ marginBottom: 10 }}>
-            <View style={styles2.categoryContainer}>
-              <MaterialCommunityIcons name="bread-slice-outline" size={24} color="#FFd3E1" />
-              <Text style={{ color: '#FFd3E1', fontSize: 26, marginLeft: 10 }}>Bakery & Bread</Text>
-
-              <View style={styles2.arrowContainer}>
-                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                  <Text style={{ color: '#FFd3E1', fontSize: 18, marginRight: 20 }}>$14.50</Text>
-                  <IconButton
-                    icon="chevron-down"
-                    size={24}
-                    color="grey"
-                  />
-                </View>
-
-              </View>
-            </View>
-
-            <View style={[styles2.subCategoryRow, styles2.subCategoryBorder, { borderColor: '#FFd3E1' }]}>
-              <View style={styles2.circleContainer}>
-                <IconButton
-                  icon="checkbox-blank-circle-outline"
-                  size={24}
-                  color="grey"
-                />
-                <Text style={styles2.subCategoryText}>Flour</Text>
-              </View>
-
-            </View>
-
-            <View style={[styles2.subCategoryRow, styles2.subCategoryBorder, { borderColor: '#FFd3E1' }]}>
-              <View style={styles2.circleContainer}>
-                <IconButton
-                  icon="checkbox-marked-circle-outline"
-                  size={24}
-                  color="grey"
-                />
-                <Text style={styles2.subCategoryText}>Yeast</Text>
-              </View>
-            </View>
-
-          </View>
-
-          <View style={{ marginBottom: 10 }}>
-            <View style={styles2.categoryContainer}>
-              <MaterialCommunityIcons name="food-apple" size={24} color="#E0C3FC" />
-              <Text style={{ color: '#E0C3FC', fontSize: 26, marginLeft: 10 }}>Produce</Text>
-              <View style={styles2.arrowContainer}>
-                <View style={styles2.arrowContainer}>
-                  <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                    <Text style={{ color: '#E0C3FC', fontSize: 18, marginRight: 20 }}>$1.35</Text>
-                    <IconButton
-                      icon="chevron-down"
-                      size={24}
-                      color="grey"
-                    />
-                  </View>
-
-                </View>
-              </View>
-            </View>
-            <View style={[styles2.subCategoryRow, styles2.subCategoryBorder, { borderColor: '#E0C3FC' }]}>
-              <View style={styles2.circleContainer}>
-                <IconButton
-                  icon="checkbox-marked-circle-outline"
-                  size={24}
-                  color="grey"
-                />
-                <Text style={styles2.subCategoryText}>Vege</Text>
-              </View>
-            </View>
-
-            <View style={[styles2.subCategoryRow, styles2.subCategoryBorder, { borderColor: '#E0C3FC' }]}>
-              <View style={styles2.circleContainer}>
-                <IconButton
-                  icon="checkbox-marked-circle-outline"
-                  size={24}
-                  color="grey"
-
-                />
-                <Text style={styles2.subCategoryText}>Apple</Text>
-              </View>
-            </View>
-
-          </View>
-
-          <View style={{ marginBottom: 10 }}>
-            <View style={styles2.categoryContainer}>
-              <MaterialCommunityIcons name="coffee-outline" size={24} color="#A6C1EE" />
-              <Text style={{ color: '#A6C1EE', fontSize: 26, marginLeft: 10 }}>Beverages</Text>
-              <View style={styles2.arrowContainer}>
-                <View style={styles2.arrowContainer}>
-                  <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                    <Text style={{ color: '#A6C1EE', fontSize: 18, marginRight: 20 }}>$9.65</Text>
-                    <IconButton
-                      icon="chevron-down"
-                      size={24}
-                      color="grey"
-                    />
-                  </View>
-
-                </View>
-              </View>
-            </View>
-
-            <View style={[styles2.subCategoryRow, styles2.subCategoryBorder, { borderColor: '#A6C1EE' }]}>
-
-              <View style={styles2.circleContainer}>
-                <IconButton
-                  icon="checkbox-marked-circle-outline"
-                  size={24}
-                  color="grey"
-                />
-
-                <Text style={styles2.subCategoryText}>Lots of coffee</Text>
-              </View>
-
-            </View>
-
-            <View style={[styles2.subCategoryRow, styles2.subCategoryBorder, { borderColor: '#A6C1EE' }]}>
-              <View style={styles2.circleContainer}>
-                <IconButton
-                  icon="checkbox-marked-circle-outline"
-                  size={24}
-                  color="#007AFF"
-                />
-                <Text style={styles2.subCategoryText}>Black tea</Text>
-              </View>
-            </View>
-
-          </View>
-
-        </View>
-
-        <View style={styles2.categoryContainer}>
-          <Text style={{ color: '#f2b8b5', fontSize: 28, justifyContent: 'flex-end' }}>Final Cost: </Text>
-        </View>
-
-
-      </ScrollView>
-    </View >
+    </View>
 
   );
 };
@@ -210,52 +127,42 @@ const styles2 = StyleSheet.create({
   categoryContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
-    marginBottom: 10,
-    paddingHorizontal: 25,
-    width: '100%',
+    //justifyContent: 'space-between',
+    marginTop: 10,
+    //width: '100%',
+    flexShrink: '1',
   },
-  categoryText: {
-    fontSize: 26,
-    fontWeight: '400',
-    marginLeft: 10,
-  },
+
   arrowContainer: {
     marginLeft: 'auto',
+    //flexShrink: '1',
   },
 
   subCategoryRow: {
     flexDirection: 'row',
     justifyContent: 'flex-start',
-    marginBottom: 20,
-    paddingHorizontal: 20,
+    marginTop: 10,
   },
+
   circleContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginLeft: 5,
+    flexShrink: '1',
   },
+
   circleIcon: {
     marginRight: 10,
   },
-  subCategoryText: {
-    fontSize: 16,
-    fontWeight: '400',
-  },
-  dottedBorder: {
-    borderWidth: 4,
-    borderStyle: 'dotted',
-    borderColor: 'gray',
-  },
 
   subCategoryBorder: {
-
     borderWidth: 1,
-    borderRadius: 5,
-    paddingHorizontal: 10,
-    marginLeft: 20,
-    marginRight: 20,
+    borderRadius: 5
   },
+
+  textContainer: {
+    flexGrow: 1,
+    flex: 1,
+  }
 
 
 });
@@ -276,6 +183,16 @@ const ListScreen = () => {
 
         <ListHeader />
         <ListOfItems navigation={navigation} />
+
+        <ScrollView>
+          <CategoryHeader categoryName="Bakery a really long name to see if it works Bakery hopefully it works now  " categoryCost="$14.50" />
+          <SubCategoryList listName="apple this is a bunch to text to show the flexShrink actually works after so long" />
+          <SubCategoryList listName="bingo sheet" />
+          <CategoryHeader categoryName="Produce" />
+
+
+        </ScrollView>
+
 
       </View>
 
