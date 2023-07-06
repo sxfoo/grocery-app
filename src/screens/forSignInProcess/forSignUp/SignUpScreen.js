@@ -45,7 +45,6 @@ const SignUpScreen = () => {
 	
 	const onSignInPressed = () => {
 		navigation.navigate("SignIn");
-		console.warn("SignInPressed");
 	};
 
 	const onTermsOfUsePressed = () => {
@@ -94,8 +93,6 @@ const SignUpScreen = () => {
 					<Text style={styles.link} onPress={onPrivacyPolicyPressed}>Privacy Policy</Text>
 				</Text>
 
-				<SocialSignInButtons />
-
 				<CustomButton
 				text="Have an account? Sign in"
 				onPress={onSignInPressed}
@@ -116,7 +113,7 @@ const styles = StyleSheet.create({
 	title: {
 		fontSize: 24,
 		fontWeight: "bold",
-		color: "#051C60",
+		color: "white",
 		margin: 10,
 	},
 

@@ -38,10 +38,8 @@ const AccountDeletionScreen = () => {
 	return (
 		<View>
 			<View style={styles.root}>
-				<Text style={styles.title}>Delete your account</Text>
-
 				<Checkbox.Item
-					label={"Are you sure you want to delete your account? All your data will be lost. \n(Click here to agree)"}
+					label={"Are you sure you want to delete your account? All your data will be lost.\n(Click here to agree)"}
 					status={isChecked ? "checked" : "unchecked"}
 					onPress={handleCheckbox}
 				/>
@@ -54,22 +52,9 @@ const AccountDeletionScreen = () => {
 
 const styles = StyleSheet.create({
 	root: {
-		paddingVertical: 50,
+		paddingVertical: 20,
 		alignItems: "center",
 		padding: 20,
-	},
-
-	title: {
-		fontSize: 24,
-		fontWeight: "bold",
-		color: 'white',
-		margin: 10,
-	},
-
-	text: {
-		color: "gray",
-		marginVertical: 10,
-		fontSize: 15,
 	},
 });
 
