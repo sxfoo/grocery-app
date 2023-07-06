@@ -9,7 +9,7 @@ import FeatherIcon from 'react-native-vector-icons/Feather';
 import { launchCamera, launchImageLibrary } from "react-native-image-picker";
 import { useNavigation } from "@react-navigation/native";
 import { signOut, getAuth } from "@firebase/auth";
-import ThemeContext from "../themeContext";
+import ThemeContext  from "../themeContext"
 
 /* Settings page, specify the individual settings, icons and type of change*/
 const customisation = [
@@ -118,7 +118,7 @@ const styles = StyleSheet.create({
 const PROFILE_PIC = "https://static.wikia.nocookie.net/disney/images/3/3c/Profile_-_Sulley.jpg/revision/latest?cb=20200817112818";
 
 const Settings = () => {
-    const { isDarkMode, toggleDarkMode } = useContext(ThemeContext);
+    const { isDarkTheme, toggleDarkMode } = useContext(ThemeContext);
 
     const navigation = useNavigation();
     const [Pic, SetPic] = React.useState('');
@@ -257,8 +257,8 @@ const Settings = () => {
 												{/*takes up the available space*/}
 												{type === "toggle" && id === "darkMode" && (
 													<Switch
-														value={!isDarkMode}
-														onValueChange={toggleDarkMode}
+														value={isDarkTheme}
+														onValueChange={() => toggleDarkMode()}
 													/>
 												)}
 												{type === "toggle" && id !== "darkMode" && (

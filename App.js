@@ -2,7 +2,7 @@ import { MD3DarkTheme, MD3LightTheme, PaperProvider, adaptNavigationTheme } from
 import { NavigationContainer, DarkTheme as NavigationDarkTheme, DefaultTheme as NavigationDefaultTheme } from '@react-navigation/native';
 import { useState } from 'react';
 import MainBottomTabStack from './src/navigation/MainBottomTabStack';
-import { ThemeProvider } from './src/themeContext';
+import ThemeContext from './src/themeContext';
 
 const { LightTheme, DarkTheme } = adaptNavigationTheme({
   reactNavigationLight: NavigationDefaultTheme,
@@ -20,21 +20,21 @@ export default function App() {
 
   const [isDarkTheme, setIsDarkTheme] = useState(true)
 
-  const toggleTheme = () => {
+  const toggleDarkMode = () => {
     setIsDarkTheme(!isDarkTheme);
     console.log(isDarkTheme);
   }
-  
+
   const theme = isDarkTheme ? MD3DarkTheme : MD3LightTheme
   const containerTheme = isDarkTheme ? DarkTheme : LightTheme;
 
   return (
-		<ThemeProvider value={{ isDarkTheme, toggleTheme }}>
+		<ThemeContext.Provider value={{ isDarkTheme, toggleDarkMode }}>
 			<PaperProvider theme={theme}>
 				<NavigationContainer theme={containerTheme}>
 					<MainBottomTabStack />
 				</NavigationContainer>
 			</PaperProvider>
-		</ThemeProvider>
+		</ThemeContext.Provider>
 	);
 }
