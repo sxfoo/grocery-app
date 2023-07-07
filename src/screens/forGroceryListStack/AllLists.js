@@ -59,7 +59,7 @@ const AllListsScreen = ({ navigation, route }) => {
                 ) //updates the oldlist, if item.key is = to suppose to edit listKey, it sets it to the new updatedItem, rewrite its data
                 storeItemData('AllListsID', newListsData);                                                  
                 setAllListsData(newListsData);
-                onlineEditList({oldTitle: oldTitle , newListName: updatedItem.title, ListUID: updatedItem.key});
+                onlineEditList({oldTitle: oldTitle , newListName: updatedItem.title, ListUID: updatedItem.key}); //if auth.currentUser
             }
         }
     }, [route.params]);

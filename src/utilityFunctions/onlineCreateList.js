@@ -6,7 +6,19 @@ import { auth } from "../../firebaseConfig";
 
 export const onlineEditList = async ({oldTitle , newListName, ListUID}) => {
     const userId = await getUserId();
-    console.log(oldTitle, newListName, ListUID);
+    const olduserRef = ref(db, `user_node/UID: ${userId}/lists/${oldTitle}`);
+    try {
+        await remove(olduserRef);
+        console.log('old list removed.');
+    }
+    catch (error) {
+        console.error('Error deleting online list' ,error);
+    }
+    const data = {
+        ListUID: ListUID
+    }
+    const userRef = ref(db, `user_node/UID: ${userId}/lists/${newListName}`);
+    await set (userRef, data);
 };
 
 export const onlineCreateList = async ({ListName, ListUID}) => {
