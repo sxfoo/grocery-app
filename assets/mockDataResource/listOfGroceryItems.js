@@ -138,7 +138,7 @@ const categoryStylesData = {
         color: "#FFD700",
     },
     "Beauty & Personal Care": {
-        icon: "face",
+        icon: "face-man",
         color: "#FF85A1",
     },
     "Dairy, Chilled & Eggs": {
