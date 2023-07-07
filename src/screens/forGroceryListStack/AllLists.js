@@ -66,8 +66,8 @@ const AllListsScreen = ({ navigation, route }) => {
                 keyboardShouldPersistTaps='handled'
             >
                 {/* Renders all available grocery lists */}
-                {allListsData.map((item, index) => (
-                    <GroceryCardComponent key={index} listData={item} isEditing={isEditing} />
+                {allListsData.map((item) => (
+                    <GroceryCardComponent key={item.key} listData={item} isEditing={isEditing} />
                 ))}
 
                 {/* If editing, do not render NewListComponent */}

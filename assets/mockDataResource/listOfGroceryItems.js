@@ -128,5 +128,84 @@ const ListOfCategories = [
     "Electrical & Lifestyle"
 ]
 
+const categoryStylesData = {
+    "Bakery": {
+        icon: "bread-slice",
+        color: "#FFBF69",
+    },
+    "Baby, Child & toys": {
+        icon: "baby-buggy",
+        color: "#FFD700",
+    },
+    "Beauty & Personal Care": {
+        icon: "face",
+        color: "#FF85A1",
+    },
+    "Dairy, Chilled & Eggs": {
+        icon: "egg",
+        color: "#9BD4B9",
+    },
+    "Drinks": {
+        icon: "cup",
+        color: "#FF7675",
+    },
+    "Alcoholic Drinks": {
+        icon: "glass-cocktail",
+        color: "#A569BD",
+    },
+    "Food Cupboard": {
+        icon: "cupboard",
+        color: "#F5CBA7",
+    },
+    "Frozen": {
+        icon: "snowflake",
+        color: "#00CED1",
+    },
+    "Fruits & Vegetables": {
+        icon: "fruit-cherries",
+        color: "#78D8BB",
+    },
+    "Health and Wellness": {
+        icon: "heart-pulse",
+        color: "#F9E79F",
+    },
+    "Household": {
+        icon: "home-outline",
+        color: "#B2BABB",
+    },
+    "Meat & Seafood": {
+        icon: "food-steak",
+        color: "#C0392B",
+    },
+    "Pet Supplies": {
+        icon: "dog",
+        color: "#F8C471",
+    },
+    "Rice, Noodles & Cooking Ingredients": {
+        icon: "food-variant",
+        color: "#F39C12",
+    },
+    "Snacks & Confectionery": {
+        icon: "food-fork-drink",
+        color: "#FAD7A0",
+    },
+    "Stationery": {
+        icon: "pencil",
+        color: "#FFC300",
+    },
+    "Tools": {
+        icon: "toolbox",
+        color: "#ABB2B9",
+    },
+    "Electrical & Lifestyle": {
+        icon: "flash",
+        color: "#D35400",
+    },
+    "Uncategorised": {
+        icon: "help-circle",
+        color: "#FFFFFF",
+    },
+};
 
+export { categoryStylesData };
 export default groceryItems;

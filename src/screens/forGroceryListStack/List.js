@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useRef, useState } from 'react';
-import { View, StyleSheet, TouchableWithoutFeedback, Keyboard, ScrollView } from 'react-native';
+import { View, StyleSheet, SectionList } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { IconButton, Divider, Card, Text, useTheme, Button } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
@@ -7,101 +7,225 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { MaterialIcons, Feather, Entypo } from '@expo/vector-icons';
 import { printAllData, removeAllData } from '../../utilityFunctions/asyncStorageUtils';
 
-/* Displays User's Location at the top*/
+import { categoryStylesData } from '../../../assets/mockDataResource/listOfGroceryItems';
+
+/* Displays User's Location at the top of the screen*/
 const ListHeader = () => {
+
+  const navigation = useNavigation();
+
   return (
     <View style={{ flexDirection: 'column', gap: 20 }}>
-      <Card>
+
+      {/* <Card>
         <Card.Title
           title="Nearest Supermarket"
           subtitle="Fairprice Xtra @ Ang Mo Kio Street.."
           left={(props) => <IconButton {...props} icon="map-marker-radius" />}
           right={(props) => <IconButton {...props} icon="dots-vertical" onPress={() => { }} />}
         />
-      </Card>
+      </Card> */}
+
+      {/* Debug purposes. Remove if necessary*/}
+      <View>
+        <Button
+          style={styles2.addButton}
+          icon='plus-thick'
+          mode='outlined'
+          onPress={() => navigation.navigate('Search Items')}
+        >
+          Add Items
+        </Button>
+      </View>
+      <View style={{ flexDirection: 'row', alignSelf: 'center', gap: 10 }}>
+        <Button
+          mode='outlined'
+          onPress={() => { printAllData() }}>
+          Check storage
+        </Button>
+
+        <Button
+          mode='outlined'
+          onPress={() => { removeAllData() }}>
+          Remove local storage
+        </Button>
+      </View>
       <Divider />
     </View>
   )
 }
 
-// Function to display the category name, v1.0 without accordion
-const CategoryHeader = ({ categoryName, categoryCost, collapseCheck }) => {
-  const [isCollapsed, setIsCollapsed] = useState(collapseCheck);
+// Component to display the category name, v1.0 without accordion
+const CategoryHeader = ({ categoryName, categoryCost }) => {
 
-  const toggleCollapse = () => {
-    setIsCollapsed(!isCollapsed);
-  };
+  const categoryStyleInfo = categoryStylesData[categoryName];
+  const iconName = categoryStyleInfo.icon;
+  const categoryColor = categoryStyleInfo.color;
 
   return (
-    <View style={styles2.categoryContainer}>
+    <View style={{
+      flexDirection: 'row', alignItems: 'center',
+      marginTop: 10,
+    }}>
 
-        <MaterialCommunityIcons name="bread-slice-outline" size={24} color="#FFd3E1" />
+      <MaterialCommunityIcons name={iconName} size={30} color={categoryColor} />
 
-        <View style={{ flexShrink: '1' }}>
-          <Text style={{ color: '#FFd3E1', marginLeft: 10, flexShrink: '1' }} variant="titleSmall">{categoryName}</Text>
-        </View>
+      <Text style={{ color: categoryColor, flex: 1, marginStart: 10 }} variant="titleSmall">{categoryName}</Text>
 
-        <View style={styles2.arrowContainer}>
-          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <Text style={{ color: '#FFd3E1' }} variant="bodySmall" >
-              {categoryCost}
-            </Text>
+      <Text style={{ color: categoryColor }} variant="labelLarge" >
+        {categoryCost}
+      </Text>
 
-            <IconButton
-              icon={isCollapsed ? 'chevron-up' : 'chevron-down'}
-              size={24}
-              color="grey"
-              onPress={toggleCollapse}
-            />
-          </View>
+      <IconButton
+        icon={'chevron-down'}
+        size={24}
+        iconColor={categoryColor}
+      />
 
-        </View>
     </View>
   )
 };
 
-
-
-// Function to display the list of item for each category
-const SubCategoryList = ({ listName, checklistCheck }) => {
-  const [isChecked, setIsChecked] = useState(checklistCheck);
+// Component to display the item in the list
+const ItemComponent = ({ item }) => {
+  const [isChecked, setIsChecked] = useState(item.completed);
 
   const toggleCheck = () => {
     setIsChecked(!isChecked);
   };
-  return (
-    <View style={[styles2.subCategoryRow, styles2.subCategoryBorder, { borderColor: '#FFd3E1' }]}>
-      <View style={styles2.circleContainer}>
-        <IconButton
-          icon={isChecked ? 'checkbox-marked-circle-outline' : 'checkbox-blank-circle-outline'}
-          size={24}
-          color="grey"
-          onPress={toggleCheck}
-        />
-        <View style={{ flexShrink: 1 }}>
-          <Text style={{ flexShrink: 1 }} variant="bodyMedium">{listName}</Text>
-        </View>
 
+  const categoryStyleInfo = categoryStylesData[item.category];
+  const categoryColor = categoryStyleInfo.color;
+
+  return (
+    <View style={{
+      flex: 1, flexDirection: 'row', alignItems: 'center',
+      marginTop: 10,
+      borderWidth: 1, borderRadius: 5, borderColor: categoryColor
+    }}>
+
+      <IconButton
+        icon={isChecked ? 'checkbox-marked-circle-outline' : 'checkbox-blank-circle-outline'}
+        size={24}
+        iconColor={categoryColor}
+        onPress={toggleCheck}
+      />
+
+      <Text style={{ flex: 2 }} variant="bodyMedium">{item.itemName}</Text>
+
+      <View style={{ flex: 1, flexDirection: 'column', alignItems: 'center' }}>
+        <Text variant='bodyMedium'>{item.quantity} unit</Text>
+        <Text variant='labelSmall'>${item.unitPrice} x {item.quantity} unit</Text>
       </View>
+
     </View>
+
   )
 }
 
-const ListOfItems = ({ navigation }) => {
-  return (
-    <View style={styles.container}>
-      <Button
-        style={styles.addButton}
-        icon='plus-thick'
-        mode='outlined'
-        onPress={() => navigation.navigate('Search Items')}
-      >
-        Add Items
-      </Button>
-    </View>
+const data = [
+  {
+    "itemID": "F4C3F025-6E88-4AFC-A79B-04A30E7C5281",
+    "itemName": "Flour",
+    "category": "Rice, Noodles & Cooking Ingredients",
+    "quantity": "1",
+    "unitPrice": "0.00",
+    "totalPrice": "0.00",
+    "timeStamp": 1688701275848,
+    "completed": false
+  },
+  {
+    "itemID": "5269F869-8D98-44A5-8FAA-0D4D08F144EF",
+    "itemName": "Milk",
+    "category": "Dairy, Chilled & Eggs",
+    "quantity": "1",
+    "unitPrice": "0.00",
+    "totalPrice": "0.00",
+    "timeStamp": 1688701278275,
+    "completed": false
+  },
+];
 
+const TransformDataForSectionList = (dataArray) => {
+
+  // Group the data by category
+  const transformedDataArray = dataArray.reduce((acc, item) => {
+    const { category } = item;
+    const sectionIndex = acc.findIndex(section => section.category === category);
+
+    if (sectionIndex !== -1) {
+      acc[sectionIndex].data.push(item);
+    } else {
+      acc.push({ category: category, data: [item] });
+    }
+
+    return acc;
+  }, []);
+
+  return transformedDataArray;
+}
+
+// Render each section header
+const renderSectionHeader = ({ section: { category } }) => (
+  <CategoryHeader categoryName={category} categoryCost={'0.00'} />
+);
+
+// Render each item within a section
+const renderItem = ({ item }) => (
+  <ItemComponent item={item} />
+);
+
+/* The overall Screen to be displayed. */
+const ListScreen = () => {
+
+  // Transform the data gotten from AsyncStorage
+  const sections = TransformDataForSectionList(data);
+
+  return (
+
+    /* Used for react native gesture handler */
+    <GestureHandlerRootView style={{ flex: 1 }}>
+
+      {/* The overall screen. */}
+      <View style={styles.body}>
+
+        <ListHeader />
+
+        <SectionList
+          sections={sections}
+          keyExtractor={(item) => item.itemID}
+          renderItem={renderItem}
+          renderSectionHeader={renderSectionHeader}
+          stickySectionHeadersEnabled={false}
+        />
+
+      </View>
+
+    </GestureHandlerRootView>
   );
 };
+
+const styles = StyleSheet.create({
+  body: {
+    flex: 1,
+    padding: 16,
+  },
+
+  contentContainer: {
+    flex: 1,
+    paddingHorizontal: 16,
+  },
+
+  row: {
+    flexDirection: 'row',
+    alignItems: 'center'
+  },
+
+  textOptions: {
+    fontSize: 18
+  },
+
+});
 
 const styles2 = StyleSheet.create({
   container: {
@@ -147,7 +271,7 @@ const styles2 = StyleSheet.create({
   circleContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    flexShrink: '1',
+    // flexShrink: '1',
   },
 
   circleIcon: {
@@ -163,63 +287,6 @@ const styles2 = StyleSheet.create({
     flexGrow: 1,
     flex: 1,
   }
-
-
-});
-
-
-/* The overall Screen to be displayed. */
-const ListScreen = () => {
-
-  const navigation = useNavigation();
-
-  return (
-
-    /* Used for react native gesture handler */
-    <GestureHandlerRootView style={{ flex: 1 }}>
-
-      {/* The overall screen. */}
-      <View style={styles.body}>
-
-        <ListHeader />
-        <ListOfItems navigation={navigation} />
-
-        <ScrollView>
-          <CategoryHeader categoryName="Bakery a really long name to see if it works Bakery hopefully it works now  " categoryCost="$14.50" />
-          <SubCategoryList listName="apple this is a bunch to text to show the flexShrink actually works after so long" />
-          <SubCategoryList listName="bingo sheet" />
-          <CategoryHeader categoryName="Produce" />
-
-
-        </ScrollView>
-
-
-      </View>
-
-    </GestureHandlerRootView>
-  );
-};
-
-const styles = StyleSheet.create({
-  body: {
-    flex: 1,
-    padding: 16,
-  },
-
-  contentContainer: {
-    flex: 1,
-    paddingHorizontal: 16,
-  },
-
-  row: {
-    flexDirection: 'row',
-    alignItems: 'center'
-  },
-
-  textOptions: {
-    fontSize: 18
-  },
-
 });
 
 export default ListScreen;
