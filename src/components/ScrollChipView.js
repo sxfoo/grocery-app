@@ -6,7 +6,7 @@ import * as Haptics from 'expo-haptics';
 // Utility function for this component
 import { removeChip } from '../utilityFunctions/scrollChipViewUtils'
 
-export const ScrollChipView = ({ addedItems, setAddedItems, theme }) => {
+export const ScrollChipView = ({ addedItems, setAddedItems, theme, listMetaData }) => {
 
     // Animation effects, currently only on expand
     const popAnim = useRef(new Animated.Value(0)).current;
@@ -63,7 +63,7 @@ export const ScrollChipView = ({ addedItems, setAddedItems, theme }) => {
                         ]}
                     >
                         <Chip onClose={() => {
-                            removeChip(item.itemID, addedItems, setAddedItems)
+                            removeChip(item.itemID, addedItems, setAddedItems, listMetaData)
                         }}>
                             {`${item.itemName} qty:${item.quantity}`}
                         </Chip>
