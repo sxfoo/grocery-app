@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { Alert, StyleSheet } from "react-native";
 import { Image } from "react-native-ui-lib";
 import { View, TouchableOpacity, Icon } from "react-native-ui-lib";
@@ -10,6 +10,8 @@ import { launchCamera, launchImageLibrary } from "react-native-image-picker";
 import { useNavigation } from "@react-navigation/native";
 import { signOut, getAuth } from "@firebase/auth";
 import ThemeContext  from "../themeContext"
+import ProfilePictureModal from "../components/ProfilePictureModal";
+
 
 /* Settings page, specify the individual settings, icons and type of change*/
 const customisation = [
@@ -120,11 +122,25 @@ const PROFILE_PIC = "https://static.wikia.nocookie.net/disney/images/3/3c/Profil
 const Settings = () => {
     const { isDarkTheme, toggleDarkMode } = useContext(ThemeContext);
 
+    const [profilePicture, setProfilePicture] = useState(null);
+    const [modalVisible, setModalVisible] = useState(false);
+
+    handleSelectPicture = () => {
+        setModalVisible(false)
+    };
+
+    handleCapturePhoto = () => {
+        setModalVisible(false);
+    };
+
+    closeModal = () => {
+        setModalVisible(false);
+    };
+    
     const navigation = useNavigation();
     const [Pic, SetPic] = React.useState('');
     const [form, setForm] = React.useState({
         Notification: true,
-        location: true,
     });
     const theme = useTheme();
     const insets = useSafeAreaInsets();
@@ -137,9 +153,8 @@ const Settings = () => {
         .catch((error) => {
         alert(error.message);
     });
-    }
-    const imagePick = () => {
-        console.log('Image pick pressed');
+}
+    
         /*
         let options = {
             mediaType: 'photo',
@@ -171,7 +186,6 @@ const Settings = () => {
                 console.log('Image pPicker error: ', error);
             }
             */
-    };
     const email = auth.currentUser.email
     return (
 			<SafeAreaProvider>
@@ -188,11 +202,8 @@ const Settings = () => {
 						]}
 					>
 						{/* Profile picture*/}
-						<TouchableOpacity
-							onPress={() => {
-								imagePick();
-							}}
-						>
+						<TouchableOpacity onPress={() => setModalVisible(true)}>
+
 							<View style={styles.avatar}>
 								<Image
 									alt="Profile Picture"
@@ -200,11 +211,18 @@ const Settings = () => {
 									style={styles.profile_avatar}
 								/>
 							</View>
+                            
 
 							<View style={styles.profile_write}>
 								<FeatherIcon name="edit-3" size={15} color="#fff" />
 							</View>
 						</TouchableOpacity>
+                        <ProfilePictureModal
+                            modalVisible={modalVisible}
+                            closeModal={closeModal}
+                            handleSelectPicture={handleSelectPicture} 
+                            handleCapturePhoto={handleCapturePhoto}
+                        />
 
 						<Text style={styles.profile_name}>
 							{" "}
@@ -261,7 +279,7 @@ const Settings = () => {
 														onValueChange={() => toggleDarkMode()}
 													/>
 												)}
-												{type === "toggle" && id !== "darkMode" && (
+												{type === "toggle" && id === "Location" && (
 													<Switch
                                                     value = {form[id]}
                                                     onValueChange = {value => setForm({ ...form, [id]: value})}
