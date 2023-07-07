@@ -1,5 +1,7 @@
 import { randomUUID } from 'expo-crypto';
 import { getItemData, storeItemData } from '../utilityFunctions/asyncStorageUtils'
+import { auth } from '../../firebaseConfig';
+import { onlineCreateList } from './onlineCreateList';
 
 // Functions that should be run every first open of the screen / app
 
@@ -15,7 +17,13 @@ export const initialiseAllListsIDsData = async () => {
         else {
             const newListID = randomUUID();
             const newListArray = [{ key: newListID, title: 'Home', numItems: 0 }];
-            
+            //If the user is logged in, create the Home list online too
+            if (auth.currentUser){
+                try { await onlineCreateList({ListName: "Home", ListUID: newListID});}
+                catch (error) {
+                    console.error(error);
+                }
+            }
             await storeItemData('AllListsID', newListArray)
 
             console.log('Successful initialization of listData:', newListArray);
