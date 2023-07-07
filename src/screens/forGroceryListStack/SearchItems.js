@@ -47,6 +47,9 @@ const SearchItemsBar = () => {
     const route = useRoute();
     const { listMetaData } = route.params;
 
+    // Used for ScrollChip View, a temporary array to show what is added/removed currently
+    const [addedItems, setAddedItems] = useState([]);
+
     /* Search logic + Animations */
     // searchQuery holds the input value of searchbar
     const [searchQuery, setSearchQuery] = useState('');
@@ -59,8 +62,6 @@ const SearchItemsBar = () => {
             setDelayedRendering(false);
         }
     };
-
-    const [addedItems, setAddedItems] = useState([]);
 
     // filteredItems is a letter filter (based on searchQuery) of groceryListItem array.
     // returns an array that matches the front few characters of searchQuery
@@ -142,7 +143,7 @@ const SearchItemsBar = () => {
                     onChangeText={onChangeSearch}
                     value={searchQuery}
                 />
-                <ScrollChipView addedItems={addedItems} setAddedItems={setAddedItems} theme={theme} />
+                <ScrollChipView addedItems={addedItems} setAddedItems={setAddedItems} theme={theme} listMetaData={listMetaData} />
             </View>
 
             {/* if searchinput value is empty, do not render Flat List */}

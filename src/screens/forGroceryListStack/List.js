@@ -172,7 +172,7 @@ const ListScreen = ({ route }) => {
         setSections(transformedData);
       };
       fetchItemsData();
-    }, [sections])
+    }, [])
   );
   
   return (
@@ -191,6 +191,7 @@ const ListScreen = ({ route }) => {
           renderItem={renderItem}
           renderSectionHeader={renderSectionHeader}
           stickySectionHeadersEnabled={false}
+          initialNumToRender={20}
         />
 
       </View>
