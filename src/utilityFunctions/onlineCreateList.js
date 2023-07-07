@@ -4,9 +4,9 @@ import { ref, set, update, get } from "firebase/database";
 import { db } from "../../firebaseConfig";
 import { auth } from "../../firebaseConfig";
 
-export const onlineCreateList = async ({ListName}) => {
+export const onlineCreateList = async ({ListName, ListUID}) => {
     const userId =  await getUserId();
-    const listId = randomUUID(); 
+    const listId = ListUID; 
     const userRef = ref(db, (`user_node/UID: ${userId}/lists/${ListName}`));
 
     const data = {

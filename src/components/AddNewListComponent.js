@@ -23,23 +23,24 @@ export const NewListComponent = ({ setAllListsData }) => {
     const handleCreateList = async () => {
 
         if (newListName.trim() !== '') {
+            const key = randomUUID()
             const newList = {
-                "key": randomUUID(),
+                "key": key,
                 "numItems": 0,
                 "title": newListName,
             };
-
+            
             // State to render list data
             setAllListsData(prevData => [...prevData, newList])
 
             // Async Storage to append the list data
             const prevData = await getItemData('AllListsID');
             const newData = [...prevData, newList];
-            await storeItemData('AllListsID', newData);
-
+            await storeItemData('listsID', newData);
+            console.log('Offline create listUID: ' ,key)
             // Firebase online storage to set new list at `user_node/UID: ${userId}/lists/${ListName}`
             if (auth.currentUser) { //checkifauth
-                await onlineCreateList({ ListName: newListName }); //May return listId in the future to sync the list
+                await onlineCreateList({ ListName: newListName, ListUID: key }); //May return listId in the future to sync the list
             }
 
             setIsCreatingList(false);
