@@ -8,16 +8,15 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import ProfileStack from './ProfileStack';
 import ListStack from './GroceryListStack'
 import SettingsStack from './Verified_Settings_Stack';
-import { onAuthStateChanged } from '@firebase/auth';
-import { auth } from '../../firebaseConfig';
 import SignInStack from './Unverified_Settings_Stack';
 import { checkifauth } from '../utilityFunctions/checkifauth';
 import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
 
 // function to set bottom tabs visibilty for settings screen
 const VisibleBottomTabs = (route) => {
-
+    
     // If the focused route is not found, we need to assume it's the initial screen
+    //if undefined, routename = Unv_setting
     const routeName = getFocusedRouteNameFromRoute(route) ?? "Unv_setting";
 
     if (routeName === "Unv_setting" || routeName === "Settings") {
@@ -32,22 +31,7 @@ export default function MainBottomTabStack() {
 
     //This part of the code checks if an user has been authenticated or not
     const BottomTab = createBottomTabNavigator();
-    /*const [isAuth, setIsAuth] = useState(false)
-    useEffect(() => {
-        const unsubscribeAuthStateChanged = onAuthStateChanged(
-            auth, (authenticatedUser) => {
-                if (authenticatedUser) {
-                    setIsAuth(true); //If a user has logged in, it's set to true
-                }
-                else{
-                    setIsAuth(false); //otherwise set to false
-                }
-            }
-        );
-        //!CheckLater
-        return () => unsubscribeAuthStateChanged();
-    }, []);*/
-
+ 
     return (
         <BottomTab.Navigator
             screenOptions={{

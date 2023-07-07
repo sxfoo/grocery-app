@@ -4,6 +4,11 @@ import { ref, set, update, get } from "firebase/database";
 import { db } from "../../firebaseConfig";
 import { auth } from "../../firebaseConfig";
 
+export const onlineEditList = async ({oldTitle , newListName, ListUID}) => {
+    const userId = await getUserId();
+    console.log(oldTitle, newListName, ListUID);
+};
+
 export const onlineCreateList = async ({ListName, ListUID}) => {
     const userId =  await getUserId();
     const listId = ListUID; 

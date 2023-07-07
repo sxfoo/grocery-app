@@ -1,3 +1,4 @@
+import { update } from 'firebase/database';
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import { TextInput, Button } from 'react-native-paper'
@@ -7,19 +8,17 @@ const ListSettingsScreen = ({ navigation, route }) => {
 
   const { listMetaData } = route.params;
   const [title, setTitle] = React.useState(listMetaData.title);
-
+  const oldTitle = listMetaData.title
   // Function to handle on Save button Press
   const handleSave = () => {
-
+    
     if (title.trim() !== '') {
-
       // Use list key value
       // To compare and replace the new title name
       const listKey = listMetaData.key
-
       // Save the updated title, navigate back to the AllListScreen.
       const updatedItem = { ...listMetaData, title: title };
-      navigation.navigate('All Lists', { action: 'TitleEdit', listKey: listKey, updatedItem: updatedItem });
+      navigation.navigate('All Lists', { action: 'TitleEdit', listKey: listKey, updatedItem: updatedItem, oldTitle: oldTitle});
     }
 
   };

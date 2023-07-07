@@ -5,9 +5,10 @@ import { StatusBar } from 'expo-status-bar';
 import { useFocusEffect } from '@react-navigation/native';
 import { initialiseAllListsIDsData } from '../../utilityFunctions/initialisationData';
 import { getItemData, storeItemData } from '../../utilityFunctions/asyncStorageUtils';
-
+import { auth } from '../../../firebaseConfig';
 import { GroceryCardComponent } from '../../components/GroceryCardComponent';
 import { NewListComponent } from '../../components/AddNewListComponent';
+import { onlineEditList } from '../../utilityFunctions/onlineCreateList';
 
 /* The overall Screen to be displayed. Shows all the user's created grocery lists */
 const AllListsScreen = ({ navigation, route }) => {
@@ -45,16 +46,20 @@ const AllListsScreen = ({ navigation, route }) => {
     }, [navigation, isEditing]);
 
     // Update the list item if it has been edited in the ListSettings screen
-    // To be updated properly to use key values instead of matching and replacing by previous list titles 
+    // To be updated properly to use key values instead of matching and replacing by previous list titles
+    //useeffect only runs when route.params changes and action == TitleEdit 
     React.useEffect(() => {
-        const { action, listKey, updatedItem } = route.params;
-
+        const { action, listKey, updatedItem, oldTitle } = route.params;
+        console.log('route:' ,route)
+        console.log(route.params);
         if (action == 'TitleEdit') {
             if (updatedItem) {
-                const newListsData = allListsData.map((item) => (item.key === listKey ? updatedItem : item))
-
-                storeItemData('AllListsID', newListsData);
+                const newListsData = allListsData.map((item) => 
+                item.key === listKey ? updatedItem : item
+                ) //updates the oldlist, if item.key is = to suppose to edit listKey, it sets it to the new updatedItem, rewrite its data
+                storeItemData('AllListsID', newListsData);                                                  
                 setAllListsData(newListsData);
+                onlineEditList({oldTitle: oldTitle , newListName: updatedItem.title, ListUID: updatedItem.key});
             }
         }
     }, [route.params]);
