@@ -2,13 +2,13 @@ import { useState, useRef, useEffect, useMemo } from 'react';
 import { Text, Searchbar, List, Divider, useTheme } from 'react-native-paper'
 import { View, StyleSheet, Animated, KeyboardAvoidingView, FlatList, UIManager } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-
+import { useRoute } from '@react-navigation/native';
 import groceryListItem from '../../../assets/mockDataResource/listOfGroceryItems'
 import { AccordionCardItem } from '../../components/AccordionCardItem';
 import { ScrollChipView } from '../../components/ScrollChipView';
 
 // renderItem function is used to describe the rendering of each item in the Flat list
-const renderItem = ({ item, theme, searchQuery, setSearchQuery, setAddedItems }) => {
+const renderItem = ({ item, theme, searchQuery, setSearchQuery, setAddedItems, listMetaData }) => {
 
     // For animation stuff, bolds the matching letters,
     // sets the color for the rest of the letters to be onSurfaceDisabled (react paper theme)
@@ -31,7 +31,9 @@ const renderItem = ({ item, theme, searchQuery, setSearchQuery, setAddedItems })
             textTitle={textTitle}
             theme={theme}
             setSearchQuery={setSearchQuery}
-            setAddedItems={setAddedItems} />
+            setAddedItems={setAddedItems} 
+            listMetaData={listMetaData}
+        />
     );
 };
 
@@ -40,6 +42,10 @@ const SearchItemsBar = () => {
 
     /* Using react native paper theme */
     const theme = useTheme();
+
+    /* Get listmetaData through navigation */
+    const route = useRoute();
+    const { listMetaData } = route.params;
 
     /* Search logic + Animations */
     // searchQuery holds the input value of searchbar
@@ -155,7 +161,7 @@ const SearchItemsBar = () => {
                         <FlatList
                             data={filteredItems}
                             keyExtractor={(item) => item.id.toString()}
-                            renderItem={(props) => renderItem({ ...props, theme, searchQuery, setSearchQuery, setAddedItems })}
+                            renderItem={(props) => renderItem({ ...props, theme, searchQuery, setSearchQuery, setAddedItems, listMetaData })}
                             keyboardShouldPersistTaps='handled'
                         />
                     )}

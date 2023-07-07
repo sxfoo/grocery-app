@@ -53,7 +53,7 @@ const AllListsScreen = ({ navigation, route }) => {
             if (updatedItem) {
                 const newListsData = allListsData.map((item) => (item.key === listKey ? updatedItem : item))
 
-                storeItemData('listsID', newListsData);
+                storeItemData('AllListsID', newListsData);
                 setAllListsData(newListsData);
             }
         }

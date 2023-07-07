@@ -33,9 +33,9 @@ export const NewListComponent = ({ setAllListsData }) => {
             setAllListsData(prevData => [...prevData, newList])
 
             // Async Storage to append the list data
-            const prevData = await getItemData('listsID');
+            const prevData = await getItemData('AllListsID');
             const newData = [...prevData, newList];
-            await storeItemData('listsID', newData);
+            await storeItemData('AllListsID', newData);
 
             // Firebase online storage to set new list at `user_node/UID: ${userId}/lists/${ListName}`
             if (auth.currentUser) { //checkifauth

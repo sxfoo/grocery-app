@@ -2,17 +2,20 @@ import { useCallback, useMemo, useRef, useState } from 'react';
 import { View, StyleSheet, SectionList } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { IconButton, Divider, Card, Text, useTheme, Button } from 'react-native-paper';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute, useFocusEffect } from '@react-navigation/native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { MaterialIcons, Feather, Entypo } from '@expo/vector-icons';
 import { printAllData, removeAllData } from '../../utilityFunctions/asyncStorageUtils';
-
+import { initialiseListItems } from '../../utilityFunctions/initialisationData';
 import { categoryStylesData } from '../../../assets/mockDataResource/listOfGroceryItems';
 
 /* Displays User's Location at the top of the screen*/
 const ListHeader = () => {
 
   const navigation = useNavigation();
+  const route = useRoute();
+
+  const { listMetaData } = route.params;
 
   return (
     <View style={{ flexDirection: 'column', gap: 20 }}>
@@ -32,7 +35,7 @@ const ListHeader = () => {
           style={styles2.addButton}
           icon='plus-thick'
           mode='outlined'
-          onPress={() => navigation.navigate('Search Items')}
+          onPress={() => navigation.navigate('Search Items', { listMetaData: listMetaData })}
         >
           Add Items
         </Button>
@@ -123,29 +126,6 @@ const ItemComponent = ({ item }) => {
   )
 }
 
-const data = [
-  {
-    "itemID": "F4C3F025-6E88-4AFC-A79B-04A30E7C5281",
-    "itemName": "Flour",
-    "category": "Rice, Noodles & Cooking Ingredients",
-    "quantity": "1",
-    "unitPrice": "0.00",
-    "totalPrice": "0.00",
-    "timeStamp": 1688701275848,
-    "completed": false
-  },
-  {
-    "itemID": "5269F869-8D98-44A5-8FAA-0D4D08F144EF",
-    "itemName": "Milk",
-    "category": "Dairy, Chilled & Eggs",
-    "quantity": "1",
-    "unitPrice": "0.00",
-    "totalPrice": "0.00",
-    "timeStamp": 1688701278275,
-    "completed": false
-  },
-];
-
 const TransformDataForSectionList = (dataArray) => {
 
   // Group the data by category
@@ -176,11 +156,25 @@ const renderItem = ({ item }) => (
 );
 
 /* The overall Screen to be displayed. */
-const ListScreen = () => {
+const ListScreen = ({ route }) => {
 
-  // Transform the data gotten from AsyncStorage
-  const sections = TransformDataForSectionList(data);
+  const { listMetaData } = route.params
+  const [sections, setSections] = useState([]);
 
+  // Retrieve from async Storage listItems given listID
+  useFocusEffect(
+    useCallback(() => {
+      const fetchItemsData = async () => {
+        const data = await initialiseListItems(listMetaData.key);
+
+        // Transform the data gotten from AsyncStorage
+        const transformedData = TransformDataForSectionList(data);
+        setSections(transformedData);
+      };
+      fetchItemsData();
+    }, [sections])
+  );
+  
   return (
 
     /* Used for react native gesture handler */

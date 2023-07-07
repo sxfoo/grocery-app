@@ -1,14 +1,14 @@
-import { storeItemData } from './asyncStorageUtils';
+import { getItemData, storeItemData } from './asyncStorageUtils';
 import { randomUUID } from 'expo-crypto';
-import { db, ref, set } from '../../firebaseConfig'
+import { auth, db, ref, set } from '../../firebaseConfig'
 import { LayoutAnimation } from 'react-native';
-import { checkifauth, getUserId } from './checkifauth';
+import { getUserId } from './checkifauth';
 import { fetchlistUID } from './onlineCreateList';
 
 /* For Accordian Card Item */
 
 // Function to occur on adding to list
-export const AddToList = ({ item, values, setSearchQuery, setAddedItems, loggedIn }) => {
+export const AddToList = ({ item, values, setSearchQuery, setAddedItems, listMetaData }) => {
 
     // Random unique ID for item:
     const itemUUID = randomUUID();
@@ -31,10 +31,12 @@ export const AddToList = ({ item, values, setSearchQuery, setAddedItems, loggedI
             //getUserId is an asynchronous function (take some time)
             //it causes listId to be assigned the promise object instead of the actual value
             //await can onlyn be used in an async function
-            const listId = await getUserId(); //This retrieves the user data, according to the device / authenticated user account
-
+            const listId = listMetaData.key; //This retrieves the user data, according to the device / authenticated user account
+            
             // Offline Storage
-            await storeItemData(itemUUID, data); // Wait for offline storage to complete
+            let currentListItems = (await getItemData(listId + '/items')) ?? [];
+            const updatedListItems = [...currentListItems, data];
+            await storeItemData(listId + '/items', updatedListItems); // Wait for offline storage to complete
 
             // To add as chip items on search screen
             setAddedItems(prevValues => {
@@ -48,8 +50,8 @@ export const AddToList = ({ item, values, setSearchQuery, setAddedItems, loggedI
                 console.error('Error adding new item:', error);
             }
 
-
-            if (loggedIn) {
+            // If logged in, store online
+            if (auth.currentUser) {
                 // Online Storage
                 const listId = await getUserId(); //to be changed in the future
                 const userId = await getUserId();
