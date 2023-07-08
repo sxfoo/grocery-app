@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { StyleSheet, SafeAreaView, ScrollView, Pressable } from 'react-native';
+import { StyleSheet, SafeAreaView, ScrollView, LayoutAnimation, UIManager } from 'react-native';
 import { Text } from 'react-native-paper';
 import { StatusBar } from 'expo-status-bar';
 import { useFocusEffect } from '@react-navigation/native';
@@ -9,6 +9,8 @@ import { auth } from '../../../firebaseConfig';
 import { GroceryCardComponent } from '../../components/GroceryCardComponent';
 import { NewListComponent } from '../../components/AddNewListComponent';
 import { onlineEditList } from '../../utilityFunctions/onlineCreateList';
+
+import PressableOpacity from '../../components/PressableOpacity'
 
 /* The overall Screen to be displayed. Shows all the user's created grocery lists */
 const AllListsScreen = ({ navigation, route }) => {
@@ -36,11 +38,21 @@ const AllListsScreen = ({ navigation, route }) => {
     React.useEffect(() => {
         navigation.setOptions({
             headerRight: () => (
-                <Pressable onPress={() => setIsEditing((prev) => !prev)}>
+                <PressableOpacity
+                    activeOpacity={0.5}
+                    onPress={() => {
+                        LayoutAnimation.configureNext({
+                            duration: 200,
+                            create: { type: 'linear', property: 'opacity' },
+                            update: { type: 'spring', springDamping: 1 },
+                            delete: { type: 'linear', property: 'opacity' },
+                        });
+                        setIsEditing((prev) => !prev)
+                    }}>
                     <Text variant='titleMedium' style={{ marginRight: 20, fontWeight: '500' }}>
                         {isEditing ? 'Done' : 'Edit'}
                     </Text>
-                </Pressable>
+                </PressableOpacity>
             ),
         });
     }, [navigation, isEditing]);
@@ -50,17 +62,17 @@ const AllListsScreen = ({ navigation, route }) => {
     //useeffect only runs when route.params changes and action == TitleEdit 
     React.useEffect(() => {
         const { action, listKey, updatedItem, oldTitle } = route.params;
-        console.log('route:' ,route)
+        console.log('route:', route)
         console.log(route.params);
         if (action == 'TitleEdit') {
             if (updatedItem) {
-                const newListsData = allListsData.map((item) => 
-                item.key === listKey ? updatedItem : item
+                const newListsData = allListsData.map((item) =>
+                    item.key === listKey ? updatedItem : item
                 ) //updates the oldlist, if item.key is = to suppose to edit listKey, it sets it to the new updatedItem, rewrite its data
-                storeItemData('AllListsID', newListsData);                                                  
+                storeItemData('AllListsID', newListsData);
                 setAllListsData(newListsData);
-                if (auth.currentUser){
-                onlineEditList({oldTitle: oldTitle , newListName: updatedItem.title, ListUID: updatedItem.key});
+                if (auth.currentUser) {
+                    onlineEditList({ oldTitle: oldTitle, newListName: updatedItem.title, ListUID: updatedItem.key });
                 }
             }
         }

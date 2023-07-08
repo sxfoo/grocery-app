@@ -126,6 +126,11 @@ const SearchItemsBar = () => {
 
     const searchInputRef = useRef(null);
 
+    useEffect(() => {
+        // Focus on the search input when the screen mounts
+        searchInputRef.current?.focus();
+      }, []);
+
     return (
 
         // Renders the search bar, and the flat list.
