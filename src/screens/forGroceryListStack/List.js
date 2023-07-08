@@ -8,6 +8,7 @@ import { MaterialIcons, Feather, Entypo } from '@expo/vector-icons';
 import { printAllData, removeAllData } from '../../utilityFunctions/asyncStorageUtils';
 import { initialiseListItems } from '../../utilityFunctions/initialisationData';
 import { categoryStylesData } from '../../../assets/mockDataResource/listOfGroceryItems';
+import PressableOpacity from '../../components/PressableOpacity'
 
 /* Displays User's Location at the top of the screen*/
 const ListHeader = () => {
@@ -66,18 +67,16 @@ const CategoryHeader = ({ categoryName, categoryCost }) => {
   const categoryColor = categoryStyleInfo.color;
 
   return (
-    <View style={{
-      flexDirection: 'row', alignItems: 'center',
-      marginTop: 10,
-    }}>
+    <View
+      style={{
+        flexDirection: 'row', alignItems: 'center',
+        marginTop: 10,
+      }}>
 
       <MaterialCommunityIcons name={iconName} size={30} color={categoryColor} />
 
       <Text style={{ color: categoryColor, flex: 1, marginStart: 10 }} variant="titleSmall">{categoryName}</Text>
-
-      <Text style={{ color: categoryColor }} variant="labelLarge" >
-        {categoryCost}
-      </Text>
+      <Text style={{ color: categoryColor }} variant="labelLarge">{categoryCost}</Text>
 
       <IconButton
         icon={'chevron-down'}
@@ -101,27 +100,30 @@ const ItemComponent = ({ item }) => {
   const categoryColor = categoryStyleInfo.color;
 
   return (
-    <View style={{
-      flex: 1, flexDirection: 'row', alignItems: 'center',
-      marginTop: 10,
-      borderWidth: 1, borderRadius: 5, borderColor: categoryColor
-    }}>
+    <PressableOpacity
+      style={{
+        flex: 1, flexDirection: 'row', alignItems: 'center',
+        marginTop: 10,
+        borderWidth: 1, borderRadius: 5, borderColor: categoryColor
+      }}
+      activeOpacity={0.5}
+      onPress={toggleCheck}
+    >
 
       <IconButton
         icon={isChecked ? 'checkbox-marked-circle-outline' : 'checkbox-blank-circle-outline'}
         size={24}
         iconColor={categoryColor}
-        onPress={toggleCheck}
       />
 
-      <Text style={{ flex: 2 }} variant="bodyMedium">{item.itemName}</Text>
+      <Text style={{ flex: 2 }} variant="bodyLarge">{item.itemName}</Text>
 
       <View style={{ flex: 1, flexDirection: 'column', alignItems: 'center' }}>
         <Text variant='bodyMedium'>{item.quantity} unit</Text>
         <Text variant='labelSmall'>${item.unitPrice} x {item.quantity} unit</Text>
       </View>
 
-    </View>
+    </PressableOpacity>
 
   )
 }
@@ -174,7 +176,7 @@ const ListScreen = ({ route }) => {
       fetchItemsData();
     }, [])
   );
-  
+
   return (
 
     /* Used for react native gesture handler */
@@ -191,6 +193,7 @@ const ListScreen = ({ route }) => {
           renderItem={renderItem}
           renderSectionHeader={renderSectionHeader}
           stickySectionHeadersEnabled={false}
+          showsVerticalScrollIndicator={false}
           initialNumToRender={20}
         />
 
