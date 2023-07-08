@@ -57,8 +57,6 @@ export const AddToList = ({ item, values, setSearchQuery, setAddedItems, listMet
                 const list_node_data = {
                     [listMetaData.title]: listId
                 }
-                //const itemRef = ref(db, `list_node/${listId}/items/` + itemUUID);
-                //await set(itemRef, data); // Wait for online storage to complete
 
                 const itemRef = ref(db, `list_node/lists/List_ID: ${listId}/items/` + itemUUID);
                 await set(itemRef, data);
