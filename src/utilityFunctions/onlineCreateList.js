@@ -3,6 +3,7 @@ import { getUserId } from "./checkifauth";
 import { ref, set, update, get, remove } from "firebase/database";
 import { db } from "../../firebaseConfig";
 import { auth } from "../../firebaseConfig";
+import { List } from "react-native-paper";
 
 export const onlineEditList = async ({oldTitle , newListName, ListUID}) => {
     const userId = await getUserId();
@@ -24,17 +25,22 @@ export const onlineEditList = async ({oldTitle , newListName, ListUID}) => {
 export const onlineCreateList = async ({ListName, ListUID}) => {
     const userId =  await getUserId();
     const listId = ListUID; 
-    const userRef = ref(db, (`user_node/UID: ${userId}/lists/${ListName}`));
-
+    //User Node
+    const userRef = ref(db, (`user_node/User UID: ${userId}/lists/${ListName}`));
+    //List Node
+    const listRef = ref(db, (`list_node/`));
+    ///Creates a new list at the user node
     const data = {
         ListUID : listId
     };
+    //Creates a new list at the list node
+    const list_data = {
+        [ListName] : listId
+    };
     await set(userRef, data);
+    await set(listRef, list_data);
     console.log('New list added to firebase with listname: '  + ListName + 'listid: '  + listId);
-
     //Plans to check if duplicated list next time through their uid. 
-    //const userListUidRef = ref(db, `user_node/${userId}/lists/${ListName}`);
-    //await set(userListUidRef, listId);
 };
 
 export const fetchlistUID = async ({ListName}) => {
