@@ -1,12 +1,14 @@
 import { View, Text, StyleSheet, ScrollView, Alert } from "react-native";
 import React, { useState } from "react";
-import CustomInput from "../../../components/CustomInput/CustomInput";
-import CustomButton from "../../../components/CustomButton/CustomButton";
+import CustomInput from "../../components/CustomInput/CustomInput";
+import CustomButton from "../../components/CustomButton/CustomButton";
 import { useNavigation } from "@react-navigation/native";
-import { auth } from "../../../../firebaseConfig";
+import { auth } from "../../../firebaseConfig";
 import { sendPasswordResetEmail } from "@firebase/auth";
+import { useTheme } from "react-native-paper";
 
 const ResetPasswordScreen = () => {
+	const theme = useTheme()
 	const [email, setEmail] = useState("");
 
 	const navigation = useNavigation();
@@ -29,7 +31,7 @@ const ResetPasswordScreen = () => {
 	return (
 		<View>
 			<View style={styles.root}>
-				<Text style={styles.text}>Enter your email to receive instructions on how to reset your password.</Text>
+				<Text style={[styles.text, {color: theme.colors.inverseSurface}]}>Enter your email to receive instructions on how to reset your password.</Text>
 
 				<CustomInput
 					placeholder="Enter your email"

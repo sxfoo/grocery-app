@@ -1,11 +1,11 @@
 import { View, Text, StyleSheet, ScrollView } from "react-native";
 import React, { useEffect, useState } from "react";
-import CustomInput from "../../../components/CustomInput/CustomInput";
-import CustomButton from "../../../components/CustomButton/CustomButton";
-import SocialSignInButtons from "../../../components/SocialSignInButtons/SocialSignInButtons";
+import CustomInput from "../../components/CustomInput/CustomInput";
+import CustomButton from "../../components/CustomButton/CustomButton";
+import SocialSignInButtons from "../../components/SocialSignInButtons/SocialSignInButtons";
 import { useNavigation } from "@react-navigation/native";
 import { createUserWithEmailAndPassword, sendEmailVerification, onAuthStateChanged } from "firebase/auth";
-import { auth } from "../../../../firebaseConfig";
+import { auth } from "../../../firebaseConfig";
 
 const SignUpScreen = () => {
 	// const [username, setUsername] = useState("");

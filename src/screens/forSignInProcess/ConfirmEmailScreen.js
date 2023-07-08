@@ -1,39 +1,44 @@
 import { View, Text, StyleSheet, ScrollView } from "react-native";
 import React, { useState } from "react";
-import CustomInput from "../../../components/CustomInput/CustomInput";
-import CustomButton from "../../../components/CustomButton/CustomButton";
+import CustomInput from "../../components/CustomInput/CustomInput";
+import CustomButton from "../../components/CustomButton/CustomButton";
 import { useNavigation } from "@react-navigation/native";
 
-const ForgotPasswordScreen = () => {
+const ConfirmEmailScreen = () => {
 	const [code, setCode] = useState("");
-	const [username, setUsername] = useState('');
-
 	const navigation = useNavigation()
-
-	const onSignInPressed = () => {
-		console.warn("onSignInPressed");
-		navigation.navigate("SignIn")
+	const onConfirmPressed = () => {
+		console.warn("onConfirmPressed");
 	};
 
-	const onSendPressed = () => {
+	const onSignInPressed = () => {
+		console.warn("Sign in");
+		navigation.navigate('SignInScreen');
+	};
+	
+	const onResendCodePressed = () => {
 		console.warn("onResendCodePressed");
-		navigation.navigate("ResetPassword")
 	};
 	return (
 		<ScrollView showsVerticalScrollIndicator={false}>
 			<View style={styles.root}>
-				<Text style={styles.title}>Reset your password</Text>
+				<Text style={styles.title}>Confirm your email</Text>
 
 				<CustomInput
-					placeholder="Username"
-					value={username}
-					setValue={setUsername}
+					placeholder="Enter your confirmation code"
+					value={code}
+					setValue={setCode}
 				/>
 
-				<CustomButton text="Send" onPress={onSendPressed} />
+				<CustomButton text="Confirm" onPress={onConfirmPressed} />
 
 				<CustomButton
-					text="Back to Sign in"
+					text="Resend code"
+					onPress={onResendCodePressed}
+					type="SECONDARY"
+				/>
+				<CustomButton
+					text="Back to Sign In"
 					onPress={onSignInPressed}
 					type="TERTIARY"
 				/>
@@ -65,4 +70,4 @@ const styles = StyleSheet.create({
 	},
 });
 
-export default ForgotPasswordScreen;
+export default ConfirmEmailScreen;

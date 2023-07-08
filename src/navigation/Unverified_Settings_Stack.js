@@ -4,13 +4,14 @@ import { NavigationContainer } from "@react-navigation/native";
 import { useTheme } from 'react-native-paper'
 import { createStackNavigator, TransitionPresets } from "@react-navigation/stack";
 // import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import SignInScreen from "../screens/forSignInProcess/forSignIn/SignInScreen";
-import SignUpScreen from "../screens/forSignInProcess/forSignUp/SignUpScreen";
-import ConfirmEmailScreen from "../screens/forSignInProcess/forConfirmEmail/ConfirmEmailScreen";
-import ForgotPasswordScreen from "../screens/forSignInProcess/forForgotPassword/ForgotPasswordScreen";
-import ResetPasswordScreen from "../screens/forSignInProcess/forResetPassword/ResetPasswordScreen";
+import SignInScreen from "../screens/forSignInProcess/SignInScreen";
+import SignUpScreen from "../screens/forSignInProcess/SignUpScreen";
+import ConfirmEmailScreen from "../screens/forSignInProcess/ConfirmEmailScreen";
+import ForgotPasswordScreen from "../screens/forSignInProcess/ForgotPasswordScreen";
+import ResetPasswordScreen from "../screens/forSignInProcess/ResetPasswordScreen";
 import HomeScreen from "../screens/forGroceryListStack/AllLists";
 import Unv_setting from "../screens/Unv_setting";
+import ChangeUsernameScreen from "../screens/forSignInProcess/ChangeUsernameScreen";
 
 const SignIn = createStackNavigator()
 
@@ -69,6 +70,8 @@ const SignInStack = () => {
                 name="ResetPassword"
                 component={ResetPasswordScreen}
             />
+
+            <SignIn.Screen name="ChangeUsername" component={ChangeUsernameScreen}/>
 
         </SignIn.Navigator>
     )

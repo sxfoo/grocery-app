@@ -1,10 +1,10 @@
 import { View, Text, StyleSheet, Alert, TouchableOpacity } from "react-native";
 import React, { useState } from "react";
-import CustomButton from "../../../components/CustomButton/CustomButton";
+import CustomButton from "../../components/CustomButton/CustomButton";
 import { useNavigation } from "@react-navigation/native";
-import { auth } from "../../../../firebaseConfig";
+import { auth } from "../../../firebaseConfig";
 import { deleteUser} from "@firebase/auth"; 
-import SignUpScreen from "../forSignUp/SignUpScreen";
+import SignUpScreen from "./SignUpScreen";
 import { Checkbox } from "react-native-paper";
 
 const AccountDeletionScreen = () => {

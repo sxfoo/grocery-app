@@ -7,10 +7,10 @@ import {
 	ScrollView,
 } from "react-native";
 import React, { useState, useEffect } from "react";
-import Logo from "../../../../assets/images/shoppingcart.png";
-import CustomInput from "../../../components/CustomInput/CustomInput";
-import CustomButton from "../../../components/CustomButton/CustomButton";
-import SocialSignInButtons from "../../../components/SocialSignInButtons";
+import Logo from "../../../assets/images/shoppingcart.png";
+import CustomInput from "../../components/CustomInput/CustomInput";
+import CustomButton from "../../components/CustomButton/CustomButton";
+import SocialSignInButtons from "../../components/SocialSignInButtons";
 import { useNavigation } from "@react-navigation/native";
 import { signInWithEmailAndPassword, getAuth, onAuthStateChanged } from "firebase/auth";
 
