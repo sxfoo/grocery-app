@@ -41,11 +41,11 @@ export const SettingsStack = () => {
 			/>
 
 			<Stack.Screen
-				name="ResetPassword"
+				name="Reset Password"
 				component={ResetPasswordScreen}
 			/>
 
-			<Stack.Screen name="DeleteAccount" component={AccountDeletionScreen} />
+			<Stack.Screen name="Delete Account" component={AccountDeletionScreen} />
 
 		</Stack.Navigator>
 	);

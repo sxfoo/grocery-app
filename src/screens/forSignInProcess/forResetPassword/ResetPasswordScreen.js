@@ -29,8 +29,6 @@ const ResetPasswordScreen = () => {
 	return (
 		<View>
 			<View style={styles.root}>
-				<Text style={styles.title}>Reset your password</Text>
-
 				<Text style={styles.text}>Enter your email to receive instructions on how to reset your password.</Text>
 
 				<CustomInput
@@ -53,7 +51,6 @@ const ResetPasswordScreen = () => {
 
 const styles = StyleSheet.create({
 	root: {
-		paddingVertical: 50,
 		alignItems: "center",
 		padding: 20,
 	},
@@ -61,14 +58,13 @@ const styles = StyleSheet.create({
 	title: {
 		fontSize: 24,
 		fontWeight: "bold",
-		color: 'white',
 		margin: 10,
 	},
 
 	text: {
-		color: "gray",
 		marginVertical: 10,
 		fontSize: 15,
+		color: 'white'
 	},
 });
 
