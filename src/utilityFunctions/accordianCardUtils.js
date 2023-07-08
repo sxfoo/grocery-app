@@ -57,8 +57,11 @@ export const AddToList = ({ item, values, setSearchQuery, setAddedItems, listMet
                 const list_node_data = {
                     [listMetaData.title]: listId
                 }
-                const itemRef = ref(db, `list_node/${listMetaData.title}: ${listId}/items/` + itemUUID);
-                await set(itemRef, data); // Wait for online storage to complete
+                //const itemRef = ref(db, `list_node/${listId}/items/` + itemUUID);
+                //await set(itemRef, data); // Wait for online storage to complete
+
+                const itemRef = ref(db, `list_node/lists/List_ID: ${listId}/items/` + itemUUID);
+                await set(itemRef, data);
 
                 console.log('ListMetadata' + listMetaData.key + listMetaData.title);
                 console.log('New item added successfully to Realtime Database:', itemUUID);

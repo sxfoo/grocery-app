@@ -1,6 +1,6 @@
 import { randomUUID } from "expo-crypto";
 import { getUserId } from "./checkifauth";
-import { ref, set, update, get, remove } from "firebase/database";
+import { ref, set, update, get, remove } from "firebase/database"; // use Update instead of set (as it will overwrite)
 import { db } from "../../firebaseConfig";
 import { auth } from "../../firebaseConfig";
 import { List } from "react-native-paper";
@@ -28,21 +28,23 @@ export const onlineCreateList = async ({ListName, ListUID}) => {
     //User Node
     const userRef = ref(db, (`user_node/User UID: ${userId}/lists/${ListName}`));
     //List Node
-    const listRef = ref(db, (`list_node/`));
+    const listRef = ref(db, (`list_node/lists/List_ID: ${listId}`));
     ///Creates a new list at the user node
     const data = {
         ListUID : listId
     };
     //Creates a new list at the list node
-    const list_data = {
-        [ListName] : listId
-    };
-    await set(userRef, data);
-    await set(listRef, list_data);
+    //const default_list = {
+    //    [ListName]: listId
+    //}
+    //await set(listRef, default_list);
+    
+    await set(userRef, data); //if it's 2 add key value
+    await set(listRef, listId); //add a new list / if its 1 just add value to key without removing the existing ones
     console.log('New list added to firebase with listname: '  + ListName + 'listid: '  + listId);
     //Plans to check if duplicated list next time through their uid. 
 };
-
+/*
 export const fetchlistUID = async ({ListName}) => {
     const dataRef = ref(db, `user_node/${auth.currentUser.uid}/lists/${ListName}/ListUID`);
     const snapshot = await get(dataRef);
@@ -54,7 +56,7 @@ export const fetchlistUID = async ({ListName}) => {
         console.log('Error @ onlineCreateItemsInList');
     }
     return listUID;
-};
+};*/
 /*
 export const addingItemsToList = async ({listUID}) => {
     
