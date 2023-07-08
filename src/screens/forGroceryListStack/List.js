@@ -36,7 +36,7 @@ const ListHeader = () => {
           style={styles2.addButton}
           icon='plus-thick'
           mode='outlined'
-          onPress={() => navigation.navigate('Search Items', { listMetaData: listMetaData })}
+          onPress={() => navigation.navigate('Search Items', { listMetaData: listMetaData })} //passed in as props
         >
           Add Items
         </Button>

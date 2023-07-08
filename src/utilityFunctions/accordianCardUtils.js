@@ -32,7 +32,7 @@ export const AddToList = ({ item, values, setSearchQuery, setAddedItems, listMet
             //it causes listId to be assigned the promise object instead of the actual value
             //await can onlyn be used in an async function
             const listId = listMetaData.key; //This retrieves the user data, according to the device / authenticated user account
-            
+    
             // Offline Storage
             let currentListItems = (await getItemData(listId + '/items')) ?? [];
             const updatedListItems = [...currentListItems, data];
@@ -50,20 +50,20 @@ export const AddToList = ({ item, values, setSearchQuery, setAddedItems, listMet
                 console.error('Error adding new item:', error);
             }
 
-            // If logged in, store online
+            // If logged in, store online, may be shifted next time to onlineCreatelist
             if (auth.currentUser) {
                 // Online Storage
-                const listId = await getUserId(); //to be changed in the future
-                const userId = await getUserId();
-                const itemRef = ref(db, `list_node/${listId}/items/` + itemUUID);
-                await set(itemRef, data); // Wait for online storage to complete
+                const listId = listMetaData.key;
+                const list_node_data = {
+                    [listMetaData.title]: listId
+                }
 
+                const itemRef = ref(db, `list_node/lists/List_ID: ${listId}/items/` + itemUUID);
+                await set(itemRef, data);
 
-                const userRef = ref(db, `user_node/${userId}/lists/` );
-                await set(userRef, listId);
-
+                console.log('ListMetadata' + listMetaData.key + listMetaData.title);
                 console.log('New item added successfully to Realtime Database:', itemUUID);
-                console.log(data);
+                console.log(list_node_data);
             } else {
                 console.log('Not logged in!')
             }
