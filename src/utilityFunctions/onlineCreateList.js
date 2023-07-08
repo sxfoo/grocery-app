@@ -1,6 +1,6 @@
 import { randomUUID } from "expo-crypto";
 import { getUserId } from "./checkifauth";
-import { ref, set, update, get } from "firebase/database";
+import { ref, set, update, get, remove } from "firebase/database";
 import { db } from "../../firebaseConfig";
 import { auth } from "../../firebaseConfig";
 
@@ -9,7 +9,7 @@ export const onlineEditList = async ({oldTitle , newListName, ListUID}) => {
     const olduserRef = ref(db, `user_node/UID: ${userId}/lists/${oldTitle}`);
     try {
         await remove(olduserRef);
-        console.log('old list removed.');
+        console.log('Old list removed, title:' ,oldTitle);
     }
     catch (error) {
         console.error('Error deleting online list' ,error);
