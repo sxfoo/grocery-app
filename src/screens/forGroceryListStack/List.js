@@ -1,71 +1,25 @@
-import { useCallback, useMemo, useRef, useState, useEffect } from 'react';
-import { View, StyleSheet, SectionList, LayoutAnimation, UIManager } from 'react-native';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { IconButton, Divider, Card, Text, useTheme, Button } from 'react-native-paper';
-import { useNavigation, useRoute, useFocusEffect } from '@react-navigation/native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { MaterialIcons, Feather, Entypo } from '@expo/vector-icons';
-import { printAllData, removeAllData, storeItemData } from '../../utilityFunctions/asyncStorageUtils';
-import { initialiseListItems } from '../../utilityFunctions/initialisationData';
-import { categoryStylesData } from '../../../assets/mockDataResource/listOfGroceryItems';
-import PressableOpacity from '../../components/PressableOpacity'
+import { useFocusEffect, useRoute } from '@react-navigation/native';
+import { useCallback, useEffect, useState, useContext } from 'react';
+import { LayoutAnimation, SectionList, View } from 'react-native';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { IconButton, Text, useTheme } from 'react-native-paper';
 import Animated, { FadeInLeft, FadeInRight, FadeOutLeft } from "react-native-reanimated";
+import { categoryStylesData } from '../../../assets/mockDataResource/listOfGroceryItems';
+import PressableOpacity from '../../components/PressableOpacity';
+import { storeItemData } from '../../utilityFunctions/asyncStorageUtils';
+import { initialiseListItems } from '../../utilityFunctions/initialisationData';
+import ThemeContext from '../../themeContext'
 
-/* Displays User's Location at the top of the screen*/
-const ListHeader = () => {
+import { ListHeader } from '../../components/ListHeader';
+import { TransformDataForSectionList } from '../../utilityFunctions/listScreenUtils';
 
-  const navigation = useNavigation();
-  const route = useRoute();
-
-  const { listMetaData } = route.params;
-
-  return (
-    <View style={{ flexDirection: 'column', gap: 20 }}>
-
-      {/* <Card>
-        <Card.Title
-          title="Nearest Supermarket"
-          subtitle="Fairprice Xtra @ Ang Mo Kio Street.."
-          left={(props) => <IconButton {...props} icon="map-marker-radius" />}
-          right={(props) => <IconButton {...props} icon="dots-vertical" onPress={() => { }} />}
-        />
-      </Card> */}
-
-      {/* Debug purposes. Remove if necessary*/}
-      <View>
-        <Button
-          style={styles2.addButton}
-          icon='plus-thick'
-          mode='outlined'
-          onPress={() => navigation.navigate('Search Items', { listMetaData: listMetaData })} //passed in as props
-        >
-          Add Items
-        </Button>
-      </View>
-      <View style={{ flexDirection: 'row', alignSelf: 'center', gap: 10 }}>
-        <Button
-          mode='outlined'
-          onPress={() => { printAllData() }}>
-          Check storage
-        </Button>
-
-        <Button
-          mode='outlined'
-          onPress={() => { removeAllData() }}>
-          Remove local storage
-        </Button>
-      </View>
-      <Divider />
-    </View>
-  )
-}
-
-// Component to display the category name, v1.0 without accordion
-const CategoryHeader = ({ categoryName, categoryCost, isEditing }) => {
+// Component to display the category name (Household, Electrical & lifestyle etc...)
+const CategoryHeader = ({ categoryName, categoryCost, isEditing, isDarkTheme }) => {
 
   const categoryStyleInfo = categoryStylesData[categoryName];
   const iconName = categoryStyleInfo.icon;
-  const categoryColor = categoryStyleInfo.color;
+  const categoryColor = isDarkTheme ? categoryStyleInfo.color : categoryStyleInfo.additionalColor;
 
   return (
     <View
@@ -89,7 +43,7 @@ const CategoryHeader = ({ categoryName, categoryCost, isEditing }) => {
   )
 };
 
-// Component to display the item in the list
+// Component that displays the item
 const ItemComponent = ({ item, index, isEditing, sections, setSections }) => {
   const [isChecked, setIsChecked] = useState(item.completed);
 
@@ -101,29 +55,33 @@ const ItemComponent = ({ item, index, isEditing, sections, setSections }) => {
   const route = useRoute();
   const { listMetaData } = route.params;
 
-  const categoryStyleInfo = categoryStylesData[item.category];
-  const categoryColor = categoryStyleInfo.color;
-
   const handleDeletingData = async () => {
     try {
 
-      // TO CLEAN UP THIS STUFF V MESSY
+      // Async storage 
       const data = await initialiseListItems(listMetaData.key);
       const updatedArray = data.filter(object => object.itemID !== item.itemID);
       await storeItemData(listMetaData.key + '/items', updatedArray)
 
+      // For rendering data on screen
       const updatedRenderedArray = sections.filter(categoryData => {
         if (categoryData.category === item.category) {
           categoryData.data.splice(index, 1);
-          return categoryData.data.length > 0; // Keep the object only if the data array is not empty
+          return categoryData.data.length > 0;
         }
         return true;
       });
 
-      setSections(updatedRenderedArray);
+      // ADD firebase storage code here:
+
+      // Return rendered data on screen
+      return updatedRenderedArray;
 
     } catch (error) {
+
       console.log('Failed to delete item data:', error)
+      throw error;
+
     }
   }
 
@@ -143,7 +101,12 @@ const ItemComponent = ({ item, index, isEditing, sections, setSections }) => {
           <PressableOpacity
             activeOpacity={0.5}
             onPress={async () => {
-              await handleDeletingData();
+              try {
+                const updatedRenderedArray = await handleDeletingData();
+                setSections(updatedRenderedArray);
+              } catch (error) {
+                console.log('Failed to delete item:', error);
+              }
             }}
           >
             <MaterialCommunityIcons
@@ -153,7 +116,8 @@ const ItemComponent = ({ item, index, isEditing, sections, setSections }) => {
             />
           </PressableOpacity>
         </Animated.View>
-      ) : null}
+      ) : null
+      }
 
       <PressableOpacity
         style={{
@@ -164,7 +128,7 @@ const ItemComponent = ({ item, index, isEditing, sections, setSections }) => {
         onPress={() => { isEditing ? null : toggleCheck() }}
       >
         <IconButton
-          icon={isEditing ? '' : (isChecked ? 'checkbox-marked-circle' : 'checkbox-blank-circle-outline')}
+          icon={isEditing ? 'dots-horizontal' : (isChecked ? 'checkbox-marked-circle' : 'checkbox-blank-circle-outline')}
           iconColor={isChecked ? theme.colors.primary : theme.colors.onSurfaceVariant}
           size={24}
         />
@@ -184,32 +148,13 @@ const ItemComponent = ({ item, index, isEditing, sections, setSections }) => {
 
       </PressableOpacity>
 
-    </Animated.View>
+    </Animated.View >
   )
 }
 
-const TransformDataForSectionList = (dataArray) => {
-
-  // Group the data by category
-  const transformedDataArray = dataArray.reduce((acc, item) => {
-    const { category } = item;
-    const sectionIndex = acc.findIndex(section => section.category === category);
-
-    if (sectionIndex !== -1) {
-      acc[sectionIndex].data.push(item);
-    } else {
-      acc.push({ category: category, data: [item] });
-    }
-
-    return acc;
-  }, []);
-
-  return transformedDataArray;
-}
-
 // Render each section header
-const renderSectionHeader = ({ section: { category }, isEditing }) => (
-   <CategoryHeader categoryName={category} categoryCost={'0.00'} isEditing={isEditing} />
+const renderSectionHeader = ({ section: { category }, isEditing, isDarkTheme}) => (
+  <CategoryHeader categoryName={category} categoryCost={'0.00'} isEditing={isEditing} isDarkTheme={isDarkTheme}/>
 );
 
 // Render each item within a section
@@ -220,16 +165,24 @@ const renderItem = ({ item, index, isEditing, sections, setSections }) => (
 /* The overall Screen to be displayed. */
 const ListScreen = ({ navigation, route }) => {
 
+  // Check for dark mode, to alter colors for header.
+  const { isDarkTheme } = useContext(ThemeContext);
+
+  // listMetaData contains current list metadata => { "title": "Home" ... }
+  // For list rendering => sections, an array for putting in the data used for sectionlist
   const { listMetaData } = route.params
   const [sections, setSections] = useState([]);
 
   // Retrieve from async Storage listItems given listID
+  // transform the data and setSections
   useFocusEffect(
     useCallback(() => {
       const fetchItemsData = async () => {
+
+        // get list items data from async storage
         const data = await initialiseListItems(listMetaData.key);
 
-        // Transform the data gotten from AsyncStorage
+        // Transform the data gotten from AsyncStorage for usage in section list
         const transformedData = TransformDataForSectionList(data);
         setSections(transformedData);
       };
@@ -241,6 +194,7 @@ const ListScreen = ({ navigation, route }) => {
   // isEditing a boolean to keep track if user is in Editing State
   const [isEditing, setIsEditing] = useState(false);
 
+  // On screen blur (meaning, when user is not on this screen), set isEditing to false
   useEffect(() => {
     const unsubscribe = navigation.addListener('blur', () => {
       setIsEditing(false);
@@ -257,9 +211,13 @@ const ListScreen = ({ navigation, route }) => {
         <PressableOpacity
           activeOpacity={0.5}
           onPress={() => {
-            LayoutAnimation.configureNext({ // Adjust the duration value to make the animation faster
+
+            // Animation for next layout change
+            LayoutAnimation.configureNext({
               update: { duration: 150, type: 'linear' }
             });
+
+            // Set isEditing true/false
             setIsEditing((prev) => !prev)
           }}>
 
@@ -275,10 +233,14 @@ const ListScreen = ({ navigation, route }) => {
   return (
 
     /* Used for react native gesture handler */
+    // No longer necessary
     <GestureHandlerRootView style={{ flex: 1 }}>
 
       {/* The overall screen. */}
-      <View style={styles.body}>
+      <View style={{
+        flex: 1,
+        padding: 16,
+      }}>
 
         <ListHeader />
 
@@ -286,7 +248,7 @@ const ListScreen = ({ navigation, route }) => {
           sections={sections}
           keyExtractor={(item) => item.itemID}
           renderItem={({ item, index }) => renderItem({ item, index, isEditing, sections, setSections })}
-          renderSectionHeader={({ section }) => renderSectionHeader({ section, isEditing })}
+          renderSectionHeader={({ section }) => renderSectionHeader({ section, isEditing, isDarkTheme})}
           stickySectionHeadersEnabled={false}
           showsVerticalScrollIndicator={false}
           initialNumToRender={20}
@@ -297,89 +259,5 @@ const ListScreen = ({ navigation, route }) => {
     </GestureHandlerRootView>
   );
 };
-
-const styles = StyleSheet.create({
-  body: {
-    flex: 1,
-    padding: 16,
-  },
-
-  contentContainer: {
-    flex: 1,
-    paddingHorizontal: 16,
-  },
-
-  row: {
-    flexDirection: 'row',
-    alignItems: 'center'
-  },
-
-  textOptions: {
-    fontSize: 18
-  },
-
-});
-
-const styles2 = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  textOptions: {
-    fontSize: 18,
-    textAlign: 'center',
-    marginBottom: 10,
-  },
-  addButton: {
-    borderRadius: 5,
-    width: '100%',
-    height: 50,
-    justifyContent: 'center',
-  },
-  itemsContainer: {
-    marginTop: 20,
-    alignItems: 'center',
-  },
-  categoryContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    //justifyContent: 'space-between',
-    marginTop: 10,
-    //width: '100%',
-    flexShrink: '1',
-  },
-
-  arrowContainer: {
-    marginLeft: 'auto',
-    //flexShrink: '1',
-  },
-
-  subCategoryRow: {
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
-    marginTop: 10,
-  },
-
-  circleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    // flexShrink: '1',
-  },
-
-  circleIcon: {
-    marginRight: 10,
-  },
-
-  subCategoryBorder: {
-    borderWidth: 1,
-    borderRadius: 5
-  },
-
-  textContainer: {
-    flexGrow: 1,
-    flex: 1,
-  }
-});
 
 export default ListScreen;

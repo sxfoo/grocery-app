@@ -132,80 +132,100 @@ const categoryStylesData = {
     "Bakery": {
         icon: "bread-slice",
         color: "#FFBF69",
+        additionalColor: "#794D27",
     },
     "Baby, Child & toys": {
         icon: "baby-buggy",
         color: "#FFD700",
+        additionalColor: "#8B7300",
     },
     "Beauty & Personal Care": {
         icon: "face-man",
         color: "#FF85A1",
+        additionalColor: "#80344D",
     },
     "Dairy, Chilled & Eggs": {
         icon: "egg",
         color: "#9BD4B9",
+        additionalColor: "#487D68",
     },
     "Drinks": {
         icon: "cup",
         color: "#FF7675",
+        additionalColor: "#A7414A",
     },
     "Alcoholic Drinks": {
         icon: "glass-cocktail",
         color: "#A569BD",
+        additionalColor: "#4C2E4D",
     },
     "Food Cupboard": {
         icon: "cupboard",
         color: "#F5CBA7",
+        additionalColor: "#8C5435",
     },
     "Frozen": {
         icon: "snowflake",
         color: "#00CED1",
+        additionalColor: "#006466",
     },
     "Fruits & Vegetables": {
         icon: "fruit-cherries",
         color: "#78D8BB",
+        additionalColor: "#1B4F3B",
     },
     "Health and Wellness": {
         icon: "heart-pulse",
         color: "#F9E79F",
+        additionalColor: "#B7950B",
     },
     "Household": {
         icon: "home-outline",
         color: "#B2BABB",
+        additionalColor: "#555E61",
     },
     "Meat & Seafood": {
         icon: "food-steak",
         color: "#C0392B",
+        additionalColor: "#6E281E",
     },
     "Pet Supplies": {
         icon: "dog",
         color: "#F8C471",
+        additionalColor: "#9E7B41",
     },
     "Rice, Noodles & Cooking Ingredients": {
         icon: "food-variant",
         color: "#F39C12",
+        additionalColor: "#724C02",
     },
     "Snacks & Confectionery": {
         icon: "food-fork-drink",
         color: "#FAD7A0",
+        additionalColor: "#A86915",
     },
     "Stationery": {
         icon: "pencil",
         color: "#FFC300",
+        additionalColor: "#7F6000",
     },
     "Tools": {
         icon: "toolbox",
         color: "#ABB2B9",
+        additionalColor: "#555555",
     },
     "Electrical & Lifestyle": {
         icon: "flash",
         color: "#D35400",
+        additionalColor: "#6F3C00",
     },
     "Uncategorised": {
         icon: "help-circle",
         color: "#FFFFFF",
+        additionalColor: "#000000",
     },
 };
+
 
 export { categoryStylesData };
 export default groceryItems;
