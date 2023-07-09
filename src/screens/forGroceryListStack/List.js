@@ -76,7 +76,7 @@ const CategoryHeader = ({ categoryName, categoryCost, isEditing }) => {
 
       {isEditing ? null : <MaterialCommunityIcons name={iconName} size={30} color={categoryColor} />}
 
-      <Text style={{ color: categoryColor, flex: 1, marginStart: 10 }} variant="titleSmall">{categoryName}</Text>
+      <Text style={{ color: categoryColor, flex: 1, marginStart: 10 }} variant="titleMedium">{categoryName}</Text>
       <Text style={{ color: categoryColor }} variant="labelLarge">{categoryCost}</Text>
 
       <IconButton
@@ -158,15 +158,15 @@ const ItemComponent = ({ item, index, isEditing, sections, setSections }) => {
       <PressableOpacity
         style={{
           flex: 8, flexDirection: 'row', alignItems: 'center',
-          borderWidth: 1, borderRadius: 5, borderColor: categoryColor,
+          borderWidth: 1, borderRadius: 5, borderColor: theme.colors.elevation.level5,
         }}
         activeOpacity={0.5}
         onPress={() => { isEditing ? null : toggleCheck() }}
       >
         <IconButton
-          icon={isEditing ? '' : (isChecked ? 'checkbox-marked-circle-outline' : 'checkbox-blank-circle-outline')}
+          icon={isEditing ? '' : (isChecked ? 'checkbox-marked-circle' : 'checkbox-blank-circle-outline')}
+          iconColor={isChecked ? theme.colors.primary : theme.colors.onSurfaceVariant}
           size={24}
-          iconColor={categoryColor}
         />
 
         <Text style={{ flex: 3 }} numberOfLines={1} variant="bodyLarge">{item.itemName}</Text>
@@ -209,7 +209,7 @@ const TransformDataForSectionList = (dataArray) => {
 
 // Render each section header
 const renderSectionHeader = ({ section: { category }, isEditing }) => (
-  <CategoryHeader categoryName={category} categoryCost={'0.00'} isEditing={isEditing} />
+   <CategoryHeader categoryName={category} categoryCost={'0.00'} isEditing={isEditing} />
 );
 
 // Render each item within a section
