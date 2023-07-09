@@ -6,14 +6,27 @@ import SocialSignInButtons from "../../components/SocialSignInButtons/SocialSign
 import { useNavigation } from "@react-navigation/native";
 import { createUserWithEmailAndPassword, sendEmailVerification, onAuthStateChanged } from "firebase/auth";
 import { auth } from "../../../firebaseConfig";
+import { getDatabase, ref, set } from 'firebase/database'
 
 const SignUpScreen = () => {
-	// const [username, setUsername] = useState("");
+	const [username, setUsername] = useState("");
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [passwordRepeat, setPasswordRepeat] = useState("");
 	const navigation = useNavigation();
+	const database = getDatabase()
 	
+	const updateUsername = (userId, username) => {
+		const userRef = ref(database, `user_node/User UID: ${userId}`)
+		set(userRef, {username})
+			.then(() => {
+				console.log('Username updated in the database')
+			})
+			.catch((error) => {
+				console.error('Error updating username in database:', error)
+			})
+	}
+
 	const handleSignUp = () => {
 		if (email.length == 0 || password.length == 0){
 			alert('Missing fields.');
@@ -25,16 +38,20 @@ const SignUpScreen = () => {
 		}
 
 		createUserWithEmailAndPassword(auth, email, password)
-		.then((userCredentials) =>{
+		.then((userCredentials) => {
 			const user = userCredentials.user;
 			console.log('New user signed up:');
-			/*sends verification email*/
+
+			// Update username in database
+			updateUsername(user.uid, username)
+
+			// Send verification email
 			sendEmailVerification(auth.currentUser)
 			.then(() => {
 				// Verification email sent successfully
 				console.log('Verification email sent');
 			  })
-			  .catch((error) => {
+			.catch((error) => {
 				// An error occurred while sending the verification email
 				console.error('Error sending verification email:', error);
 			/*navigation.navigate('ConfirmEmail');*/
@@ -62,11 +79,11 @@ const SignUpScreen = () => {
 
 
 				{/* I commented this out temporarily because I have not found a way to store in firebase */}
-				{/*<CustomInput
+				<CustomInput
 					placeholder="Username"
 					value={username}
 					setValue={setUsername}
-				/>*/}
+				/>
 
 				<CustomInput placeholder="Email" value={email} setValue={setEmail} />
 

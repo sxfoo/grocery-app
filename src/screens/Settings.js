@@ -66,7 +66,7 @@ const Settings = () => {
 	
 	useEffect(() => {
 		const userId = auth.currentUser.uid
-		const userRef = ref(getDatabase(), `user_node/User ID: ${userId}`)
+		const userRef = ref(getDatabase(), `user_node/User UID: ${userId}`)
 		const listener = onValue(userRef, (snapshot) => {
 			const userData = snapshot.val()
 			setUsername(userData?.username || "")
