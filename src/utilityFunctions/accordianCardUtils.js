@@ -77,7 +77,10 @@ export const AddToList = ({ item, values, setSearchQuery, setAddedItems, listMet
 // Function to handle onPressoftheCard.
 export const handleOpenCloseCard = (isOpen, setIsOpen, values, setValues) => {
 
-    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+    LayoutAnimation.configureNext({
+        ...LayoutAnimation.Presets.linear,
+        duration: 150,
+    });
     setIsOpen(!isOpen);
 
     // If card is closed (not expanded)
