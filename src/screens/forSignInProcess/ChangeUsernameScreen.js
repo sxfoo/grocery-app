@@ -23,7 +23,7 @@ const ChangeUsernameScreen = () => {
 		const userId = user.uid
 
 		const db = getDatabase()
-		const userRef = ref(db, `user_node/User ID: ${userId}`)
+		const userRef = ref(db, `user_node/User UID: ${userId}`)
 		
 		update(userRef, { username: username})
 		.then ( () => {
