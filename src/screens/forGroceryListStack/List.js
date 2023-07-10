@@ -10,9 +10,10 @@ import PressableOpacity from '../../components/PressableOpacity';
 import { storeItemData } from '../../utilityFunctions/asyncStorageUtils';
 import { initialiseListItems } from '../../utilityFunctions/initialisationData';
 import ThemeContext from '../../themeContext'
-
 import { ListHeader } from '../../components/ListHeader';
 import { TransformDataForSectionList } from '../../utilityFunctions/listScreenUtils';
+import { auth } from '../../../firebaseConfig';
+import { onlineRemoveItemsfromList } from '../../utilityFunctions/onlineModifyItemsList';
 
 // Component to display the category name (Household, Electrical & lifestyle etc...)
 const CategoryHeader = ({ categoryName, categoryCost, isEditing, isDarkTheme }) => {
@@ -57,10 +58,10 @@ const ItemComponent = ({ item, index, isEditing, sections, setSections }) => {
 
   const handleDeletingData = async () => {
     try {
-
+      
       // Async storage 
       const data = await initialiseListItems(listMetaData.key);
-      const updatedArray = data.filter(object => object.itemID !== item.itemID);
+      const updatedArray = data.filter(object => object.itemID !== item.itemID); //Not equal to item.ID stays
       await storeItemData(listMetaData.key + '/items', updatedArray)
 
       // For rendering data on screen
@@ -71,9 +72,11 @@ const ItemComponent = ({ item, index, isEditing, sections, setSections }) => {
         }
         return true;
       });
-
+      
       // ADD firebase storage code here:
-
+      if (auth.currentUser){
+        onlineRemoveItemsfromList({listID: listMetaData.key, itemID: item.itemID});
+      }
       // Return rendered data on screen
       return updatedRenderedArray;
 
@@ -148,7 +151,7 @@ const ItemComponent = ({ item, index, isEditing, sections, setSections }) => {
 
       </PressableOpacity>
 
-    </Animated.View >
+    </Animated.View>
   )
 }
 

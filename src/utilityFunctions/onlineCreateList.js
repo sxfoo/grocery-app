@@ -1,6 +1,6 @@
 import { randomUUID } from "expo-crypto";
 import { getUserId } from "./checkifauth";
-import { ref, set, get, remove } from "firebase/database"; // use Update instead of set (as it will overwrite)
+import { ref, set, get, remove } from "firebase/database"; 
 import { db } from "../../firebaseConfig";
 import { List } from "react-native-paper";
 
@@ -35,9 +35,11 @@ export const onlineCreateList = async ({ListName, ListUID}) => {
 
     await set(userRef, data); //if it's 2 add key value
     await set(listRef, listId); //add a new list / if its 1 just add value to key without removing the existing ones
-    console.log('New list added to firebase with listname: '  + ListName + 'listid: '  + listId);
+    console.log('New list added to firebase with listname: '  + ListName + ' listid: '  + listId);
     //Plans to check if duplicated list next time through their uid. 
 };
+
+
 /*
 export const fetchlistUID = async ({ListName}) => {
     const dataRef = ref(db, `user_node/${auth.currentUser.uid}/lists/${ListName}/ListUID`);
@@ -51,29 +53,5 @@ export const fetchlistUID = async ({ListName}) => {
     }
     return listUID;
 };*/
-/*
-export const addingItemsToList = async ({listUID}) => {
-    
-    const itemRef = ref(db, `list_node/${listId}/items/` + itemUUID);
-    await set(itemRef, data); // Wait for online storage to complete
 
 
-    const userRef = ref(db, `user_node/${userId}/lists/` );
-    await set(userRef, listId);
-
-    console.log('New item added successfully to Realtime Database:', itemUUID);
-    console.log(data);
-};*/
-/*
-    // Online Storage
-    const listId = await getUserId(); //to be changed in the future
-    
-    const itemRef = ref(db, `list_node/${listId}/items/` + itemUUID);
-    await set(itemRef, data); // Wait for online storage to complete
-
-    console.log('New item added successfully to Realtime Database:', itemUUID);
-    console.log(data);
-} else {
-    console.log('Not logged in!')
-}
-*/
