@@ -4,8 +4,8 @@ import SearchItems from '../screens/forGroceryListStack/SearchItems';
 import ListSettings from '../screens/forGroceryListStack/ListSettings';
 import { createStackNavigator, TransitionPresets } from '@react-navigation/stack';
 import { useTheme, IconButton } from 'react-native-paper'
-
 import { auth } from '../../firebaseConfig'
+import EditItems from '../screens/forGroceryListStack/EditItems';
 
 const Stack = createStackNavigator();
 
@@ -89,6 +89,12 @@ export default function ListStack() {
                 component={SearchItems}
             />
 
+            <Stack.Screen
+                name = "Edit Items"
+                component={EditItems}
+            />
+
+            
         </Stack.Navigator>
 
     );

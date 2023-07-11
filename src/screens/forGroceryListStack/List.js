@@ -1,5 +1,5 @@
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { useFocusEffect, useRoute } from '@react-navigation/native';
+import { useFocusEffect, useNavigation, useRoute } from '@react-navigation/native';
 import { useCallback, useEffect, useState, useContext } from 'react';
 import { LayoutAnimation, SectionList, View } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
@@ -47,7 +47,7 @@ const CategoryHeader = ({ categoryName, categoryCost, isEditing, isDarkTheme }) 
 // Component that displays the item
 const ItemComponent = ({ item, index, isEditing, sections, setSections }) => {
   const [isChecked, setIsChecked] = useState(item.completed);
-
+  const Navigation = useNavigation()
   const toggleCheck = () => {
     setIsChecked(!isChecked);
   };
@@ -128,7 +128,8 @@ const ItemComponent = ({ item, index, isEditing, sections, setSections }) => {
           borderWidth: 1, borderRadius: 5, borderColor: theme.colors.elevation.level5,
         }}
         activeOpacity={0.5}
-        onPress={() => { isEditing ? null : toggleCheck() }}
+        //if is Editing navigate to EditItems, otherwise Check if off the item list
+        onPress={() => { isEditing ? Navigation.navigate('Edit Items', {item}) : toggleCheck() }}
       >
         <IconButton
           icon={isEditing ? 'dots-horizontal' : (isChecked ? 'checkbox-marked-circle' : 'checkbox-blank-circle-outline')}

@@ -19,6 +19,7 @@ export const GroceryCardComponent = ({ listData, isEditing }) => {
     // To move to utility functions
     const handleCardNavigation = () => {
         if (isEditing) {
+            //passed in as a param, which later can be retrieved from route.params.listMetaData
             navigation.navigate('List Settings', { listMetaData: listData })
         }
         else if (!isEditing) {

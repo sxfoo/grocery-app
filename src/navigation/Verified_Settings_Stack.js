@@ -6,7 +6,6 @@ import Settings from "../screens/Settings";
 import SignInScreen from "../screens/forSignInProcess/SignInScreen";
 import ResetPasswordScreen from "../screens/forSignInProcess/ResetPasswordScreen";
 import { createAnimatedPropAdapter } from "react-native-reanimated";
-import { createDrawerNavigator } from '@react-navigation/drawer';
 import { useTheme } from "react-native-paper";
 
 import AccountDeletionScreen from "../screens/forSignInProcess/AccountDeletionScreen";
