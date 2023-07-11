@@ -1,12 +1,15 @@
 import React from "react";
-import {View, StyleSheet} from 'react-native';
+import {View, StyleSheet, Text} from 'react-native';
 import { TextInput, Button, Divider } from "react-native-paper";
 import { useState } from "react";
+import { useNavigation } from "@react-navigation/native";
 import {handleQuantityValueChange, 
         handleValueChange, 
         handleValueInputFocusBlur,
         handleQuantityInputFocusBlur 
         } from "../../utilityFunctions/accordianCardUtils";
+import { Dropdown } from "react-native-element-dropdown";
+import { useTheme } from "react-native-paper";
 
 const styles = StyleSheet.create({
     container: {
@@ -17,29 +20,61 @@ const styles = StyleSheet.create({
         paddingHorizontal: 10,
         borderRadius: 10,
     },
+    dropdowncontainer: {
+        padding: 10,
+    },
+    label: {
+        position: 'absolute',
+        zIndex: 999,
+        paddingRight: 4,
+        left: 18,
+        top: 10,
+    },
     divider: {
         paddingHorizontal: 10,
         marginVertical: 14,
     },
+    dropdown: {
+        height: 50,
+        borderColor: 'gray',
+        borderWidth: 0.5,
+        marginTop: 10,
+        borderRadius: 8,
+    }
 });
 
-const handleSave = () => {
-
-};
-
-
-const EditItems = ({navigation, route}) => {
+const EditItems = ({route}) => {
+    const navigation = useNavigation()
     console.log(route.params)
     const item = route.params.item
-    console.log(item.itemName)
+    const theme = useTheme()
     //set values update the values
     const [values, setValues] = useState({
         unitValue: item.unitPrice,
         totalValue: item.totalPrice,
         quantity: item.quantity,
     });
+
+    const categoryOptions = [
+        {label: 'Bakery & Bread', value: 'Bakery & Bread'},
+        {label: 'Beverages', value: 'Beverages'},
+        {label: 'Produce', value: 'Produce'},
+        {label: 'Stationery', value: 'Stationery'},
+        {label: 'Uncategorised', value: 'Uncategorised'},
+    ];
     const [category, setCategory] = useState(item.category);
     const [itemName, setItemName] = useState(item.itemName);
+    const [value, setValue] = useState(null);
+    const [isFocus, setIsFocus] = useState(false);
+
+    const handleSave = () => {
+        if (itemName.trim() !== ''){
+            const updatedItem = {...item, itemName: itemName}
+            console.log(updatedItem)
+            console.log(route.params)
+            //navigation.navigate('List', {action: 'ItemEdit', updatedItem: updatedItem })
+        }
+    };
     //on text change, call set title, set title updates the state variable of title, and change title
     return (
         <View>
@@ -54,12 +89,28 @@ const EditItems = ({navigation, route}) => {
                 />
             </View>
 
-            <View style = {styles.container}>
-                <TextInput
-                    label="Category: "
-                    value= {category}
-                />
+            <View style = {[styles.dropdowncontainer]}>
+                <Text style = {[styles.label, {backgroundColor: theme.colors.background, color: theme.colors.inversePrimary}]}> Category: </Text>
+                    <Dropdown
+                        style={[styles.dropdown, isFocus && { borderColor: 'blue' }]}
+                        placeholderStyle={styles.placeholderStyle}
+                        selectedTextStyle={styles.selectedTextStyle}
+                        iconStyle={styles.iconStyle}
+                        data={categoryOptions}
+                        maxHeight={300}
+                        labelField="label"
+                        valueField="value"
+                        placeholder={!isFocus ? item.category : '...'}
+                        value={value}
+                        onFocus={() => setIsFocus(true)}
+                        onBlur={() => setIsFocus(false)}
+                        onChange={item => {
+                            setValue(item.value);
+                            setIsFocus(false);
+                        }}
+                    />
             </View>
+
             <Divider
                 style = {styles.divider}
             />

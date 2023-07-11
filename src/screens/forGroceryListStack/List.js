@@ -55,7 +55,8 @@ const ItemComponent = ({ item, index, isEditing, sections, setSections }) => {
   const theme = useTheme();
   const route = useRoute();
   const { listMetaData } = route.params;
-
+  console.log('item: ' ,item)
+  console.log(route)
   const handleDeletingData = async () => {
     try {
       
@@ -87,7 +88,7 @@ const ItemComponent = ({ item, index, isEditing, sections, setSections }) => {
 
     }
   }
-
+  
   return (
     <Animated.View
       entering={FadeInRight}

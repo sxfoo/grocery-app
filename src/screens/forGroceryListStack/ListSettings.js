@@ -11,7 +11,7 @@ const ListSettingsScreen = ({ navigation, route }) => {
   const oldTitle = listMetaData.title
   // Function to handle on Save button Press
   const handleSave = () => {
-    
+    //trim removes leading or trailing whitespace
     if (title.trim() !== '') {
       // Use list key value
       // To compare and replace the new title name
