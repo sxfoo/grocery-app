@@ -43,10 +43,12 @@ const styles = StyleSheet.create({
     }
 });
 
-const EditItems = ({route}) => {
-    const navigation = useNavigation()
-    console.log(route.params)
+const EditItems = ({navigation,route}) => {
+    console.log(route)
+    console.log(route.params.item)
+    
     const item = route.params.item
+    const listMetaData = route.params.listMetaData
     const theme = useTheme()
     //set values update the values
     const [values, setValues] = useState({
@@ -69,10 +71,10 @@ const EditItems = ({route}) => {
 
     const handleSave = () => {
         if (itemName.trim() !== ''){
-            const updatedItem = {...item, itemName: itemName}
-            console.log(updatedItem)
-            console.log(route.params)
-            //navigation.navigate('List', {action: 'ItemEdit', updatedItem: updatedItem })
+            const updatedItem = {...route.params.item, itemName: itemName}
+            console.log('UpdatedItem: ', updatedItem)
+            console.log('Route.Params: ' ,route.params)
+            navigation.navigate('List', {action: 'ItemEdit', listMetaData, updatedItem})
         }
     };
     //on text change, call set title, set title updates the state variable of title, and change title
@@ -166,5 +168,11 @@ const EditItems = ({route}) => {
         </View>
     )
 };
+
+/*
+const EditItems2 = (navigation, route) => {
+    console.log('Route.params: ' ,route.params)
+};
+*/
 
 export default EditItems;

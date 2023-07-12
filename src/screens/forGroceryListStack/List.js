@@ -14,6 +14,7 @@ import { ListHeader } from '../../components/ListHeader';
 import { TransformDataForSectionList } from '../../utilityFunctions/listScreenUtils';
 import { auth } from '../../../firebaseConfig';
 import { onlineRemoveItemsfromList } from '../../utilityFunctions/onlineModifyItemsList';
+import { update } from 'firebase/database';
 
 // Component to display the category name (Household, Electrical & lifestyle etc...)
 const CategoryHeader = ({ categoryName, categoryCost, isEditing, isDarkTheme }) => {
@@ -55,8 +56,6 @@ const ItemComponent = ({ item, index, isEditing, sections, setSections }) => {
   const theme = useTheme();
   const route = useRoute();
   const { listMetaData } = route.params;
-  console.log('item: ' ,item)
-  console.log(route)
   const handleDeletingData = async () => {
     try {
       
@@ -130,7 +129,7 @@ const ItemComponent = ({ item, index, isEditing, sections, setSections }) => {
         }}
         activeOpacity={0.5}
         //if is Editing navigate to EditItems, otherwise Check if off the item list
-        onPress={() => { isEditing ? Navigation.navigate('Edit Items', {item}) : toggleCheck() }}
+        onPress={() => { isEditing ? Navigation.navigate('Edit Items', {listMetaData, item}) : toggleCheck() }}
       >
         <IconButton
           icon={isEditing ? 'dots-horizontal' : (isChecked ? 'checkbox-marked-circle' : 'checkbox-blank-circle-outline')}
@@ -169,7 +168,7 @@ const renderItem = ({ item, index, isEditing, sections, setSections }) => (
 
 /* The overall Screen to be displayed. */
 const ListScreen = ({ navigation, route }) => {
-
+  console.log('Route.params for list.js' ,route.params)
   // Check for dark mode, to alter colors for header.
   const { isDarkTheme } = useContext(ThemeContext);
 
@@ -234,6 +233,24 @@ const ListScreen = ({ navigation, route }) => {
       ),
     });
   }, [navigation, isEditing]);
+
+  useEffect(() => {
+    let data = null;
+    const {action, listMetaData, updatedItem} = route.params;
+    if (action == 'ItemEdit'){
+      if (updatedItem){
+        console.log('Success');
+        const fetchData = async () => {
+          //data = await initialiseListItems(listMetaData.key);
+          //console.log('This is data' ,data);
+          const newItemData = sections.map((item) => 
+            item.key === updatedItem.itemID ? updatedItem : item
+          )
+        };
+        fetchData();
+    }
+  }
+  }, [route.params]);
 
   return (
 
