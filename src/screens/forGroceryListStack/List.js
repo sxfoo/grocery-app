@@ -1,6 +1,6 @@
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useFocusEffect, useNavigation, useRoute } from '@react-navigation/native';
-import { useCallback, useEffect, useState, useContext } from 'react';
+import { useCallback, useEffect, useState, useContext, useRef } from 'react';
 import { LayoutAnimation, SectionList, View } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { IconButton, Text, useTheme } from 'react-native-paper';
@@ -58,7 +58,7 @@ const ItemComponent = ({ item, index, isEditing, sections, setSections }) => {
   const { listMetaData } = route.params;
   const handleDeletingData = async () => {
     try {
-      
+
       // Async storage 
       const data = await initialiseListItems(listMetaData.key);
       const updatedArray = data.filter(object => object.itemID !== item.itemID); //Not equal to item.ID stays
@@ -72,10 +72,10 @@ const ItemComponent = ({ item, index, isEditing, sections, setSections }) => {
         }
         return true;
       });
-      
+
       // ADD firebase storage code here:
-      if (auth.currentUser){
-        onlineRemoveItemsfromList({listID: listMetaData.key, itemID: item.itemID});
+      if (auth.currentUser) {
+        onlineRemoveItemsfromList({ listID: listMetaData.key, itemID: item.itemID });
       }
       // Return rendered data on screen
       return updatedRenderedArray;
@@ -87,7 +87,7 @@ const ItemComponent = ({ item, index, isEditing, sections, setSections }) => {
 
     }
   }
-  
+
   return (
     <Animated.View
       entering={FadeInRight}
@@ -129,7 +129,7 @@ const ItemComponent = ({ item, index, isEditing, sections, setSections }) => {
         }}
         activeOpacity={0.5}
         //if is Editing navigate to EditItems, otherwise Check if off the item list
-        onPress={() => { isEditing ? Navigation.navigate('Edit Items', {listMetaData, item}) : toggleCheck() }}
+        onPress={() => { isEditing ? Navigation.navigate('Edit Items', { listMetaData, item }) : toggleCheck() }}
       >
         <IconButton
           icon={isEditing ? 'dots-horizontal' : (isChecked ? 'checkbox-marked-circle' : 'checkbox-blank-circle-outline')}
@@ -157,8 +157,8 @@ const ItemComponent = ({ item, index, isEditing, sections, setSections }) => {
 }
 
 // Render each section header
-const renderSectionHeader = ({ section: { category }, isEditing, isDarkTheme}) => (
-  <CategoryHeader categoryName={category} categoryCost={'0.00'} isEditing={isEditing} isDarkTheme={isDarkTheme}/>
+const renderSectionHeader = ({ section: { category }, isEditing, isDarkTheme }) => (
+  <CategoryHeader categoryName={category} categoryCost={'0.00'} isEditing={isEditing} isDarkTheme={isDarkTheme} />
 );
 
 // Render each item within a section
@@ -168,7 +168,7 @@ const renderItem = ({ item, index, isEditing, sections, setSections }) => (
 
 /* The overall Screen to be displayed. */
 const ListScreen = ({ navigation, route }) => {
-  console.log('Route.params for list.js' ,route.params)
+  console.log('Route.params for list.js', route.params)
   // Check for dark mode, to alter colors for header.
   const { isDarkTheme } = useContext(ThemeContext);
 
@@ -217,9 +217,9 @@ const ListScreen = ({ navigation, route }) => {
           onPress={() => {
 
             // Animation for next layout change
-            LayoutAnimation.configureNext({
-              update: { duration: 150, type: 'linear' }
-            });
+            //LayoutAnimation.configureNext({
+            //  update: { duration: 150, type: 'linear' } 
+            //});
 
             // Set isEditing true/false
             setIsEditing((prev) => !prev)
@@ -236,20 +236,20 @@ const ListScreen = ({ navigation, route }) => {
 
   useEffect(() => {
     let data = null;
-    const {action, listMetaData, updatedItem} = route.params;
-    if (action == 'ItemEdit'){
-      if (updatedItem){
+    const { action, listMetaData, updatedItem } = route.params;
+    if (action == 'ItemEdit') {
+      if (updatedItem) {
         console.log('Success');
         const fetchData = async () => {
           //data = await initialiseListItems(listMetaData.key);
           //console.log('This is data' ,data);
-          const newItemData = sections.map((item) => 
+          const newItemData = sections.map((item) =>
             item.key === updatedItem.itemID ? updatedItem : item
           )
         };
         fetchData();
+      }
     }
-  }
   }, [route.params]);
 
   return (
@@ -270,7 +270,7 @@ const ListScreen = ({ navigation, route }) => {
           sections={sections}
           keyExtractor={(item) => item.itemID}
           renderItem={({ item, index }) => renderItem({ item, index, isEditing, sections, setSections })}
-          renderSectionHeader={({ section }) => renderSectionHeader({ section, isEditing, isDarkTheme})}
+          renderSectionHeader={({ section }) => renderSectionHeader({ section, isEditing, isDarkTheme })}
           stickySectionHeadersEnabled={false}
           showsVerticalScrollIndicator={false}
           initialNumToRender={20}

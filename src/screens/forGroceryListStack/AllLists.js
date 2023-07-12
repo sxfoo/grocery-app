@@ -41,12 +41,12 @@ const AllListsScreen = ({ navigation, route }) => {
                 <PressableOpacity
                     activeOpacity={0.5}
                     onPress={() => {
-                        LayoutAnimation.configureNext({
-                            duration: 200,
-                            create: { type: 'linear', property: 'opacity' },
-                            update: { type: 'spring', springDamping: 1 },
-                            delete: { type: 'linear', property: 'opacity' },
-                        });
+                        //LayoutAnimation.configureNext({
+                        //    duration: 200,
+                        //    create: { type: 'linear', property: 'opacity' },
+                        //    update: { type: 'spring', springDamping: 1 },
+                        //    delete: { type: 'linear', property: 'opacity' },
+                        //});
                         setIsEditing((prev) => !prev)
                     }}>
                     <Text variant='titleMedium' style={{ marginRight: 20, fontWeight: '500' }}>
