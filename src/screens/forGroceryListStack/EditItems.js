@@ -6,7 +6,8 @@ import { useNavigation } from "@react-navigation/native";
 import {handleQuantityValueChange, 
         handleValueChange, 
         handleValueInputFocusBlur,
-        handleQuantityInputFocusBlur 
+        handleQuantityInputFocus,
+        handleQuantityInputBlur,
         } from "../../utilityFunctions/accordianCardUtils";
 import { Dropdown } from "react-native-element-dropdown";
 import { useTheme } from "react-native-paper";
@@ -150,8 +151,8 @@ const EditItems = ({navigation,route}) => {
                     label = "Quantity: "
                     value = {values.quantity}
                     onChangeText={(text) => handleQuantityValueChange(text, values, setValues)}
-                    onFocus={() => handleQuantityInputFocusBlur(values, setValues)}
-                    onBlur={() => handleQuantityInputFocusBlur(values, setValues)}
+                    onFocus={() => handleQuantityInputFocus(values, setValues)}
+                    onBlur={() => handleQuantityInputBlur(values, setValues)}
                     keyboardAppearance="dark"
                     keyboardType="decimal-pad"
                 />

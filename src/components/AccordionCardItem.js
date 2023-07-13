@@ -7,7 +7,8 @@ import {
     handleValueChange,
     handleQuantityValueChange,
     handleValueInputFocusBlur,
-    handleQuantityInputFocusBlur,
+    handleQuantityInputFocus,
+    handleQuantityInputBlur,
     validInputSubmit,
     AddToList
 } from '../utilityFunctions/accordianCardUtils';
@@ -112,8 +113,8 @@ export const AccordionCardItem = ({ item, textTitle, theme, setSearchQuery, setA
                                     error={!validInputs.quantity}
                                     value={values.quantity}
                                     onChangeText={(text) => handleQuantityValueChange(text, values, setValues)}
-                                    onFocus={() => handleQuantityInputFocusBlur(values, setValues)}
-                                    onBlur={() => handleQuantityInputFocusBlur(values, setValues)}
+                                    onFocus={() => handleQuantityInputFocus(values, setValues)}
+                                    onBlur={() => handleQuantityInputBlur(values, setValues)}
                                     keyboardAppearance="dark"
                                     keyboardType="number-pad"
                                 />
