@@ -224,6 +224,11 @@ const categoryStylesData = {
         color: "#FFFFFF",
         additionalColor: "#000000",
     },
+    "Completed": {
+        icon: "store-check",
+        color: "#00C853",
+        additionalColor: "#006400",
+    },
 };
 
 

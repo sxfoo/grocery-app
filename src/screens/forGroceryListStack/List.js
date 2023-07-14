@@ -4,7 +4,7 @@ import { useCallback, useEffect, useState, useContext, useRef } from 'react';
 import { LayoutAnimation, SectionList, View } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { IconButton, Text, useTheme } from 'react-native-paper';
-import Animated, { FadeInLeft, FadeInRight, FadeOutLeft } from "react-native-reanimated";
+import Animated, { FadeInDown, FadeInLeft, FadeInRight, FadeOutDown, FadeOutLeft } from "react-native-reanimated";
 import { categoryStylesData } from '../../../assets/mockDataResource/listOfGroceryItems';
 import PressableOpacity from '../../components/PressableOpacity';
 import { storeItemData } from '../../utilityFunctions/asyncStorageUtils';
@@ -17,7 +17,7 @@ import { onlineRemoveItemsfromList } from '../../utilityFunctions/onlineModifyIt
 import { update } from 'firebase/database';
 
 // Component to display the category name (Household, Electrical & lifestyle etc...)
-const CategoryHeader = ({ categoryName, categoryCost, isEditing, isDarkTheme }) => {
+const CategoryHeader = ({ categoryName, isEditing, isDarkTheme }) => {
 
   const categoryStyleInfo = categoryStylesData[categoryName];
   const iconName = categoryStyleInfo.icon;
@@ -30,13 +30,11 @@ const CategoryHeader = ({ categoryName, categoryCost, isEditing, isDarkTheme }) 
         marginTop: 10,
       }}>
 
-      {isEditing ? null : <MaterialCommunityIcons name={iconName} size={30} color={categoryColor} />}
-
+      {isEditing ? null : <MaterialCommunityIcons name={iconName} size={24} color={categoryColor} />}
       <Text style={{ color: categoryColor, flex: 1, marginStart: 10 }} variant="titleMedium">{categoryName}</Text>
-      <Text style={{ color: categoryColor }} variant="labelLarge">{categoryCost}</Text>
 
       <IconButton
-        icon={'chevron-down'}
+        icon={''}
         size={24}
         iconColor={categoryColor}
       />
@@ -47,15 +45,49 @@ const CategoryHeader = ({ categoryName, categoryCost, isEditing, isDarkTheme }) 
 
 // Component that displays the item
 const ItemComponent = ({ item, index, isEditing, sections, setSections }) => {
+
   const [isChecked, setIsChecked] = useState(item.completed);
-  const Navigation = useNavigation()
-  const toggleCheck = () => {
-    setIsChecked(!isChecked);
-  };
+  const navigation = useNavigation()
 
   const theme = useTheme();
   const route = useRoute();
   const { listMetaData } = route.params;
+
+  const toggleCheck = async () => {
+
+    setIsChecked(!isChecked);
+
+    try {
+      // Async Storage 
+      const data = await initialiseListItems(listMetaData.key);
+      const updatedArray = data.map((object) => {
+        if (object.itemID === item.itemID) {
+          return {
+            ...object,
+            completed: !object.completed
+          };
+        }
+        return object;
+      });
+      await storeItemData(listMetaData.key + '/items', updatedArray)
+
+      // For rendering updated data on screen
+      const updatedRenderedArray = TransformDataForSectionList(updatedArray);
+
+      // Firebase stuff here
+      //
+      //
+      //
+
+      return updatedRenderedArray;
+
+    } catch (error) {
+      setIsChecked(!isChecked);
+      console.log('Failed to check (complete/incomplete) item:', error)
+      throw error;
+    }
+  };
+
   const handleDeletingData = async () => {
     try {
 
@@ -65,15 +97,9 @@ const ItemComponent = ({ item, index, isEditing, sections, setSections }) => {
       await storeItemData(listMetaData.key + '/items', updatedArray)
 
       // For rendering data on screen
-      const updatedRenderedArray = sections.filter(categoryData => {
-        if (categoryData.category === item.category) {
-          categoryData.data.splice(index, 1);
-          return categoryData.data.length > 0;
-        }
-        return true;
-      });
-
-      // ADD firebase storage code here:
+      const updatedRenderedArray = TransformDataForSectionList(updatedArray);
+      
+      // Firebase realtime database
       if (auth.currentUser) {
         onlineRemoveItemsfromList({ listID: listMetaData.key, itemID: item.itemID });
       }
@@ -90,8 +116,8 @@ const ItemComponent = ({ item, index, isEditing, sections, setSections }) => {
 
   return (
     <Animated.View
-      entering={FadeInRight}
-      exiting={FadeOutLeft}
+      entering={FadeInDown}
+      exiting={FadeOutDown}
       style={{ flexDirection: 'row', marginTop: 10 }}
     >
 
@@ -125,15 +151,27 @@ const ItemComponent = ({ item, index, isEditing, sections, setSections }) => {
       <PressableOpacity
         style={{
           flex: 8, flexDirection: 'row', alignItems: 'center',
-          borderWidth: 1, borderRadius: 5, borderColor: theme.colors.elevation.level5,
+          borderWidth: 1, borderRadius: 5, borderColor: item.completed ?  '#00C853' : theme.colors.elevation.level5,
         }}
         activeOpacity={0.5}
-        //if is Editing navigate to EditItems, otherwise Check if off the item list
-        onPress={() => { isEditing ? Navigation.navigate('Edit Items', { listMetaData, item }) : toggleCheck() }}
+
+        //if is Editing navigate to EditItems, otherwise toggleCheck() on the item.
+        onPress={async () => {
+          if (isEditing) {
+            navigation.navigate('Edit Items', { listMetaData, item })
+          } else {
+            try {
+              const updatedRenderedArray = await toggleCheck();
+              setSections(updatedRenderedArray);
+            } catch (error) {
+              console.log('Failed to check item:', error);
+            }
+          }
+        }}
       >
         <IconButton
           icon={isEditing ? 'dots-horizontal' : (isChecked ? 'checkbox-marked-circle' : 'checkbox-blank-circle-outline')}
-          iconColor={isChecked ? theme.colors.primary : theme.colors.onSurfaceVariant}
+          iconColor={isChecked ? '#00C853' : theme.colors.onSurfaceVariant}
           size={24}
         />
 
@@ -158,7 +196,7 @@ const ItemComponent = ({ item, index, isEditing, sections, setSections }) => {
 
 // Render each section header
 const renderSectionHeader = ({ section: { category }, isEditing, isDarkTheme }) => (
-  <CategoryHeader categoryName={category} categoryCost={'0.00'} isEditing={isEditing} isDarkTheme={isDarkTheme} />
+  <CategoryHeader categoryName={category} isEditing={isEditing} isDarkTheme={isDarkTheme} />
 );
 
 // Render each item within a section
@@ -168,7 +206,7 @@ const renderItem = ({ item, index, isEditing, sections, setSections }) => (
 
 /* The overall Screen to be displayed. */
 const ListScreen = ({ navigation, route }) => {
-  console.log('Route.params for list.js', route.params)
+
   // Check for dark mode, to alter colors for header.
   const { isDarkTheme } = useContext(ThemeContext);
 
