@@ -166,8 +166,8 @@ const EditItems = ({navigation,route}) => {
                         placeholderStyle={[styles.placeholderStyle, {color: theme.colors.onBackground}]}
                         selectedTextStyle={[styles.selectedTextStyle, {color: theme.colors.onBackground}]}
                         containerStyle={[styles.dropdownBox, 
-                        {borderColor: theme.colors.primary, backgroundColor: theme.colors.secondary}]}
-                        activeColor={theme.colors.onBackground}
+                        {borderColor: theme.colors.primary, backgroundColor: theme.colors.inverseOnSurface}]}
+                        activeColor={theme.colors.primary}
                         iconStyle={styles.iconStyle}
                         data={categoryOptions}
                         maxHeight={300}

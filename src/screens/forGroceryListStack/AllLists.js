@@ -23,7 +23,11 @@ const AllListsScreen = ({ navigation, route }) => {
     useFocusEffect(
         React.useCallback(() => {
             const fetchAllListsIDs = async () => {
-                const data = await initialiseAllListsIDsData();
+                //const data = await initialiseAllListsIDsData();
+                //Async storage "Home", no longer here
+
+                //For firebase storage 
+                const data = await initialiseFirebaseListsIDs();
                 setAllListsData(data);
             };
             fetchAllListsIDs();

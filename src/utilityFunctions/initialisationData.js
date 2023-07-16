@@ -12,6 +12,7 @@ export const initialiseAllListsIDsData = async () => {
         const listsID = await getItemData('AllListsID');
 
         if (listsID !== null) {
+            console.log('list: ',listsID);
             return listsID;
         }
         else {

@@ -6,14 +6,22 @@ const intialiseInArray = (data) => {
     const result = [] //Array that contains the title and uid in key:value pair
 
     for (const key in data) {
-        const obj = {}; //Make them into a key value pair
-        obj[key] = data[key].ListUID;
-        result.push(obj);
+        //const obj = {}; //Make them into a key value pair
+        //obj[key] = data[key].ListUID;
+        //result.push(obj);
+
+        obj = {
+            "key" : data[key].ListUID,
+            "numItems": 0,
+            "title": key,
+        }
+        result.push(obj)
     }
     return result;
 }
 
 export const initialiseFirebaseListsIDs = async () => {
+    if (auth.currentUser){
     const userId = await getUserId();
     const userRef = ref(db, `user_node/User UID: ${userId}/lists`)
 
@@ -32,14 +40,17 @@ export const initialiseFirebaseListsIDs = async () => {
     catch(error){
         console.error('Error fetching data:' ,error);
     }
+    }
+    else{
+        return [];
+    }
 };
 
 const intialiseInArray2 = (data) => {
     const result = []
 
     for (const key in data) {
-        result.push(data[key])
-
+        result.push(data[key]);
     }
     return result;
 };
@@ -53,6 +64,7 @@ const getItemDatafromList = async(listname, listid) => {
             const data = snapshot.val();
             const result = intialiseInArray2(data);
             console.log(result);
+            return result;
         }
         else { //items dont exists, aka is empty
             console.log('List: ' + listname + ' is empty');
@@ -65,11 +77,17 @@ const getItemDatafromList = async(listname, listid) => {
 
 export const initialiseFirebaseListItems = async (data) => {
     //data is now an array of all the lists, forEach iterates over the array
-    data.forEach(element => {
+    /*data.forEach(element => {
         for (const key in element){
             const listid = element[key];     
             getItemDatafromList(key, listid);
         }
+    });*/
+    const items = data.map(obj => {
+        return {key: obj.key, title: obj.title};
     });
-    
-}
+
+    items.forEach(element => {
+        const item = getItemDatafromList(element.title, element.key);
+    });
+};
