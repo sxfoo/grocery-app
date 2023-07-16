@@ -15,6 +15,7 @@ import { TransformDataForSectionList } from '../../utilityFunctions/listScreenUt
 import { auth } from '../../../firebaseConfig';
 import { onlineRemoveItemsfromList } from '../../utilityFunctions/onlineModifyItemsList';
 import { update } from 'firebase/database';
+import {getItemDatafromList } from '../../utilityFunctions/firebaseUtils';
 
 // Component to display the category name (Household, Electrical & lifestyle etc...)
 const CategoryHeader = ({ categoryName, isEditing, isDarkTheme }) => {
@@ -222,7 +223,10 @@ const ListScreen = ({ navigation, route }) => {
       const fetchItemsData = async () => {
 
         // get list items data from async storage
-        const data = await initialiseListItems(listMetaData.key);
+        //const data = await initialiseListItems(listMetaData.key);
+        console.log('listid' ,listMetaData.key);
+        //CHANGED TO FIREBASE
+        const data = await getItemDatafromList(listMetaData.key);
 
         // Transform the data gotten from AsyncStorage for usage in section list
         const transformedData = TransformDataForSectionList(data);

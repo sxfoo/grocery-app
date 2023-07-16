@@ -1,6 +1,8 @@
 import { auth, db } from "../../firebaseConfig";
 import { ref, set, get} from "firebase/database";
 import { getUserId } from "./checkifauth";
+import { randomUUID } from "expo-crypto";
+import { getItemData, storeItemData } from "./asyncStorageUtils";
 
 const intialiseInArray = (data) => {
     const result = [] //Array that contains the title and uid in key:value pair
@@ -21,6 +23,20 @@ const intialiseInArray = (data) => {
 }
 
 export const initialiseFirebaseListsIDs = async () => {
+
+    const listsID = await getItemData('AllListsID');
+    if (listsID == null) 
+    {
+        //This part is copied from initialise all list id data from utility functions
+        const newListID = randomUUID();
+        const newListArray = [{ key: newListID, title: 'Home', numItems: 0}];
+
+        await storeItemData('AllListsID' ,newListArray);
+        console.log('Default home initialised');
+        listsID = newListArray;
+    }   
+    
+    
     if (auth.currentUser){
     const userId = await getUserId();
     const userRef = ref(db, `user_node/User UID: ${userId}/lists`)
@@ -31,10 +47,14 @@ export const initialiseFirebaseListsIDs = async () => {
             const data = snapshot.val();
             const result = intialiseInArray(data);
             console.log(result);
-            return result;
+            return [...listsID,...result];
         }
         else {
-            console.log('Data not found.');
+            console.log('No data in firebase.');
+            try {return [...listsID];}
+            catch{
+                console.error('Fail');
+            }
         }
     }
     catch(error){
@@ -42,7 +62,7 @@ export const initialiseFirebaseListsIDs = async () => {
     }
     }
     else{
-        return [];
+        return [...listsID];
     }
 };
 
@@ -55,7 +75,7 @@ const intialiseInArray2 = (data) => {
     return result;
 };
 
-const getItemDatafromList = async(listname, listid) => {
+export const getItemDatafromList = async(listid) => {
     //gets all the item in 1 list
     const listRef = ref(db, `list_node/lists/List_ID: ${listid}/items`)
     try{
@@ -67,7 +87,7 @@ const getItemDatafromList = async(listname, listid) => {
             return result;
         }
         else { //items dont exists, aka is empty
-            console.log('List: ' + listname + ' is empty');
+            console.log('List: ' + listid + ' is empty');
         }
     }
     catch(error) {
@@ -88,6 +108,6 @@ export const initialiseFirebaseListItems = async (data) => {
     });
 
     items.forEach(element => {
-        const item = getItemDatafromList(element.title, element.key);
+        const item = getItemDatafromList(element.key);
     });
 };

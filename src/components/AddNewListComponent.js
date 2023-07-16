@@ -32,12 +32,13 @@ export const NewListComponent = ({ setAllListsData }) => {
             
             // State to render list data
             setAllListsData(prevData => [...prevData, newList])
-
+            /*
             // Async Storage to append the list data
             const prevData = await getItemData('AllListsID');
             const newData = [...prevData, newList];
             await storeItemData('AllListsID', newData);
             console.log('Offline create listUID: ' ,key)
+            */
             // Firebase online storage to set new list at `user_node/UID: ${userId}/lists/${ListName}`
             if (auth.currentUser) { //checkifauth
                 await onlineCreateList({ ListName: newListName, ListUID: key }); 

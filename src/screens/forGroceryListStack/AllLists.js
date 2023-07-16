@@ -95,7 +95,7 @@ const AllListsScreen = ({ navigation, route }) => {
                 ))}
 
                 {/* If editing, do not render NewListComponent */}
-                {isEditing ? null : <NewListComponent setAllListsData={setAllListsData} />}
+                {!isEditing && auth.currentUser ? <NewListComponent setAllListsData={setAllListsData}/> : null}
                     <Button onPress={() => initialiseFirebaseListsIDs()}> Initialise Firebase all list data</Button>
 
                     <Button 
