@@ -20,6 +20,7 @@ const styles = StyleSheet.create({
         gap: 14,
         paddingHorizontal: 10,
         borderRadius: 10,
+        marginVertical: 10,
     },
     dropdowncontainer: {
         padding: 10,
@@ -34,14 +35,27 @@ const styles = StyleSheet.create({
     divider: {
         paddingHorizontal: 10,
         marginVertical: 14,
+        borderWidth: .5,
     },
     dropdown: {
         height: 50,
         borderColor: 'gray',
-        borderWidth: 0.5,
+        borderWidth: 1.5,
         marginTop: 10,
-        borderRadius: 8,
-    }
+        borderRadius: 6,
+        
+    },
+    placeholderStyle: {
+        paddingLeft: 10,
+   },
+   selectedTextStyle: {
+        paddingLeft: 10,
+   },
+   dropdownBox: {
+        borderWidth: '2',
+        borderBottomLeftRadius: '8',
+        borderBottomRightRadius: '8',
+   },
 });
 
 const EditItems = ({navigation,route}) => {
@@ -81,8 +95,12 @@ const EditItems = ({navigation,route}) => {
     //on text change, call set title, set title updates the state variable of title, and change title
     return (
         <View>
+            <Divider
+                style = {[styles.divider, {borderColor: theme.colors.outline}]}
+            />
             <View style = {styles.container}> 
                 <TextInput
+                    disabled = {isFocus}
                     style = {{flex: 1}}
                     mode = "outlined"
                     label = "Item: "
@@ -92,37 +110,13 @@ const EditItems = ({navigation,route}) => {
                 />
             </View>
 
-            <View style = {[styles.dropdowncontainer]}>
-                <Text style = {[styles.label, {backgroundColor: theme.colors.background, color: theme.colors.inversePrimary}]}> Category: </Text>
-                    <Dropdown
-                        style={[styles.dropdown, isFocus && { borderColor: 'blue' }]}
-                        placeholderStyle={styles.placeholderStyle}
-                        selectedTextStyle={styles.selectedTextStyle}
-                        iconStyle={styles.iconStyle}
-                        data={categoryOptions}
-                        maxHeight={300}
-                        labelField="label"
-                        valueField="value"
-                        placeholder={!isFocus ? item.category : '...'}
-                        value={value}
-                        onFocus={() => setIsFocus(true)}
-                        onBlur={() => setIsFocus(false)}
-                        onChange={item => {
-                            setValue(item.value);
-                            setIsFocus(false);
-                        }}
-                    />
-            </View>
-
-            <Divider
-                style = {styles.divider}
-            />
             <View style={styles.container}>
                 <View style = {{flex: 1}}>
                 <TextInput
                     mode = "outlined"
                     label = "Unit Value: "
                     value = {values.unitValue}
+                    disabled = {isFocus}
                     //text comes with onChangeText, it represents the most updated text. 
                     onChangeText={(text) => handleValueChange(text, 'unitValue', values, setValues)}
                     onFocus={() => handleValueInputFocusBlur('unitValue', values, setValues)}
@@ -137,6 +131,7 @@ const EditItems = ({navigation,route}) => {
                         mode = "outlined"
                         label= "Total Value: "
                         value={values.totalValue}
+                        disabled = {isFocus}
                         onChangeText={(text) => handleValueChange(text, 'totalValue', values, setValues)}
                         onFocus={() => handleValueInputFocusBlur('totalValue', values, setValues)}
                         onBlur={() => handleValueInputFocusBlur('totalValue', values, setValues)}
@@ -150,6 +145,7 @@ const EditItems = ({navigation,route}) => {
                     mode="outlined"
                     label = "Quantity: "
                     value = {values.quantity}
+                    disabled = {isFocus}
                     onChangeText={(text) => handleQuantityValueChange(text, values, setValues)}
                     onFocus={() => handleQuantityInputFocus(values, setValues)}
                     onBlur={() => handleQuantityInputBlur(values, setValues)}
@@ -158,6 +154,40 @@ const EditItems = ({navigation,route}) => {
                 />
                 </View>
             </View>
+
+
+
+
+
+            <View style = {[styles.dropdowncontainer]}>
+                <Text style = {[styles.label, {backgroundColor: theme.colors.background, color: theme.colors.onBackground}]}> Category: </Text>
+                    <Dropdown
+                        style={[styles.dropdown, isFocus && { borderColor: theme.colors.primary }]}
+                        placeholderStyle={[styles.placeholderStyle, {color: theme.colors.onBackground}]}
+                        selectedTextStyle={[styles.selectedTextStyle, {color: theme.colors.onBackground}]}
+                        containerStyle={[styles.dropdownBox, 
+                        {borderColor: theme.colors.primary, backgroundColor: theme.colors.secondary}]}
+                        activeColor={theme.colors.onBackground}
+                        iconStyle={styles.iconStyle}
+                        data={categoryOptions}
+                        maxHeight={300}
+                        labelField="label"
+                        valueField="value"
+                        placeholder={item.category}
+                        value={value}
+                        onFocus={() => setIsFocus(true)}
+                        onBlur={() => setIsFocus(false)}
+                        onChange={item => {
+                            setValue(item.value);
+                            setIsFocus(false);
+                        }}
+                    />
+            </View>
+
+            <Divider
+                style = {[styles.divider, {borderColor: theme.colors.outline}]}
+            />
+
             <Button
                 mode = "contained"
                 onPress={() => {
@@ -169,11 +199,5 @@ const EditItems = ({navigation,route}) => {
         </View>
     )
 };
-
-/*
-const EditItems2 = (navigation, route) => {
-    console.log('Route.params: ' ,route.params)
-};
-*/
 
 export default EditItems;
