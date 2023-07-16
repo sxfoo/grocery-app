@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { StyleSheet, SafeAreaView, ScrollView, LayoutAnimation, UIManager } from 'react-native';
-import { Text } from 'react-native-paper';
+import { Button, Text } from 'react-native-paper';
 import { StatusBar } from 'expo-status-bar';
 import { useFocusEffect } from '@react-navigation/native';
 import { initialiseAllListsIDsData } from '../../utilityFunctions/initialisationData';
@@ -11,6 +11,7 @@ import { NewListComponent } from '../../components/AddNewListComponent';
 import { onlineEditList } from '../../utilityFunctions/onlineCreateList';
 
 import PressableOpacity from '../../components/PressableOpacity'
+import { initialiseFirebaseListItems, initialiseFirebaseListsIDs } from '../../utilityFunctions/firebaseUtils';
 
 /* The overall Screen to be displayed. Shows all the user's created grocery lists */
 const AllListsScreen = ({ navigation, route }) => {
@@ -91,7 +92,15 @@ const AllListsScreen = ({ navigation, route }) => {
 
                 {/* If editing, do not render NewListComponent */}
                 {isEditing ? null : <NewListComponent setAllListsData={setAllListsData} />}
+                    <Button onPress={() => initialiseFirebaseListsIDs()}> Initialise Firebase all list data</Button>
 
+                    <Button 
+                        onPress = {async () => {
+                            const result = await initialiseFirebaseListsIDs();
+                            initialiseFirebaseListItems(result);
+                        }}> 
+                        Initialise all items data in the list
+                    </Button>
             </ScrollView>
         </SafeAreaView>
     );

@@ -6,7 +6,7 @@ import { List } from "react-native-paper";
 
 export const onlineEditList = async ({oldTitle , newListName, ListUID}) => {
     const userId = await getUserId();
-    const olduserRef = ref(db, `user_node/UID: ${userId}/lists/${oldTitle}`);
+    const olduserRef = ref(db, `user_node/User UID: ${userId}/lists/${oldTitle}`);
     try {
         await remove(olduserRef);
         console.log('Old list removed, title:' ,oldTitle);
@@ -17,7 +17,7 @@ export const onlineEditList = async ({oldTitle , newListName, ListUID}) => {
     const data = {
         ListUID: ListUID
     }
-    const userRef = ref(db, `user_node/UID: ${userId}/lists/${newListName}`);
+    const userRef = ref(db, `user_node/User UID: ${userId}/lists/${newListName}`);
     await set (userRef, data);
 };
 
