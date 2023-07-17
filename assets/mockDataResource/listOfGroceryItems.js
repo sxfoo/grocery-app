@@ -107,7 +107,7 @@ const groceryItems = [
     { id: 106, name: 'Zip Ties', category: 'Household' }
 ];
 
-const ListOfCategories = [
+export const ListOfCategories = [
     "Bakery",
     "Baby, Child & toys",
     "Beauty & Personal Care",
@@ -125,7 +125,8 @@ const ListOfCategories = [
     "Snacks & Confectionery",
     "Stationery",
     "Tools",
-    "Electrical & Lifestyle"
+    "Electrical & Lifestyle",
+    "Uncategorised"
 ]
 
 const categoryStylesData = {

@@ -14,10 +14,9 @@ import { ListHeader } from '../../components/ListHeader';
 import { TransformDataForSectionList } from '../../utilityFunctions/listScreenUtils';
 import { auth } from '../../../firebaseConfig';
 import { onlineRemoveItemsfromList } from '../../utilityFunctions/onlineModifyItemsList';
-import { update } from 'firebase/database';
 import { getItemDatafromList } from '../../utilityFunctions/firebaseUtils';
 import object from 'react-native-ui-lib/src/style/colorName';
-import { db, ref, set } from '../../../firebaseConfig';
+import { db, ref, set, get, update } from '../../../firebaseConfig';
 
 // Component to display the category name (Household, Electrical & lifestyle etc...)
 const CategoryHeader = ({ categoryName, isEditing, isDarkTheme }) => {
@@ -61,6 +60,7 @@ const ItemComponent = ({ item, index, isEditing, sections, setSections }) => {
     const tmp = await getItemData('AllListsID');
     let updatedRenderedArray = [];
     try {
+
       // Async Storage 
       if (listMetaData.key == tmp[0].key) {
         const data = await initialiseListItems(listMetaData.key);
@@ -80,19 +80,11 @@ const ItemComponent = ({ item, index, isEditing, sections, setSections }) => {
       }
       // Firebase stuff here
       else {
+        const itemRef = ref(db, `list_node/lists/List_ID: ${listMetaData.key}/items/${item.itemID}`);
+        await update(itemRef, {completed: !isChecked});
+
         const data = await getItemDatafromList(listMetaData.key);
-        const updatedArray = data.map((object) => {
-          if (object.itemID === item.itemID) {
-            return {
-              ...object,
-              completed: !object.completed
-            };
-          }
-          return object;
-        });
-        const itemRef = ref(db, `list_node/lists/List_ID: ${listMetaData.key}/items`);
-        await set(itemRef, updatedArray);
-        updatedRenderedArray = TransformDataForSectionList(updatedArray);
+        updatedRenderedArray = TransformDataForSectionList(data);
       }
       return updatedRenderedArray;
     } catch (error) {
@@ -299,24 +291,6 @@ const ListScreen = ({ navigation, route }) => {
       ),
     });
   }, [navigation, isEditing]);
-
-  useEffect(() => {
-    let data = null;
-    const { action, listMetaData, updatedItem } = route.params;
-    if (action == 'ItemEdit') {
-      if (updatedItem) {
-        console.log('Success');
-        const fetchData = async () => {
-          //data = await initialiseListItems(listMetaData.key);
-          //console.log('This is data' ,data);
-          const newItemData = sections.map((item) =>
-            item.key === updatedItem.itemID ? updatedItem : item
-          )
-        };
-        fetchData();
-      }
-    }
-  }, [route.params]);
 
   return (
 

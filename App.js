@@ -1,8 +1,11 @@
 import { MD3DarkTheme, MD3LightTheme, PaperProvider, adaptNavigationTheme } from 'react-native-paper';
 import { NavigationContainer, DarkTheme as NavigationDarkTheme, DefaultTheme as NavigationDefaultTheme } from '@react-navigation/native';
 import { useState } from 'react';
+import { LogBox } from 'react-native';
 import MainBottomTabStack from './src/navigation/MainBottomTabStack';
 import ThemeContext from './src/themeContext';
+
+LogBox.ignoreLogs(['Overriding previous layout animation']);
 
 const { LightTheme, DarkTheme } = adaptNavigationTheme({
   reactNavigationLight: NavigationDefaultTheme,
