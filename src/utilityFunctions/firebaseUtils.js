@@ -61,7 +61,7 @@ export const initialiseFirebaseListsIDs = async () => {
         console.error('Error fetching data:' ,error);
     }
     }
-    else{
+    else{ //user is logged off
         return [...listsID];
     }
 };
@@ -88,6 +88,7 @@ export const getItemDatafromList = async(listid) => {
         }
         else { //items dont exists, aka is empty
             console.log('List: ' + listid + ' is empty');
+            return [];
         }
     }
     catch(error) {

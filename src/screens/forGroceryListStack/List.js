@@ -7,7 +7,7 @@ import { IconButton, Text, useTheme } from 'react-native-paper';
 import Animated, { FadeInDown, FadeInLeft, FadeInRight, FadeOutDown, FadeOutLeft } from "react-native-reanimated";
 import { categoryStylesData } from '../../../assets/mockDataResource/listOfGroceryItems';
 import PressableOpacity from '../../components/PressableOpacity';
-import { storeItemData } from '../../utilityFunctions/asyncStorageUtils';
+import { getItemData, storeItemData } from '../../utilityFunctions/asyncStorageUtils';
 import { initialiseListItems } from '../../utilityFunctions/initialisationData';
 import ThemeContext from '../../themeContext'
 import { ListHeader } from '../../components/ListHeader';
@@ -55,9 +55,8 @@ const ItemComponent = ({ item, index, isEditing, sections, setSections }) => {
   const { listMetaData } = route.params;
 
   const toggleCheck = async () => {
-
     setIsChecked(!isChecked);
-
+    
     try {
       // Async Storage 
       const data = await initialiseListItems(listMetaData.key);
@@ -221,18 +220,28 @@ const ListScreen = ({ navigation, route }) => {
   useFocusEffect(
     useCallback(() => {
       const fetchItemsData = async () => {
-
-        // get list items data from async storage
-        //const data = await initialiseListItems(listMetaData.key);
-        console.log('listid' ,listMetaData.key);
-        //CHANGED TO FIREBASE
-        const data = await getItemDatafromList(listMetaData.key);
-
+        console.log(listMetaData.key);
+        const tmp = await getItemData('AllListsID');
+        let data = [];
+        try {
+        // get list items data from async storage if it's home
+        if (listMetaData.key == tmp[0].key) {
+          console.log('Home, use async');
+          data = await initialiseListItems(listMetaData.key);
+        }
+        else {
+        //CHANGED TO FIREBASE check items from the list online
+          console.log('Firebase list, use firebase')
+          data = await getItemDatafromList(listMetaData.key);
+        }
         // Transform the data gotten from AsyncStorage for usage in section list
         const transformedData = TransformDataForSectionList(data);
         setSections(transformedData);
-      };
-      fetchItemsData();
+      } catch(error) {
+        console.error("Error retrieving items from list" ,error);
+      }
+    };
+    fetchItemsData();
     }, [])
   );
 
