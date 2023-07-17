@@ -16,6 +16,8 @@ import { auth } from '../../../firebaseConfig';
 import { onlineRemoveItemsfromList } from '../../utilityFunctions/onlineModifyItemsList';
 import { update } from 'firebase/database';
 import { getItemDatafromList } from '../../utilityFunctions/firebaseUtils';
+import object from 'react-native-ui-lib/src/style/colorName';
+import { db, ref, set } from '../../../firebaseConfig';
 
 // Component to display the category name (Household, Electrical & lifestyle etc...)
 const CategoryHeader = ({ categoryName, isEditing, isDarkTheme }) => {
@@ -56,31 +58,43 @@ const ItemComponent = ({ item, index, isEditing, sections, setSections }) => {
 
   const toggleCheck = async () => {
     setIsChecked(!isChecked);
-
+    const tmp = await getItemData('AllListsID');
+    let updatedRenderedArray = [];
     try {
       // Async Storage 
-      const data = await initialiseListItems(listMetaData.key);
-      const updatedArray = data.map((object) => {
-        if (object.itemID === item.itemID) {
-          return {
-            ...object,
-            completed: !object.completed
-          };
-        }
-        return object;
-      });
-      await storeItemData(listMetaData.key + '/items', updatedArray)
+      if (listMetaData.key == tmp[0].key) {
+        const data = await initialiseListItems(listMetaData.key);
+        const updatedArray = data.map((object) => {
+          if (object.itemID === item.itemID) {
+            return {
+              ...object,
+              completed: !object.completed
+            };
+          }
+          return object;
+        });
+        await storeItemData(listMetaData.key + '/items', updatedArray)
 
-      // For rendering updated data on screen
-      const updatedRenderedArray = TransformDataForSectionList(updatedArray);
-
+        // For rendering updated data on screen
+        updatedRenderedArray = TransformDataForSectionList(updatedArray);
+      }
       // Firebase stuff here
-      //
-      //
-      //
-
+      else {
+        const data = await getItemDatafromList(listMetaData.key);
+        const updatedArray = data.map((object) => {
+          if (object.itemID === item.itemID) {
+            return {
+              ...object,
+              completed: !object.completed
+            };
+          }
+          return object;
+        });
+        const itemRef = ref(db, `list_node/lists/List_ID: ${listMetaData.key}/items`);
+        await set(itemRef, updatedArray);
+        updatedRenderedArray = TransformDataForSectionList(updatedArray);
+      }
       return updatedRenderedArray;
-
     } catch (error) {
       setIsChecked(!isChecked);
       console.log('Failed to check (complete/incomplete) item:', error)
