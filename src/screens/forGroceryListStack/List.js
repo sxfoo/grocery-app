@@ -89,28 +89,29 @@ const ItemComponent = ({ item, index, isEditing, sections, setSections }) => {
   };
 
   const handleDeletingData = async () => {
+    const tmp = await getItemData('AllListsID');
+    let updatedArray = [];
     try {
-
+      if (listMetaData.key == tmp[0].key) {
       // Async storage 
       const data = await initialiseListItems(listMetaData.key);
-      const updatedArray = data.filter(object => object.itemID !== item.itemID); //Not equal to item.ID stays
-      await storeItemData(listMetaData.key + '/items', updatedArray)
-
-      // For rendering data on screen
-      const updatedRenderedArray = TransformDataForSectionList(updatedArray);
-      
+      updatedArray = data.filter(object => object.itemID !== item.itemID); //Not equal to item.ID stays
+      await storeItemData(listMetaData.key + '/items', updatedArray);
+      }
       // Firebase realtime database
-      if (auth.currentUser) {
+      else{
+        console.log('Delete firebase item');
         onlineRemoveItemsfromList({ listID: listMetaData.key, itemID: item.itemID });
+        updatedArray = await getItemDatafromList(listMetaData.key);
       }
       // Return rendered data on screen
+      // For rendering data on screen
+      const updatedRenderedArray = TransformDataForSectionList(updatedArray);
       return updatedRenderedArray;
 
     } catch (error) {
-
       console.log('Failed to delete item data:', error)
       throw error;
-
     }
   }
 
