@@ -24,7 +24,7 @@ const intialiseInArray = (data) => {
 
 export const initialiseFirebaseListsIDs = async () => {
 
-    const listsID = await getItemData('AllListsID');
+    let listsID = await getItemData('AllListsID');
     if (listsID == null) 
     {
         //This part is copied from initialise all list id data from utility functions
