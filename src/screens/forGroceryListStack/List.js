@@ -15,7 +15,7 @@ import { TransformDataForSectionList } from '../../utilityFunctions/listScreenUt
 import { auth } from '../../../firebaseConfig';
 import { onlineRemoveItemsfromList } from '../../utilityFunctions/onlineModifyItemsList';
 import { update } from 'firebase/database';
-import {getItemDatafromList } from '../../utilityFunctions/firebaseUtils';
+import { getItemDatafromList } from '../../utilityFunctions/firebaseUtils';
 
 // Component to display the category name (Household, Electrical & lifestyle etc...)
 const CategoryHeader = ({ categoryName, isEditing, isDarkTheme }) => {
@@ -56,7 +56,7 @@ const ItemComponent = ({ item, index, isEditing, sections, setSections }) => {
 
   const toggleCheck = async () => {
     setIsChecked(!isChecked);
-    
+
     try {
       // Async Storage 
       const data = await initialiseListItems(listMetaData.key);
@@ -93,13 +93,13 @@ const ItemComponent = ({ item, index, isEditing, sections, setSections }) => {
     let updatedArray = [];
     try {
       if (listMetaData.key == tmp[0].key) {
-      // Async storage 
-      const data = await initialiseListItems(listMetaData.key);
-      updatedArray = data.filter(object => object.itemID !== item.itemID); //Not equal to item.ID stays
-      await storeItemData(listMetaData.key + '/items', updatedArray);
+        // Async storage 
+        const data = await initialiseListItems(listMetaData.key);
+        updatedArray = data.filter(object => object.itemID !== item.itemID); //Not equal to item.ID stays
+        await storeItemData(listMetaData.key + '/items', updatedArray);
       }
       // Firebase realtime database
-      else{
+      else {
         console.log('Delete firebase item');
         onlineRemoveItemsfromList({ listID: listMetaData.key, itemID: item.itemID });
         updatedArray = await getItemDatafromList(listMetaData.key);
@@ -152,7 +152,7 @@ const ItemComponent = ({ item, index, isEditing, sections, setSections }) => {
       <PressableOpacity
         style={{
           flex: 8, flexDirection: 'row', alignItems: 'center',
-          borderWidth: 1, borderRadius: 5, borderColor: item.completed ?  '#00C853' : theme.colors.elevation.level5,
+          borderWidth: 1, borderRadius: 5, borderColor: item.completed ? '#00C853' : theme.colors.elevation.level5,
         }}
         activeOpacity={0.5}
 
@@ -225,24 +225,24 @@ const ListScreen = ({ navigation, route }) => {
         const tmp = await getItemData('AllListsID');
         let data = [];
         try {
-        // get list items data from async storage if it's home
-        if (listMetaData.key == tmp[0].key) {
-          console.log('Home, use async');
-          data = await initialiseListItems(listMetaData.key);
+          // get list items data from async storage if it's home
+          if (listMetaData.key == tmp[0].key) {
+            console.log('Home, use async');
+            data = await initialiseListItems(listMetaData.key);
+          }
+          else {
+            //CHANGED TO FIREBASE check items from the list online
+            console.log('Firebase list, use firebase')
+            data = await getItemDatafromList(listMetaData.key);
+          }
+          // Transform the data gotten from AsyncStorage for usage in section list
+          const transformedData = TransformDataForSectionList(data);
+          setSections(transformedData);
+        } catch (error) {
+          console.error("Error retrieving items from list", error);
         }
-        else {
-        //CHANGED TO FIREBASE check items from the list online
-          console.log('Firebase list, use firebase')
-          data = await getItemDatafromList(listMetaData.key);
-        }
-        // Transform the data gotten from AsyncStorage for usage in section list
-        const transformedData = TransformDataForSectionList(data);
-        setSections(transformedData);
-      } catch(error) {
-        console.error("Error retrieving items from list" ,error);
-      }
-    };
-    fetchItemsData();
+      };
+      fetchItemsData();
     }, [])
   );
 
