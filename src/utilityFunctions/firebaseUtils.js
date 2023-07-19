@@ -1,5 +1,5 @@
 import { auth, db } from "../../firebaseConfig";
-import { ref, set, get} from "firebase/database";
+import { ref, set, get, remove} from "firebase/database";
 import { getUserId } from "./checkifauth";
 import { randomUUID } from "expo-crypto";
 import { getItemData, storeItemData } from "./asyncStorageUtils";
@@ -112,3 +112,11 @@ export const initialiseFirebaseListItems = async (data) => {
         const item = getItemDatafromList(element.key);
     });
 };
+
+export const onlineRemoveList = async (listID, listName) => {
+    const userID = auth.currentUser.uid;
+    const listRef = ref(db, (`list_node/lists/List_ID: ${listID}`));
+    await remove(listRef);
+    const userRef = ref(db, (`user_node/User UID: ${userID}/lists/${listName}`));
+    await remove(userRef);
+}
