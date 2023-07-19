@@ -6,7 +6,7 @@ import { List } from "react-native-paper";
 
 export const onlineEditList = async ({oldTitle , newListName, ListUID}) => {
     const userId = await getUserId();
-    const olduserRef = ref(db, `user_node/User UID: ${userId}/lists/${oldTitle}`);
+    const olduserRef = ref(db, `user_node/User UID: ${userId}/lists/${ListUID}`);
     try {
         await remove(olduserRef);
         console.log('Old list removed, title:' ,oldTitle);
@@ -15,9 +15,9 @@ export const onlineEditList = async ({oldTitle , newListName, ListUID}) => {
         console.error('Error deleting online list' ,error);
     }
     const data = {
-        ListUID: ListUID
-    }
-    const userRef = ref(db, `user_node/User UID: ${userId}/lists/${newListName}`);
+        ListName: newListName
+    };
+    const userRef = ref(db, `user_node/User UID: ${userId}/lists/${ListUID}`);
     await set (userRef, data);
 };
 
@@ -25,12 +25,12 @@ export const onlineCreateList = async ({ListName, ListUID}) => {
     const userId =  await getUserId();
     const listId = ListUID; 
     //User Node
-    const userRef = ref(db, (`user_node/User UID: ${userId}/lists/${ListName}`));
+    const userRef = ref(db, (`user_node/User UID: ${userId}/lists/${listId}`));
     //List Node
     const listRef = ref(db, (`list_node/lists/List_ID: ${listId}`));
     ///Creates a new list at the user node
     const data = {
-        ListUID : listId
+        ListName : ListName
     };
 
     await set(userRef, data); //if it's 2 add key value

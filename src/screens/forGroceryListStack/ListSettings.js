@@ -2,10 +2,11 @@ import { update } from 'firebase/database';
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import { TextInput, Button } from 'react-native-paper'
-import { onlineRemoveList, onlineEditList } from '../../utilityFunctions/firebaseUtils';
+import { onlineRemoveList } from '../../utilityFunctions/firebaseUtils';
 import { getItemData, storeItemData } from '../../utilityFunctions/asyncStorageUtils';
 import { useState } from 'react';
 import { useEffect } from 'react';
+import { onlineEditList } from '../../utilityFunctions/onlineCreateList';
 
 // TO BE UPDATED and organised properly
 const ListSettingsScreen = ({ navigation, route }) => {
@@ -46,7 +47,7 @@ const ListSettingsScreen = ({ navigation, route }) => {
         if (listKey === listData[0].key) {
           await storeItemData('AllListsID', modifiedData);
         } else {
-          // FirebaseCode Here!!!!!!
+          await onlineEditList({oldTitle: listMetaData.title, newListName: title, ListUID: listMetaData.key});
         }
         navigation.goBack();
       } catch (error) {

@@ -6,16 +6,13 @@ import { getItemData, storeItemData } from "./asyncStorageUtils";
 
 const intialiseInArray = (data) => {
     const result = [] //Array that contains the title and uid in key:value pair
-
+    console.log(data);
     for (const key in data) {
-        //const obj = {}; //Make them into a key value pair
-        //obj[key] = data[key].ListUID;
-        //result.push(obj);
 
         obj = {
-            "key" : data[key].ListUID,
+            "key" : key,
             "numItems": 0,
-            "title": key,
+            "title": data[key].ListName,
         }
         result.push(obj)
     }
@@ -117,6 +114,6 @@ export const onlineRemoveList = async (listID, listName) => {
     const userID = auth.currentUser.uid;
     const listRef = ref(db, (`list_node/lists/List_ID: ${listID}`));
     await remove(listRef);
-    const userRef = ref(db, (`user_node/User UID: ${userID}/lists/${listName}`));
+    const userRef = ref(db, (`user_node/User UID: ${userID}/lists/${listID}`));
     await remove(userRef);
 }
