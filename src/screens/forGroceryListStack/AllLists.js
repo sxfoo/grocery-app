@@ -96,7 +96,8 @@ const AllListsScreen = ({ navigation, route }) => {
 
                 {/* If editing, do not render NewListComponent */}
                 {!isEditing && auth.currentUser ? <NewListComponent setAllListsData={setAllListsData}/> : null}
-                    <Button onPress={() => initialiseFirebaseListsIDs()}> Initialise Firebase all list data</Button>
+                {/* Debug purposes for firebase data    
+                <Button onPress={() => initialiseFirebaseListsIDs()}> Initialise Firebase all list data</Button>
 
                     <Button 
                         onPress = {async () => {
@@ -105,6 +106,7 @@ const AllListsScreen = ({ navigation, route }) => {
                         }}> 
                         Initialise all items data in the list
                     </Button>
+                */}
             </ScrollView>
         </SafeAreaView>
     );
