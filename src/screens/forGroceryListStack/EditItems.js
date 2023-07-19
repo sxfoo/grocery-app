@@ -189,13 +189,14 @@ const EditItems = ({ navigation, route }) => {
                     selectedTextStyle={[styles.selectedTextStyle, { color: theme.colors.onBackground }]}
                     containerStyle={[styles.dropdownBox,
                     { borderColor: theme.colors.primary, backgroundColor: theme.colors.inverseOnSurface }]}
-                    activeColor={theme.colors.primary}
+                    activeColor={theme.colors.inversePrimary}
                     iconStyle={styles.iconStyle}
                     data={categoryOptions}
                     maxHeight={300}
                     labelField="label"
                     valueField="value"
                     placeholder={item.category}
+                    itemTextStyle = {{color: theme.colors.onBackground}}
                     value={category}
                     onFocus={() => setIsFocus(true)}
                     onBlur={() => setIsFocus(false)}
