@@ -2,8 +2,8 @@ import { update } from 'firebase/database';
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import { TextInput, Button } from 'react-native-paper'
-import { onlineRemoveList } from '../../utilityFunctions/firebaseUtils';
-import { getItemData } from '../../utilityFunctions/asyncStorageUtils';
+import { onlineRemoveList, onlineEditList } from '../../utilityFunctions/firebaseUtils';
+import { getItemData, storeItemData } from '../../utilityFunctions/asyncStorageUtils';
 import { useState } from 'react';
 import { useEffect } from 'react';
 
@@ -28,21 +28,31 @@ const ListSettingsScreen = ({ navigation, route }) => {
     fetchData();
   }, []);
 
-  //const isHomeList = listMetaData.key == tmp[0].key;
-  //console.log(tmp);
-  const oldTitle = listMetaData.title
-  // Function to handle on Save button Press
-  const handleSave = () => {
-    //trim removes leading or trailing whitespace
+  // Function to handle onSave button press
+  const handleSave = async () => {
+    // Trim removes leading or trailing whitespace
     if (title.trim() !== '') {
-      // Use list key value
-      // To compare and replace the new title name
-      const listKey = listMetaData.key
-      // Save the updated title, navigate back to the AllListScreen.
-      const updatedItem = { ...listMetaData, title: title };
-      navigation.navigate('All Lists', { action: 'TitleEdit', listKey: listKey, updatedItem: updatedItem, oldTitle: oldTitle });
-    }
+      // Use list key value to compare and replace the new title name
+      const listKey = listMetaData.key;
+      const listData = await getItemData('AllListsID');
+      const modifiedData = listData.map(item => {
+        return {
+          ...item,
+          title: title
+        };
+      });
 
+      try {
+        if (listKey === listData[0].key) {
+          await storeItemData('AllListsID', modifiedData);
+        } else {
+          // FirebaseCode Here!!!!!!
+        }
+        navigation.goBack();
+      } catch (error) {
+        throw error;
+      }
+    }
   };
 
   const handleDelete = async () => {
@@ -51,7 +61,7 @@ const ListSettingsScreen = ({ navigation, route }) => {
   };
 
   return (
-    <View style = {{rowGap: 50}}>
+    <View style={{ rowGap: 50 }}>
       <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
         <TextInput
           label="List Title"
@@ -62,15 +72,21 @@ const ListSettingsScreen = ({ navigation, route }) => {
 
         <Button
           mode="contained"
-          onPress={handleSave}
+          onPress={async () => {
+            try {
+              await handleSave();
+            } catch (error) {
+              console.error("Unable to save edited list Data: ", error);
+            }
+          }}
         >
           Save
         </Button>
       </View>
-      <View style = {{justifyContent: 'center', alignItems: 'center'}}>
+      <View style={{ justifyContent: 'center', alignItems: 'center' }}>
         {!isHome ? <Button
-          mode = "contained"
-          style = {{backgroundColor: 'red', width: '70%'}}
+          mode="contained"
+          style={{ backgroundColor: 'red', width: '70%' }}
           onPress={handleDelete}
         >
           Delete

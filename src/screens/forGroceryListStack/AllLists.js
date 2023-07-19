@@ -62,27 +62,6 @@ const AllListsScreen = ({ navigation, route }) => {
         });
     }, [navigation, isEditing]);
 
-    // Update the list item if it has been edited in the ListSettings screen
-    // To be updated properly to use key values instead of matching and replacing by previous list titles
-    //useeffect only runs when route.params changes and action == TitleEdit 
-    React.useEffect(() => {
-        const { action, listKey, updatedItem, oldTitle } = route.params;
-        console.log('route:', route)
-        console.log(route.params);
-        if (action == 'TitleEdit') {
-            if (updatedItem) {
-                const newListsData = allListsData.map((item) =>
-                    item.key === listKey ? updatedItem : item
-                ) //updates the oldlist, if item.key is = to suppose to edit listKey, it sets it to the new updatedItem, rewrite its data
-                storeItemData('AllListsID', newListsData);
-                setAllListsData(newListsData);
-                if (auth.currentUser) {
-                    onlineEditList({ oldTitle: oldTitle, newListName: updatedItem.title, ListUID: updatedItem.key });
-                }
-            }
-        }
-    }, [route.params]);
-
     return (
         <SafeAreaView style={styles.container}>
             <ScrollView
@@ -95,7 +74,7 @@ const AllListsScreen = ({ navigation, route }) => {
                 ))}
 
                 {/* If editing, do not render NewListComponent */}
-                {!isEditing && auth.currentUser ? <NewListComponent setAllListsData={setAllListsData}/> : null}
+                {!isEditing && auth.currentUser ? <NewListComponent setAllListsData={setAllListsData} /> : null}
                 {/* Debug purposes for firebase data    
                 <Button onPress={() => initialiseFirebaseListsIDs()}> Initialise Firebase all list data</Button>
 
