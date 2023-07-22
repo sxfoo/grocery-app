@@ -1,17 +1,13 @@
-import * as React from 'react';
-import { StyleSheet, SafeAreaView, ScrollView, LayoutAnimation, UIManager } from 'react-native';
-import { Button, Text } from 'react-native-paper';
-import { StatusBar } from 'expo-status-bar';
 import { useFocusEffect } from '@react-navigation/native';
-import { initialiseAllListsIDsData } from '../../utilityFunctions/initialisationData';
-import { getItemData, storeItemData } from '../../utilityFunctions/asyncStorageUtils';
+import { StatusBar } from 'expo-status-bar';
+import * as React from 'react';
+import { SafeAreaView, ScrollView, StyleSheet } from 'react-native';
+import { Text } from 'react-native-paper';
 import { auth } from '../../../firebaseConfig';
-import { GroceryCardComponent } from '../../components/GroceryCardComponent';
 import { NewListComponent } from '../../components/AddNewListComponent';
-import { onlineEditList } from '../../utilityFunctions/onlineCreateList';
-
-import PressableOpacity from '../../components/PressableOpacity'
-import { initialiseFirebaseListItems, initialiseFirebaseListsIDs } from '../../utilityFunctions/firebaseUtils';
+import { GroceryCardComponent } from '../../components/GroceryCardComponent';
+import PressableOpacity from '../../components/PressableOpacity';
+import { initialiseFirebaseListsIDs } from '../../utilityFunctions/firebaseUtils';
 
 /* The overall Screen to be displayed. Shows all the user's created grocery lists */
 const AllListsScreen = ({ navigation, route }) => {

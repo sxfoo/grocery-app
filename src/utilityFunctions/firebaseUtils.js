@@ -1,17 +1,17 @@
 import { auth, db } from "../../firebaseConfig";
-import { ref, set, get, remove} from "firebase/database";
+import { ref, set, get, remove } from "firebase/database";
 import { getUserId } from "./checkifauth";
 import { randomUUID } from "expo-crypto";
 import { getItemData, storeItemData } from "./asyncStorageUtils";
 
-const intialiseInArray = (data) => {
-    const result = [] //Array that contains the title and uid in key:value pair
-    console.log(data);
+const intialiseInArray = async (data) => {
+    const result = [] //Array that contains the title and uid in key:value pairs
     for (const key in data) {
-
+        const listRef = ref(db, `list_node/lists/List_ID: ${key}/NumItems`)
+        const snapshot = await get(listRef);
         obj = {
-            "key" : key,
-            "numItems": 0,
+            "key": key,
+            "numItems": snapshot.exists() ? snapshot.val() : 0,
             "title": data[key].ListName,
         }
         result.push(obj)
@@ -22,43 +22,41 @@ const intialiseInArray = (data) => {
 export const initialiseFirebaseListsIDs = async () => {
 
     let listsID = await getItemData('AllListsID');
-    if (listsID == null) 
-    {
+    if (listsID == null) {
         //This part is copied from initialise all list id data from utility functions
         const newListID = randomUUID();
-        const newListArray = [{ key: newListID, title: 'Home', numItems: 0}];
+        const newListArray = [{ key: newListID, title: 'Home', numItems: 0 }];
 
-        await storeItemData('AllListsID' ,newListArray);
+        await storeItemData('AllListsID', newListArray);
         console.log('Default home initialised');
         listsID = newListArray;
-    }   
-    
-    
-    if (auth.currentUser){
-    const userId = await getUserId();
-    const userRef = ref(db, `user_node/User UID: ${userId}/lists`)
+    }
 
-    try {
-        const snapshot = await get(userRef);
-        if (snapshot.exists()) {
-            const data = snapshot.val();
-            const result = intialiseInArray(data);
-            console.log(result);
-            return [...listsID,...result];
-        }
-        else {
-            console.log('No data in firebase.');
-            try {return [...listsID];}
-            catch{
-                console.error('Fail');
+
+    if (auth.currentUser) {
+        const userId = await getUserId();
+        const userRef = ref(db, `user_node/User UID: ${userId}/lists`)
+
+        try {
+            const snapshot = await get(userRef);
+            if (snapshot.exists()) {
+                const data = snapshot.val();
+                const result = await intialiseInArray(data);
+                return [...listsID, ...result];
+            }
+            else {
+                console.log('No data in firebase.');
+                try { return [...listsID]; }
+                catch {
+                    console.error('Fail');
+                }
             }
         }
+        catch (error) {
+            console.error('Error fetching data:', error);
+        }
     }
-    catch(error){
-        console.error('Error fetching data:' ,error);
-    }
-    }
-    else{ //user is logged off
+    else { //user is logged off
         return [...listsID];
     }
 };
@@ -72,15 +70,14 @@ const intialiseInArray2 = (data) => {
     return result;
 };
 
-export const getItemDatafromList = async(listid) => {
+export const getItemDatafromList = async (listid) => {
     //gets all the item in 1 list
     const listRef = ref(db, `list_node/lists/List_ID: ${listid}/items`)
-    try{
+    try {
         const snapshot = await get(listRef);
         if (snapshot.exists()) {
             const data = snapshot.val();
             const result = intialiseInArray2(data);
-            console.log(result);
             return result;
         }
         else { //items dont exists, aka is empty
@@ -88,8 +85,8 @@ export const getItemDatafromList = async(listid) => {
             return [];
         }
     }
-    catch(error) {
-        console.error("Error fetching items" ,error);
+    catch (error) {
+        console.error("Error fetching items", error);
     }
 };
 
@@ -102,7 +99,7 @@ export const initialiseFirebaseListItems = async (data) => {
         }
     });*/
     const items = data.map(obj => {
-        return {key: obj.key, title: obj.title};
+        return { key: obj.key, title: obj.title };
     });
 
     items.forEach(element => {

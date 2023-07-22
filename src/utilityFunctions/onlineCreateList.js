@@ -30,7 +30,7 @@ export const onlineCreateList = async ({ListName, ListUID}) => {
     const listRef = ref(db, (`list_node/lists/List_ID: ${listId}`));
     ///Creates a new list at the user node
     const data = {
-        ListName : ListName
+        ListName : ListName,
     };
 
     await set(userRef, data); //if it's 2 add key value

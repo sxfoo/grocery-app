@@ -38,7 +38,7 @@ export const ListHeader = () => {
                     Add Items
                 </Button>
             </View>
-            {/* Debug purposes to check storage and remove async
+             
             <View style={{ flexDirection: 'row', alignSelf: 'center', gap: 10 }}>
                 <Button
                     mode='outlined'
@@ -51,7 +51,7 @@ export const ListHeader = () => {
                     onPress={() => { removeAllData() }}>
                     Remove local storage
                 </Button>
-            </View>*/}
+            </View> 
             <Divider />
         </View>
     )

@@ -40,7 +40,7 @@ export const GroceryCardComponent = ({ listData, isEditing }) => {
 
                     <View style={{ flexDirection: 'column' }}>
                         <Text variant="headlineMedium">{listData.title}</Text>
-                        <Text variant="bodyMedium">{listData.numItems} items</Text>
+                        <Text variant="bodyMedium">{listData.numItems} item(s)</Text>
                     </View>
 
                     <View style={{ flex: 1 }}></View>

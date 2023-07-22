@@ -12,11 +12,9 @@ import { initialiseListItems } from '../../utilityFunctions/initialisationData';
 import ThemeContext from '../../themeContext'
 import { ListHeader } from '../../components/ListHeader';
 import { TransformDataForSectionList } from '../../utilityFunctions/listScreenUtils';
-import { auth } from '../../../firebaseConfig';
 import { onlineRemoveItemsfromList } from '../../utilityFunctions/onlineModifyItemsList';
 import { getItemDatafromList } from '../../utilityFunctions/firebaseUtils';
-import object from 'react-native-ui-lib/src/style/colorName';
-import { db, ref, set, get, update } from '../../../firebaseConfig';
+import { db, ref, set, get, update, runTransaction } from '../../../firebaseConfig';
 
 // Component to display the category name (Household, Electrical & lifestyle etc...)
 const CategoryHeader = ({ categoryName, isEditing, isDarkTheme }) => {
@@ -81,7 +79,7 @@ const ItemComponent = ({ item, index, isEditing, sections, setSections }) => {
       // Firebase stuff here
       else {
         const itemRef = ref(db, `list_node/lists/List_ID: ${listMetaData.key}/items/${item.itemID}`);
-        await update(itemRef, {completed: !isChecked});
+        await update(itemRef, { completed: !isChecked });
 
         const data = await getItemDatafromList(listMetaData.key);
         updatedRenderedArray = TransformDataForSectionList(data);
@@ -100,14 +98,26 @@ const ItemComponent = ({ item, index, isEditing, sections, setSections }) => {
     try {
       if (listMetaData.key == tmp[0].key) {
         // Async storage 
-        const data = await initialiseListItems(listMetaData.key);
+        const data = await initialiseListItems(listMetaData.key); // Get all List Items from list
         updatedArray = data.filter(object => object.itemID !== item.itemID); //Not equal to item.ID stays
-        await storeItemData(listMetaData.key + '/items', updatedArray);
+
+        const updatedListMetaData = tmp.map(listObject => {
+          if (listObject.key === listMetaData.key) {
+            return {
+              ...listObject,
+              numItems: listObject.numItems - 1,
+            };
+          }
+          return listObject;
+        });
+
+        await storeItemData(listMetaData.key + '/items', updatedArray); // Store updated items data in async storage
+        await storeItemData('AllListsID', updatedListMetaData)
       }
       // Firebase realtime database
       else {
         console.log('Delete firebase item');
-        onlineRemoveItemsfromList({ listID: listMetaData.key, itemID: item.itemID });
+        await onlineRemoveItemsfromList({ listID: listMetaData.key, itemID: item.itemID });
         updatedArray = await getItemDatafromList(listMetaData.key);
       }
       // Return rendered data on screen
@@ -227,7 +237,6 @@ const ListScreen = ({ navigation, route }) => {
   useFocusEffect(
     useCallback(() => {
       const fetchItemsData = async () => {
-        console.log(listMetaData.key);
         const tmp = await getItemData('AllListsID');
         let data = [];
         try {

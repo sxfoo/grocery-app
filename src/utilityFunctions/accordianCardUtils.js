@@ -1,6 +1,6 @@
 import { getItemData, storeItemData } from './asyncStorageUtils';
 import { randomUUID } from 'expo-crypto';
-import { auth, db, ref, set } from '../../firebaseConfig'
+import { auth, db, ref, set, runTransaction} from '../../firebaseConfig'
 import { LayoutAnimation } from 'react-native';
 import { getUserId } from './checkifauth';
 import { fetchlistUID } from './onlineCreateList';
@@ -29,43 +29,50 @@ export const AddToList = ({ item, values, setSearchQuery, setAddedItems, listMet
         const tmp = await getItemData('AllListsID');
         const listId = listMetaData.key
         try {
-            //getUserId is an asynchronous function (take some time)
-            //it causes listId to be assigned the promise object instead of the actual value
-            //await can onlyn be used in an async function
+            
+            // Check if list is meant to be stored offline or online
             if (listMetaData.key == tmp[0].key) {
-                //This retrieves the user data, according to the device / authenticated user account
 
                 // Offline Storage
                 let currentListItems = (await getItemData(listId + '/items')) ?? [];
                 const updatedListItems = [...currentListItems, data];
+
+                const updatedListMetaData = tmp.map(listObject => {
+
+                    const updatedNumItems = listObject.numItems + 1 >= 0 ? listObject.numItems + 1 : 0;
+                    if (listObject.key === listMetaData.key) {
+                        return {
+                            ...listObject,
+                            numItems: updatedNumItems,
+                        };
+                    }
+                    return listObject;
+                });
+
                 await storeItemData(listId + '/items', updatedListItems); // Wait for offline storage to complete
+                await storeItemData('AllListsID', updatedListMetaData); // Add NumItems + 1 to listMetaData
                 console.log("Item successfully added to async storage");
-                // To add as chip items on search screen
-                setAddedItems(prevValues => {
-                    return (
-                        [...prevValues, data]
-                    )
-                })
             }
 
             else {
                 // Online Storage
-                const list_node_data = {
-                    [listMetaData.title]: listId
-                }
-
                 const itemRef = ref(db, `list_node/lists/List_ID: ${listId}/items/` + itemUUID);
-                await set(itemRef, data);
-                console.log('ListMetadata' + listMetaData.key + listMetaData.title);
-                console.log('New item added successfully to Realtime Database:', itemUUID);
-                console.log(list_node_data);
-                // To add as chip items on search screen
-                setAddedItems(prevValues => {
-                    return (
-                        [...prevValues, data]
-                    )
+                const numItemsRef = ref(db, `list_node/lists/List_ID: ${listId}/NumItems`);
+
+                await set(itemRef, data); // Add item data to list
+                runTransaction(numItemsRef, (currentNumItems) => {
+                    const newNumItems = (currentNumItems || 0) + 1;
+                    return newNumItems;
                 })
+                console.log('New item added successfully to Realtime Database:', itemUUID);
             }
+
+            // To add as chip items on search screen
+            setAddedItems(prevValues => {
+                return (
+                    [...prevValues, data]
+                )
+            })
         }
         catch (error) {
             console.error('Error adding new item: in accordiancardutils', error);
