@@ -1,14 +1,14 @@
 import React, { useContext, useState, useEffect } from "react";
-import { StyleSheet, Alert} from "react-native";
+import { StyleSheet, Alert } from "react-native";
 import { Image } from "react-native-ui-lib";
 import { View, TouchableOpacity, Icon } from "react-native-ui-lib";
-import { IconButton, Text, useTheme} from "react-native-paper";
+import { IconButton, Text, useTheme } from "react-native-paper";
 import { ScrollView, Switch } from "react-native-gesture-handler";
 import { SafeAreaProvider, useSafeAreaInsets } from "react-native-safe-area-context";
 import FeatherIcon from 'react-native-vector-icons/Feather';
-import { useNavigation, useRoute} from "@react-navigation/native";
-import { signOut, getAuth} from "@firebase/auth";
-import ThemeContext  from "../themeContext"
+import { useNavigation, useRoute } from "@react-navigation/native";
+import { signOut, getAuth } from "@firebase/auth";
+import ThemeContext from "../themeContext"
 import ProfilePictureModal from "../components/ProfilePictureModal";
 import { useOrientation } from "react-native-ui-lib/src/hooks";
 import { getDatabase, ref, onValue } from "firebase/database";
@@ -136,6 +136,10 @@ const Settings = () => {
 		signOut(auth)
 			.then(() => {
 				console.log("user signed out");
+				navigation.reset({
+					index: 0,
+					routes: [{ name: 'Grocery List' }],
+				});
 			})
 			.catch((error) => {
 				alert(error.message);
@@ -173,9 +177,9 @@ const Settings = () => {
 						handleSelectPicture={handleSelectPicture}
 						handleCapturePhoto={handleCapturePhoto}
 					/>
-					<BudgetModal 
+					<BudgetModal
 						visible={budgetModalVisible}
-						onClose={()=> setBudgetModalVisible(false)}
+						onClose={() => setBudgetModalVisible(false)}
 						onSubmit={handleBudgetSubmit}
 					/>
 					<Text

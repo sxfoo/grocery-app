@@ -39,6 +39,7 @@ export default function MainBottomTabStack() {
                     borderTopWidth: 0,
                 }
             }}
+            id='BottomTabNav'
         >
 
             {/* Grocery List Tab. Goes to ListStack (see navigatlsion/ListStack.js) */}

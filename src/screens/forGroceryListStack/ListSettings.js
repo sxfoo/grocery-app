@@ -1,7 +1,7 @@
 import { update } from 'firebase/database';
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
-import { TextInput, Button } from 'react-native-paper'
+import { TextInput, Button, useTheme } from 'react-native-paper'
 import { onlineRemoveList } from '../../utilityFunctions/firebaseUtils';
 import { getItemData, storeItemData } from '../../utilityFunctions/asyncStorageUtils';
 import { useState } from 'react';
@@ -10,6 +10,8 @@ import { onlineEditList } from '../../utilityFunctions/onlineCreateList';
 
 // TO BE UPDATED and organised properly
 const ListSettingsScreen = ({ navigation, route }) => {
+
+  const theme = useTheme();
 
   const { listMetaData } = route.params;
   const [title, setTitle] = React.useState(listMetaData.title);
@@ -87,10 +89,10 @@ const ListSettingsScreen = ({ navigation, route }) => {
       <View style={{ justifyContent: 'center', alignItems: 'center' }}>
         {!isHome ? <Button
           mode="contained"
-          style={{ backgroundColor: 'red', width: '70%' }}
+          style={{ backgroundColor: theme.colors.error, width: '70%' }}
           onPress={handleDelete}
         >
-          Delete
+          Delete List
         </Button> : null}
       </View>
     </View>
