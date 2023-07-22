@@ -1,11 +1,12 @@
 import React from "react";
+import ThemeContext from "../themeContext";
 import { Alert, StyleSheet } from "react-native";
 import { Image } from "react-native-ui-lib";
 import { View, TouchableOpacity, Icon } from "react-native-ui-lib";
-import { Divider, IconButton, Text, useTheme} from "react-native-paper";
+import { Divider, IconButton, Text, useTheme } from "react-native-paper";
 import { FlatList, ScrollView, Switch } from "react-native-gesture-handler";
 import { SafeAreaProvider, useSafeAreaInsets } from "react-native-safe-area-context";
-import {Card} from "react-native-paper";
+import { Card } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
 import FeatherIcon from 'react-native-vector-icons/Feather';
 
@@ -14,23 +15,23 @@ const customisation = [
     {
         header: 'General',
         items: [
-            { id: 'Language', icon: 'translate', label: 'Change Language', type: 'link'},
-            { id: 'Budget', icon: 'hand-coin', label: 'Set budget', type: 'link'},
-            { id: 'darkMode', icon: 'theme-light-dark', label: 'Dark Mode', type: 'toggle'},
-            { id: 'Location', icon: 'navigation-variant', label: 'Sync location', type: 'toggle'},
+            { id: 'Language', icon: 'translate', label: 'Change Language', type: 'link' },
+            { id: 'Budget', icon: 'hand-coin', label: 'Set budget', type: 'link' },
+            { id: 'darkMode', icon: 'theme-light-dark', label: 'Dark Mode', type: 'toggle' },
+            { id: 'Location', icon: 'navigation-variant', label: 'Sync location', type: 'toggle' },
         ],
     },
     {
         header: 'Notification',
-        items:[
-            {id: 'Notification', icon: 'bell-alert', label: 'Enable push-notification', type: 'toggle'},
+        items: [
+            { id: 'Notification', icon: 'bell-alert', label: 'Enable push-notification', type: 'toggle' },
 
         ],
     },
 ];
 /* CSS used to style the page */
 const styles = StyleSheet.create({
-    
+
     headertext: {
         fontSize: 14,
         fontWeight: 'bold',
@@ -50,7 +51,7 @@ const styles = StyleSheet.create({
     avatar: {
         position: 'relative',
     },
-    profile_write:{
+    profile_write: {
         width: 30,
         height: 30,
         borderRadius: 9999,
@@ -62,12 +63,12 @@ const styles = StyleSheet.create({
         bottom: -10,
 
     },
-    profile_avatar:{
+    profile_avatar: {
         width: 72,
         height: 72,
         borderRadius: 9999,
     },
-    profile_name:{
+    profile_name: {
         fontSize: 20,
         marginTop: 15,
         fontWeight: '600',
@@ -103,6 +104,7 @@ export const toggledark = (dark) => {
 
 const Unv_setting = () => {
     const Navigation = useNavigation();
+    const { isDarkTheme, toggleDarkMode } = React.useContext(ThemeContext);
     const [form, setForm] = React.useState({
         darkMode: true,
         Notification: true,
@@ -110,76 +112,74 @@ const Unv_setting = () => {
     });
     const themes = useTheme();
     const insets = useSafeAreaInsets();
-    
+
     const imagePick = () => {
         console.log('Image pick pressed');
 
     };
 
-    return(
+    return (
         <SafeAreaProvider>
             <ScrollView>
-                <TouchableOpacity style = {[styles.profile, {        
-                paddingTop: insets.top,
-                paddingBottom: insets.bottom,
-                paddingLeft: insets.left,
-                paddingRight: insets.right
+                <TouchableOpacity style={[styles.profile, {
+                    paddingTop: insets.top,
+                    paddingBottom: insets.bottom,
+                    paddingLeft: insets.left,
+                    paddingRight: insets.right
                 }]}
-                onPress = {() => {Navigation.navigate("SignIn", {screen: 'SignInScreen'})}}
+                    onPress={() => { Navigation.navigate("SignIn", { screen: 'SignInScreen' }) }}
                 >
-                <TouchableOpacity>
-                    <View style = {styles.avatar}>
-                        <Image
-                            alt = "Profile Picture"
-                            source={{ uri: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Default_pfp.svg/1200px-Default_pfp.svg.png'}}
-                            style = {styles.profile_avatar}
-                        />
-                    </View>
-
-                    <View style = {[styles.profile_write, {backgroundColor: themes.colors.inverseOnSurface}]}>
-                        <FeatherIcon name="alert-triangle" size={15} style={{color: themes.colors.inverseSurface}} />
-                    </View>
-                </TouchableOpacity> 
-                <Text style={styles.profile_name}>You are not signed in</Text>
-                <Text style={styles.profile_email}>Sign in to gain access to full features</Text>
-            
-                {/* Profile picture*/}
-                </TouchableOpacity>
-                <Divider style = {{marginBottom: 15}}/> 
-        {/* it's basically a loop to map the header and the text*/}
-            {customisation.map(({header, items}) => (
-                <View key={header} style = {styles.header}>
-                    <Text style = {styles.headertext}>{header} </Text>        
-                <View>
-                {/* Another loop, in the row, continue to load the icon and the chevron/toggle*/}
-                    {items.map(({label, id, type, icon, nav}) => (
-                        <View key={id}>
-                        <TouchableOpacity onPress ={() => {
-                                if (nav) 
-                                {Navigation.navigate(nav)}
-                        }}>
-                            <View style = {[styles.row, {backgroundColor: themes.colors.inverseOnSurface,}]}>
-                                <View style = {styles.icon}> 
-                                    <IconButton icon = {icon} />
-                                </View>
-                                <Text style = {styles.label}>{label}</Text>
-                                <View style = {{flex: 1,}}/> 
-                                {/*takes up the available space*/}
-                                {type === 'toggle' && id ==='darkMode' &&
-                                (<Switch 
-                                    value = {form[id]}
-                                    onValueChange = {value => {setForm({ ...form, [id]: value});
-                                    toggledark(value);
-                                    }}
-                                />)}
-                                {type === 'link' && <IconButton icon = "chevron-right"/>}
-                            </View>
-                        </TouchableOpacity>
+                    <TouchableOpacity>
+                        <View style={styles.avatar}>
+                            <Image
+                                alt="Profile Picture"
+                                source={{ uri: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Default_pfp.svg/1200px-Default_pfp.svg.png' }}
+                                style={styles.profile_avatar}
+                            />
                         </View>
-                    ))}
-                </View>
-                </View>
-            ))}
+
+                        <View style={[styles.profile_write, { backgroundColor: themes.colors.inverseOnSurface }]}>
+                            <FeatherIcon name="alert-triangle" size={15} style={{ color: themes.colors.inverseSurface }} />
+                        </View>
+                    </TouchableOpacity>
+                    <Text style={styles.profile_name}>You are not signed in</Text>
+                    <Text style={styles.profile_email}>Sign in to gain access to full features</Text>
+
+                    {/* Profile picture*/}
+                </TouchableOpacity>
+                <Divider style={{ marginBottom: 15 }} />
+                {/* it's basically a loop to map the header and the text*/}
+                {customisation.map(({ header, items }) => (
+                    <View key={header} style={styles.header}>
+                        <Text style={styles.headertext}>{header} </Text>
+                        <View>
+                            {/* Another loop, in the row, continue to load the icon and the chevron/toggle*/}
+                            {items.map(({ label, id, type, icon, nav }) => (
+                                <View key={id}>
+                                    <TouchableOpacity onPress={() => {
+                                        if (nav) { Navigation.navigate(nav) }
+                                    }}>
+                                        <View style={[styles.row, { backgroundColor: themes.colors.inverseOnSurface, }]}>
+                                            <View style={styles.icon}>
+                                                <IconButton icon={icon} />
+                                            </View>
+                                            <Text style={styles.label}>{label}</Text>
+                                            <View style={{ flex: 1, }} />
+                                            {/*takes up the available space*/}
+                                            {type === 'toggle' && id === 'darkMode' && (
+                                                <Switch
+                                                    value={isDarkTheme}
+                                                    onValueChange={() => toggleDarkMode()}
+                                                />
+                                            )}
+                                            {type === 'link' && <IconButton icon="chevron-right" />}
+                                        </View>
+                                    </TouchableOpacity>
+                                </View>
+                            ))}
+                        </View>
+                    </View>
+                ))}
             </ScrollView>
         </SafeAreaProvider>
     )
